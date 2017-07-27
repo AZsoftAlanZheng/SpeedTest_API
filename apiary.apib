@@ -1,0 +1,1444 @@
+FORMAT: 1A
+HOST: https://api.droibaas.com
+
+# SpeedTest API
+
+SpeedTest API 任务下发及获取结果.
+
+## 取得Session Token [/rest/users/v2/login]
+
+### Get a Session Token [POST]
+
+取得Session Token，用在之后的操作
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            
+    + Body
+    
+            {
+                "UserId": "apm_test",
+                "Password": "464c7a646393b68d1a42076c010b5aae418d8d322f233ca0b8cd8e2c6bcd9676",
+                "Type": "general"
+            }
+            
++ Response 200 (application/json)
+
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + Data (required, object)
+                + Email: droi@droi.com (optional, string)
+                + EmailVerified: false (optional, boolean)
+                + Enabled: true (required, boolean)
+                + PhoneNum: 123 (optional, string)
+                + PhoneNumVerified: false (optional, boolean)
+                + UserId: MyTestUser (required, string)
+                + _ACL (required, object)
+                    + creator: 194444d79ebc1211d0900774 (required, string)
+                    + pr: true (required, boolean)
+                    + pw: true (required, boolean)
+                + _ClassName: DroiUser (required, string)
+                + _CreationTime: `2017-03-16T01:54:05.487Z` (required, string)
+                + _Id: 194444d79ebc1211d0900774 (required, string)
+                + _ModifiedTime: `2017-03-16T01:54:05.487Z` (required, string)
+            + ExpiredAt: `2017-04-15T01:54:05.513Z` (required, string)
+            + Token: fbc751dc6a96ca47 (required, string) - SessionToken
+
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Error Base)
+            
+## 任务下发 & 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]
+
+### Create New SpeedTest Tasks [POST]
+
+新增多个任务给Server
+
++ Parameters
+
+    + LastToken (optional, string) - 创建任务时用不到
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+            
+    + Attributes (object)
+        + Task (required, array[SpeedTest HTTP Base, SpeedTest HTTPS Base, SpeedTest DNS Base])
+        
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + Task (required, array)
+                + 5979982b59c2160026000001 (required, string)
+                + 5979982b59c2160026000002 (required, string)
+                + 5979982b59c2160026000003 (required, string)
+
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+            
+### List All SpeedTest Tasks [GET]
+
+取得所有的任务清单及查询任务状态.
+
++ Parameters
+
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    
++ Request (application/json)
+    
+    + Headers
+    
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + Task (required, array[Status HTTP Base, Status HTTPS Base, Status DNS Base])
+            + LastToken: 5979982b59c2160026000002 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+            
+## 查询单一任务状态 [/api/v2/speedtest/v1/st{?TaskID}]
+
+### View a Task Detail [GET]
+
++ Parameters
+
+    + TaskID: 5979982b59c2160026000001 (required, string) - 任务辨别码
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+            
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (Response Base)
+    
+        + Result (required, Status HTTP Base)
+
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)         
+
+## 取得HTTP任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?HTTP}]
+    
+### get a SpeedTest Task result (HTTP) [GET]
+
++ Parameters
+
+    + TaskID: 5979982b59c2160026000001 (required, string) - 任务辨别码
+    + HTTP (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+            
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Result HTTP Base)
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
+## 取得HTTPS任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?HTTPS}]    
+
+### get a SpeedTest Task result (HTTPS) [GET]
+
++ Parameters
+
+    + TaskID: 5951cc9013f2a00064000002 (required, string) - 任务辨别码
+    + HTTPS (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Result HTTPS Base)
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
+## 取得DNS任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?DNS}] 
+
+### get a SpeedTest Task result (DNS) [GET]
+
++ Parameters
+
+    + TaskID: 5951cc9013f2a00064000003 (required, string) - 任务辨别码
+    + DNS (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Result DNS Base)
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
+## 取得HTTP任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?HTTP}]
+    
+### get raw data of Task [GET]
+
++ Parameters
+
+    + TaskID:5979982b59c2160026000001 (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + HTTP (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status HTTP Base)
+            + Raw (required, array[Raw HTTP Base])
+            + LastToken:5979982b59c2160026000001 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
+## 取得HTTPS任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?HTTPS}]
+    
+### get raw data of Task [GET]
+
++ Parameters
+
+    + TaskID:5951cc9013f2a00064000002 (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + HTTPS (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status HTTPS Base)
+            + Raw (required, array[Raw HTTPS Base])
+            + LastToken:5979982b59c2160026000001 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
+## 取得DNS任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?DNS}]
+    
+### get raw data of Task [GET]
+
++ Parameters
+
+    + TaskID:5951cc9013f2a00064000003 (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + DNS (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status DNS Base)
+            + Raw (required, array[Raw DNS Base])
+            + LastToken:5979982b59c2160026000001 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+ 
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)    
+            
+## 取得活跃使用者数 [/api/v2/speedtest/v1/st/users{?Carrier}{?Country_City}{?Network}{?LastToken}]
+    
+### get the number of active clients [GET]
+
++ Parameters
+
+    + Carrier (optional,number)
+    + Country_City (optional,number)
+    + Network (optional,number)
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料 
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzheWVyiClN5H18yeNGaepH2YuslQBAd4YN
+            X-Droi-Api-Key: 0gxr3WiNgE9rjuTHfHKUPTP_75CqYx6gnyGtBiF7J-OmA7mwJd7w3PDxsTWJY44H
+            X-Droi-Session-Token: 03afe089ea3226eb
+
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + Users (required, array[Sample Base])
+            + LastToken: 5979982b59c2160026000001 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料 
+
++ Response 200 ()
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
+# Data Structures
+
+
+## SpeedTest HTTP Base (object)
++ Type: HTTP (required, string)   
++ URL: `http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
++ Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取
++ MD5: 36a92cc94a9e0fa21f625f8bfb007adf (optional, string) - 档案下载部份的MD5检查码   
++ Headers (required, object) - 填加自定义header头域
+    - Key1: Value1 (optional, string) -- 自定义Key及Value
++ Restriction (required, Restriction Base) - 加入限制条件
+
+## SpeedTest HTTPS Base (object)
++ Type: HTTPS (required, string)   
++ URL: `https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
++ Size: 100 (required, number) - 下载档案的大小
++ MD5: 36a92cc94a9e0fa21f625f8bfb007adf (required, string) - 下载档案的MD5检查码   
++ Headers (required, object) - 填加自定义header头域
+    - Key1: Value1 (optional, string) -- 自定义Key及Value
++ Restriction (required, Restriction Base) - 加入限制条件
+
+## SpeedTest DNS Base (object)
++ Type: DNS (required, string)
++ Host: www.amazon.com (required, string) - IP or Domain name
++ DNSSerIP:168.95.1.1 (optional, string) - 可指定dns server
++ Restriction (required, Restriction Base) - 加入限制条件
+
+
+## Status Base (object)
++ Status: 2 (required, number) - 0: Waiting, 1:OnGoing, 2:Finished
++ Description: Finished (required, enum)
+    - default: Finished
+    - Members
+        - Waiting
+        - OnGoing
+        - Finished
+
+## Status HTTP Base (Status Base)
++ TaskID:5979982b59c2160026000001 (required, string) - 任务辨别码
++ SpeedTest (required, SpeedTest HTTP Base) - 创建任务的设定
+
+## Status HTTPS Base (Status Base)
++ TaskID:5951cc9013f2a00064000002 (required, string) - 任务辨别码
++ SpeedTest (required, SpeedTest HTTPS Base) - 创建任务的设定
+
+## Status DNS Base (Status Base)
++ TaskID:5951cc9013f2a00064000003 (required, string) - 任务辨别码
++ SpeedTest (required, SpeedTest DNS Base) - 创建任务的设定
+
+## Time HTTP Base (object)
++ DNS:1 (required, number) - DNS解析时间
++ R:0 (required, number) - 重定向时间  
++ Connect:185 (required, number) - 建联时间 
++ Req:0 (required, number) - 内容上传时间   
++ TTFB:1196 (required, number) - 首包时间
++ Res:6 (required, number) - 内容下载时间
++ RTT:1202 (required, number) - 总下载时间
+
+## Time HTTPS Base (object)
++ DNS:1 (required, number) - DNS解析时间
++ R:0 (required, number) - 重定向时间  
++ Connect:185 (required, number) - 建联时间   
++ SSL:607 (required, number) - ssl握手时间
++ Req:0 (required, number) - 内容上传时间   
++ TTFB:589 (required, number) - 首包时间
++ Res:6 (required, number) - 内容下载时间
++ RTT:595 (required, number) - 总下载时间
+
+## Time DNS Base (object)
++ DNS:5 (required, number) - DNS解析时间
+
+## Ans Record1 Base (object)
++ Name:www.amazon.com. (required, string) - 查询的FQDN
++ Type:CNAME (required, string) - RData栏位内的资料意义 
++ Class:IN (required, string) - RData栏位内的资料等级
++ TTL:1573 (required, number) - 保留在DNS伺服器快取中的时间   
++ RData:www.cdn.amazon.com. (required, string) - 存放查询的结果，通常是存放IP位址或FQDN
+
+## Ans Record2 Base (object)
++ Name:www.cdn.amazon.com. (required, string) - 查询的FQDN
++ Type:CNAME (required, string) - RData栏位内的资料意义 
++ Class:IN (required, string) - RData栏位内的资料等级
++ TTL:132 (required, number) - 保留在DNS伺服器快取中的时间   
++ RData:d3ag4hukkh62yn.cloudfront.net. (required, string) - 存放查询的结果，通常是存放IP位址或FQDN
+
+## Ans Record3 Base (object)
++ Name:d3ag4hukkh62yn.cloudfront.net. (required, string) - 查询的FQDN
++ Type:A (required, string) - RData栏位内的资料意义 
++ Class:IN (required, string) - RData栏位内的资料等级
++ TTL:1573 (required, number) - 保留在DNS伺服器快取中的时间   
++ RData:54.239.176.100 (required, string) - 存放查询的结果，通常是存放IP位址或FQDN
+ 
+
+## Statistics Base (object)
++ Max:1234 (required, number) - 最大值
++ Min:20 (required, number) - 最小值
++ Avg:250 (required, number) - 平均值
++ Count:31 (required, number) - 有效样本数    
+  
+
+## Node1 Base (object)
++ IP:10.128.83.284 (required, string)
++ RTT:712 (required, number)
+
+## Node2 Base (object)
++ IP:10.128.101.2 (required, string)
++ RTT:449 (required, number)
+
+## Node3 Base (object)
++ IP:61.216.24.254 (required, string)
++ RTT:2364 (required, number)
+
+## Node4 Base (object)
++ IP:210.71.222.164 (required, string)
++ RTT:2559 (required, number)
+
+
+## Result HTTP Base (Status HTTP Base)
++ Result (required, object)
+    + IP:111.23.45.67 (required, string)
+    + HttpStatus (required, object)
+        + 200: 123 (optional, number) - HTTP status code '200' 的数量
+        + 404: 1 (optional, number) - HTTP status code '404' 的数量
+    + ClientStatus (required, object)
+        + 0: 1 (optional, number) - Client status code '0' 的数量  
+    + Time (required, object)
+        + DNS (Statistics Base)
+        + R (Statistics Base)
+        + Connect (Statistics Base)
+        + Req (Statistics Base)
+        + TTFB (Statistics Base)
+        + Res (Statistics Base)
+        + RTT (Statistics Base)
+
+## Result HTTPS Base (Status HTTPS Base)
++ Result (required, object)
+    + IP:111.23.45.67 (required, string)
+    + HttpStatus (required, object)
+        + 200: 123 (optional, number) - HTTP status code '200' 的数量
+        + 404: 1 (optional, number) - HTTP status code '404' 的数量
+    + ClientStatus (required, object)
+        + 0: 1 (optional, number) - Client status code '0' 的数量  
+    + Time (required, object)
+        + DNS (Statistics Base)
+        + R (Statistics Base)
+        + Connect (Statistics Base)
+        + SSL (Statistics Base)
+        + Req (Statistics Base)
+        + TTFB (Statistics Base)
+        + Res (Statistics Base)
+        + RTT (Statistics Base)
+
+## Result DNS Base (Status DNS Base)
++ Result (required, object)
+    + IP:111.23.45.67 (required, string)
+    + Time (required, object)
+        + DNS (Statistics Base)
+    + Ans (array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base])
+
+## Raw Base (object)
++ IP:111.23.45.67 (required, string) - Server's IP or Resolved IP
++ ClientIP:1.2.3.4 (required, string) - Client's IP
+
+## Raw HTTP Base (Raw Base)
++ _Id:5979982b59c2160026000001 (required, string) - ID of Raw data, 可用来查询更之后的资料
++ HttpStatus:200 (required, number) - HTTP status code
++ Time (required, Time HTTP Base)
+
+## Raw HTTPS Base (Raw Base)
++ _Id:5951cc9013f2a00064000002 (required, string) - ID of Raw data, 可用来查询更之后的资料
++ HttpStatus:200 (required, number) - HTTP status code 
++ Time (required, Time HTTPS Base)
+
+## Raw DNS Base (Raw Base)
++ _Id:5951cc9013f2a00064000003 (required, string) - ID of Raw data, 可用来查询更之后的资料
++ Time (required, Time DNS Base)
++ ANS (required, array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base]) - DNS解析资料
+
+## Sample Base (object)
++ Carrier:0 (required, number) - 指定电信商代码. 0:中国电信. 1:中国移动. 2:中国联通.
++ Country_City:0 (required, number) - 省份与城市.
++ Network:1 (required, number) - 指定网路类别.
++ Client:1 (required,number) - 建议取样的客户端数量。
+    
+## Error Base (object)
+
++ ErrorCode:1410002 (required, number)
+
+    错误码.
+    1410001:内部错误，请洽开发人员.
+    1410002:权限不足.
+    1410003:TaskID不存在.
+    1410004:NextToken错误.
+    1410005:SessionToken错误.
+    1410006:JSON错误.
+    1410007:Type错误.
+    1410008:URL错误.
+    1410009:Host错误.
+    1410010:限制条件错误.
+    1410011:电信商代码错误.
+    1410012:省份代码错误.
+    1410013:网路类别错误.
+    1410014:指定超时时长错误.10~120s，预设值60s
+    1410015:取样客户端数量错误.预设每项1个，上限10个
+    1410016:项目数量过多, 最多10组.上限10组
+    1410017:使用者不存在.
+    1410018:密码错误.
+    1410019:创建任务间隔太近.目前设定间隔五分钟
+    1410020:缺少TaskID.
+    1410021:Size错误.目前上限设1,048,576(1MB)
+    1410022:MD5错误
+    
++ MSG:权限不足 (required, string)
+
+    错误讯息
+
+## Response Base (object)
+
++ Code:0 (required, number)   
+
+## Response Error Base (object)
+
++ Code: 1040009 (required, number) - 错误代码，请通知工程师
++ Message: User has NOT signg up yet: not found (required, string) - 错误讯息，请通知工程师
++ Ticket: 1498703462958T2099126114 (required, string) - 错误工单号，请通知工程师    
+
+## Restriction Base (object)
++ Carrier (optional, number) - 指定电信商代码. 0:中国电信. 1:中国移动. 2:中国联通.
+
++ Network:1 (optional, number)
+
+    指定网路类别.
+    1:Wifi.
+    2:2G.
+    3:3G.
+    4:4G.
+        
++ Timeout:60 (number)
+
+    指定超时时长，范围10~120s，预设值60s
+    
++ Client:1 (number)
+
+    指定取样的客户端数量上限,每项上限10组。或建议取样的客户端数量。
+    
++ Country_City:1001 (optional, number)
+
+    指定省份与城市.
+    1:上海.
+    2:上海-上海.
+    3:上海-沈镇.
+    4:云南.
+    5:云南-上南现.
+    6:云南-个旧市.
+    7:云南-临安.
+    8:云南-佛山.
+    9:云南-共和.
+    10:云南-勐卯.
+    11:云南-升平.
+    12:云南-大理市.
+    13:云南-宁洱.
+    14:云南-宜政.
+    15:云南-宝山.
+    16:云南-开远.
+    17:云南-弥城.
+    18:云南-文山.
+    19:云南-文澜.
+    20:云南-昆明.
+    21:云南-昭通市.
+    22:云南-景洪市.
+    23:云南-曲靖市.
+    24:云南-林场.
+    25:云南-海东.
+    26:云南-澧江.
+    27:云南-玉溪市.
+    28:云南-祥城.
+    29:云南-绿溪.
+    30:云南-西山.
+    31:云南-迤萨.
+    32:云南-金华.
+    33:内蒙古自治区.
+    34:内蒙古自治区-乌兰察布市.
+    35:内蒙古自治区-乌兰浩特市.
+    36:内蒙古自治区-包头市.
+    37:内蒙古自治区-呼和浩特市.
+    38:内蒙古自治区-海拉尔区.
+    39:内蒙古自治区-满洲里市.
+    40:内蒙古自治区-赤峰.
+    41:内蒙古自治区-通辽市.
+    42:内蒙古自治区-鄂尔多斯市.
+    43:北京市.
+    44:北京市-丰台.
+    45:北京市-北京.
+    46:北京市-密云.
+    47:北京市-平谷.
+    48:北京市-怀柔.
+    49:北京市-房山.
+    50:北京市-昌平.
+    51:北京市-河北.
+    52:北京市-海淀.
+    53:北京市-通州.
+    54:北京市-顺义.
+    55:吉林.
+    56:吉林-光明.
+    57:吉林-吉林市.
+    58:吉林-快大茂.
+    59:吉林-民主.
+    60:吉林-汪清.
+    61:吉林-白城.
+    62:吉林-长春.
+    63:四川省.
+    64:四川省-七间房.
+    65:四川省-三院里.
+    66:四川省-下孟.
+    67:四川省-东乡.
+    68:四川省-临邛.
+    69:四川省-乐山.
+    70:四川省-九龙.
+    71:四川省-兴业.
+    72:四川省-内江市.
+    73:四川省-北大街.
+    74:四川省-南充.
+    75:四川省-占山.
+    76:四川省-双桂.
+    77:四川省-史家.
+    78:四川省-合江.
+    79:四川省-周家巷.
+    80:四川省-大渡口.
+    81:四川省-太平.
+    82:四川省-宜宾.
+    83:四川省-巴州.
+    84:四川省-巴德.
+    85:四川省-广元市.
+    86:四川省-广安.
+    87:四川省-德阳市.
+    88:四川省-成都.
+    89:四川省-新棉.
+    90:四川省-棉竹.
+    91:四川省-泸州.
+    92:四川省-漹城.
+    93:四川省-王家巷.
+    94:四川省-绵阳.
+    95:四川省-胡家巷.
+    96:四川省-自贡市.
+    97:四川省-达州.
+    98:四川省-邱家巷.
+    99:四川省-都江堰市.
+    100:四川省-重龙.
+    101:四川省-钟青.
+    102:四川省-阆中.
+    103:四川省-雁江.
+    104:四川省-雅安.
+    105:四川省-雒城.
+    106:四川省-青㭎林.
+    107:天津市.
+    108:天津市-南开.
+    109:天津市-塘沽.
+    110:天津市-天津.
+    111:天津市-西花园.
+    112:天津市-静海.
+    113:宁夏回族自治区.
+    114:宁夏回族自治区-三合乡.
+    115:宁夏回族自治区-东塔.
+    116:宁夏回族自治区-吴家渠.
+    117:宁夏回族自治区-银川.
+    118:安徽.
+    119:安徽-九龙岗.
+    120:安徽-亳州.
+    121:安徽-休宁县.
+    122:安徽-六安.
+    123:安徽-凤台城关镇.
+    124:安徽-凤阳府城镇.
+    125:安徽-前山.
+    126:安徽-历阳.
+    127:安徽-合肥.
+    128:安徽-吕湾.
+    129:安徽-固镇城关镇.
+    130:安徽-天堂.
+    131:安徽-天长.
+    132:安徽-姑熟.
+    133:安徽-安庆市.
+    134:安徽-宿州市.
+    135:安徽-寿春.
+    136:安徽-巢湖市.
+    137:安徽-旌阳.
+    138:安徽-晋熙.
+    139:安徽-望江.
+    140:安徽-梅山.
+    141:安徽-池州.
+    142:安徽-河北.
+    143:安徽-泾川.
+    144:安徽-涡阳城关镇.
+    145:安徽-淮北.
+    146:安徽-滁州.
+    147:安徽-灵城.
+    148:安徽-界首.
+    149:安徽-碧阳.
+    150:安徽-芜湖.
+    151:安徽-蚌埠.
+    152:安徽-衡山.
+    153:安徽-铜城.
+    154:安徽-铜陵.
+    155:安徽-阜阳市.
+    156:安徽-霍邱城关镇.
+    157:安徽-黄山.
+    158:安徽-黄岗.
+    159:安徽-龙城.
+    160:山东省.
+    161:山东省-东营市.
+    162:山东省-冠城.
+    163:山东省-南城.
+    164:山东省-南麻镇.
+    165:山东省-即墨市.
+    166:山东省-城区.
+    167:山东省-天福.
+    168:山东省-奎聚.
+    169:山东省-威海.
+    170:山东省-崖头.
+    171:山东省-德州市.
+    172:山东省-日照.
+    173:山东省-曲阜市.
+    174:山东省-枣庄市.
+    175:山东省-正涧.
+    176:山东省-济南.
+    177:山东省-济宁市.
+    178:山东省-淄博.
+    179:山东省-滕州.
+    180:山东省-滨州市.
+    181:山东省-潍坊市.
+    182:山东省-烟台市.
+    183:山东省-登州.
+    184:山东省-罗峰.
+    185:山东省-聊城.
+    186:山东省-胶南市.
+    187:山东省-莱芜市.
+    188:山东省-菏泽.
+    189:山东省-诸城市.
+    190:山东省-邹城市.
+    191:山东省-陵城.
+    192:山东省-雁塔.
+    193:山东省-青岛市.
+    194:山东省-青年.
+    195:山东省-龙港.
+    196:山西.
+    197:山西-临汾.
+    198:山西-临泉.
+    199:山西-凤城.
+    200:山西-大同市.
+    201:山西-太原.
+    202:山西-太原市.
+    203:山西-平遥县.
+    204:山西-张家口.
+    205:山西-忻州.
+    206:山西-文溪.
+    207:山西-文笔.
+    208:山西-新城.
+    209:山西-明星.
+    210:山西-昭余.
+    211:山西-砚城.
+    212:山西-箕城.
+    213:山西-署益村.
+    214:山西-羊泉.
+    215:山西-金城.
+    216:山西-青羊.
+    217:山西-龙泉.
+    218:广东.
+    219:广东-万江.
+    220:广东-三水.
+    221:广东-上围.
+    222:广东-东洲村.
+    223:广东-东海.
+    224:广东-东涌.
+    225:广东-东莞市.
+    226:广东-中围.
+    227:广东-中山.
+    228:广东-乐从.
+    229:广东-乐城.
+    230:广东-乳城.
+    231:广东-云浮.
+    232:广东-会垌.
+    233:广东-佛山市.
+    234:广东-信宜.
+    235:广东-先锋村.
+    236:广东-公明.
+    237:广东-北津.
+    238:广东-南昌.
+    239:广东-南街.
+    240:广东-厚街.
+    241:广东-台城.
+    242:广东-吴川.
+    243:广东-四会.
+    244:广东-圭岗.
+    245:广东-大布.
+    246:广东-山尾村.
+    247:广东-市桥.
+    248:广东-广州.
+    249:广东-廉江.
+    250:广东-径门.
+    251:广东-思城.
+    252:广东-惠城.
+    253:广东-惠州市.
+    254:广东-揭阳市.
+    255:广东-新会.
+    256:广东-新华.
+    257:广东-普宁.
+    258:广东-李祥.
+    259:广东-桃园.
+    260:广东-樟木村.
+    261:广东-横洋.
+    262:广东-江门市.
+    263:广东-河源市.
+    264:广东-浸米.
+    265:广东-深圳市.
+    266:广东-清远.
+    267:广东-湛江市.
+    268:广东-湾州.
+    269:广东-潭洲.
+    270:广东-潭鳌村.
+    271:广东-潮州市.
+    272:广东-澄华.
+    273:广东-环岗.
+    274:广东-珠海市.
+    275:广东-甜水.
+    276:广东-石岐街道.
+    277:广东-石角.
+    278:广东-福兴.
+    279:广东-福永.
+    280:广东-罗城.
+    281:广东-罗阳.
+    282:广东-联丰.
+    283:广东-肇庆市.
+    284:广东-英城.
+    285:广东-茂名.
+    286:广东-荔城.
+    287:广东-虎门.
+    288:广东-街口.
+    289:广东-象岗.
+    290:广东-赤坎.
+    291:广东-遂溪县.
+    292:广东-那龙.
+    293:广东-长沙.
+    294:广东-阳春.
+    295:广东-阳江市.
+    296:广东-陂径.
+    297:广东-雷州.
+    298:广东-韶关市.
+    299:广东-顺德区.
+    300:广东-高州.
+    301:广东-高要.
+    302:广东-龙华.
+    303:广东-龙江.
+    304:广西壮族自治区.
+    305:广西壮族自治区-临桂.
+    306:广西壮族自治区-井门.
+    307:广西壮族自治区-全州.
+    308:广西壮族自治区-北海市.
+    309:广西壮族自治区-南宁.
+    310:广西壮族自治区-南桶石.
+    311:广西壮族自治区-博白.
+    312:广西壮族自治区-卡凤.
+    313:广西壮族自治区-城厢.
+    314:广西壮族自治区-容州.
+    315:广西壮族自治区-新靖.
+    316:广西壮族自治区-木桥头.
+    317:广西壮族自治区-来宾市.
+    318:广西壮族自治区-柳州.
+    319:广西壮族自治区-桂平.
+    320:广西壮族自治区-桂林市.
+    321:广西壮族自治区-桃城.
+    322:广西壮族自治区-梧州市.
+    323:广西壮族自治区-横州.
+    324:广西壮族自治区-武宣.
+    325:广西壮族自治区-江西村.
+    326:广西壮族自治区-温泉.
+    327:广西壮族自治区-灵城.
+    328:广西壮族自治区-玉林市.
+    329:广西壮族自治区-百城.
+    330:广西壮族自治区-福建.
+    331:广西壮族自治区-胡家.
+    332:广西壮族自治区-藤州.
+    333:广西壮族自治区-贵港市.
+    334:广西壮族自治区-逐盎.
+    335:广西壮族自治区-钦州市.
+    336:广西壮族自治区-阳朔.
+    337:广西壮族自治区-龙圩.
+    338:新疆.
+    339:新疆-乌鲁木齐.
+    340:新疆-克拉玛依.
+    341:新疆-吐鲁番市.
+    342:新疆-哈密地区.
+    343:新疆-喀什.
+    344:新疆-奎屯.
+    345:新疆-库尔勒.
+    346:新疆-延安北路.
+    347:新疆-石河子市.
+    348:新疆-阿克苏市.
+    349:新疆-阿勒泰市.
+    350:新疆-阿图什.
+    351:江苏省.
+    352:江苏省-丹阳.
+    353:江苏省-全州.
+    354:江苏省-凓城.
+    355:江苏省-北新桥.
+    356:江苏省-华南.
+    357:江苏省-南京.
+    358:江苏省-南江.
+    359:江苏省-南进.
+    360:江苏省-南通.
+    361:江苏省-句容.
+    362:江苏省-叶庄.
+    363:江苏省-吴韩.
+    364:江苏省-周山.
+    365:江苏省-四杨.
+    366:江苏省-大周.
+    367:江苏省-大营.
+    368:江苏省-安庆.
+    369:江苏省-宜城.
+    370:江苏省-峨嵋.
+    371:江苏省-常州市.
+    372:江苏省-广西.
+    373:江苏省-建洋.
+    374:江苏省-张安村.
+    375:江苏省-张家老宅基.
+    376:江苏省-徐州.
+    377:江苏省-扬州市.
+    378:江苏省-新一大队.
+    379:江苏省-无厦.
+    380:江苏省-无锡.
+    381:江苏省-梁山.
+    382:江苏省-梅山.
+    383:江苏省-江宁.
+    384:江苏省-汤山.
+    385:江苏省-泰州市.
+    386:江苏省-洋中.
+    387:江苏省-湖北.
+    388:江苏省-澄江.
+    389:江苏省-玉山.
+    390:江苏省-甘中.
+    391:江苏省-盐城.
+    392:江苏省-真州.
+    393:江苏省-苏州.
+    394:江苏省-蒋墅.
+    395:江苏省-虞山.
+    396:江苏省-西场.
+    397:江苏省-连云港.
+    398:江苏省-通江.
+    399:江苏省-金塘.
+    400:江苏省-金湖.
+    401:江苏省-铜山.
+    402:江苏省-镇江.
+    403:江苏省-长沙.
+    404:江苏省-陈渡.
+    405:江苏省-高邮.
+    406:江苏省-麾东.
+    407:江西.
+    408:江西-上饶.
+    409:江西-东山.
+    410:江西-九江市.
+    411:江西-南昌.
+    412:江西-吉安.
+    413:江西-寺里.
+    414:江西-抚州市.
+    415:江西-景德镇市.
+    416:江西-湖陂.
+    417:江西-萍乡.
+    418:江西-蓉江.
+    419:江西-赣州.
+    420:江西-鹰潭市.
+    421:河北省.
+    422:河北省-任丘市.
+    423:河北省-保定市.
+    424:河北省-唐县.
+    425:河北省-巨鹿.
+    426:河北省-廊坊市.
+    427:河北省-张家口市.
+    428:河北省-景州.
+    429:河北省-柴沟堡.
+    430:河北省-沧州市.
+    431:河北省-河北.
+    432:河北省-滦县.
+    433:河北省-秦皇岛.
+    434:河北省-衡水市.
+    435:河北省-西城.
+    436:河北省-遵化.
+    437:河北省-邢台市.
+    438:河北省-邯郸市.
+    439:河南.
+    440:河南-三门峡市.
+    441:河南-会昌.
+    442:河南-偃师城关镇.
+    443:河南-兰考城关镇.
+    444:河南-南干道.
+    445:河南-南阳市.
+    446:河南-原阳城关镇.
+    447:河南-后项城.
+    448:河南-周口市.
+    449:河南-商丘市.
+    450:河南-城关.
+    451:河南-城郊.
+    452:河南-娲城.
+    453:河南-安阳市.
+    454:河南-封丘城关镇.
+    455:河南-将官池.
+    456:河南-嵩阳.
+    457:河南-平顶山市.
+    458:河南-建设.
+    459:河南-开元.
+    460:河南-开封市.
+    461:河南-新华路.
+    462:河南-昆阳.
+    463:河南-木城.
+    464:河南-柘城城关镇.
+    465:河南-汉城.
+    466:河南-汝宁.
+    467:河南-洛阳市.
+    468:河南-浚县城关镇.
+    469:河南-淮阳城关镇.
+    470:河南-漯河.
+    471:河南-濮阳城关镇.
+    472:河南-灵宝城关镇.
+    473:河南-焦作市.
+    474:河南-煤山.
+    475:河南-睢县城关镇.
+    476:河南-索河.
+    477:河南-紫荆路.
+    478:河南-羊圈.
+    479:河南-舞钢.
+    480:河南-花洲.
+    481:河南-获嘉城关镇.
+    482:河南-覃杯.
+    483:河南-郑州.
+    484:河南-青屏.
+    485:河南-颍川.
+    486:河南-驻马店市.
+    487:河南-鹤壁市.
+    488:浙江省.
+    489:浙江省-三门.
+    490:浙江省-上余.
+    491:浙江省-上海.
+    492:浙江省-下门.
+    493:浙江省-东阳.
+    494:浙江省-临海.
+    495:浙江省-丽水.
+    496:浙江省-义乌.
+    497:浙江省-乐清.
+    498:浙江省-仙居.
+    499:浙江省-余姚.
+    500:浙江省-佛堂.
+    501:浙江省-内孟.
+    502:浙江省-前蒋.
+    503:浙江省-北仑.
+    504:浙江省-周山.
+    505:浙江省-嘉兴.
+    506:浙江省-天台.
+    507:浙江省-奉化市.
+    508:浙江省-宁波.
+    509:浙江省-宁海.
+    510:浙江省-富岭.
+    511:浙江省-嵊州市.
+    512:浙江省-新昌.
+    513:浙江省-杭州.
+    514:浙江省-松源.
+    515:浙江省-柯桥区.
+    516:浙江省-梅城.
+    517:浙江省-梧桐.
+    518:浙江省-横溪.
+    519:浙江省-武义.
+    520:浙江省-浦东.
+    521:浙江省-浦阳.
+    522:浙江省-深甽镇.
+    523:浙江省-温岭.
+    524:浙江省-温州市.
+    525:浙江省-牌头.
+    526:浙江省-玉环.
+    527:浙江省-瑞安.
+    528:浙江省-绍兴市.
+    529:浙江省-荷川.
+    530:浙江省-衢州市.
+    531:浙江省-诸暨.
+    532:浙江省-象山.
+    533:浙江省-象溪.
+    534:浙江省-路桥.
+    535:浙江省-金华.
+    536:浙江省-金钟.
+    537:浙江省-金门.
+    538:浙江省-长兴县.
+    539:浙江省-陶山.
+    540:浙江省-雅安.
+    541:浙江省-飞云.
+    542:浙江省-龙洲.
+    543:浙江省-龙港.
+    544:海南.
+    545:海南-万宁市.
+    546:海南-乙丙.
+    547:海南-新洋市.
+    548:海南-海口市.
+    549:海南-金江.
+    550:湖北省.
+    551:湖北省-丁字街.
+    552:湖北省-何家巷.
+    553:湖北省-十堰.
+    554:湖北省-古城城关镇.
+    555:湖北省-园林.
+    556:湖北省-城中.
+    557:湖北省-宜昌市.
+    558:湖北省-恩施.
+    559:湖北省-房县城关镇.
+    560:湖北省-松滋市.
+    561:湖北省-武汉.
+    562:湖北省-漕河.
+    563:湖北省-红安城关镇.
+    564:湖北省-襄樊.
+    565:湖北省-随州市.
+    566:湖北省-麻城.
+    567:湖北省-黄梅.
+    568:湖北省-龙舟坪.
+    569:湖南.
+    570:湖南-万溶江.
+    571:湖南-东山.
+    572:湖南-云南.
+    573:湖南-保安.
+    574:湖南-冷水江市.
+    575:湖南-南洲.
+    576:湖南-双河口.
+    577:湖南-吉首市.
+    578:湖南-响滩.
+    579:湖南-塘渡口.
+    580:湖南-太和弦.
+    581:湖南-娄底市.
+    582:湖南-宜阳.
+    583:湖南-常德.
+    584:湖南-张家界.
+    585:湖南-怀化市.
+    586:湖南-新华.
+    587:湖南-新晃.
+    588:湖南-株洲.
+    589:湖南-桃洪.
+    590:湖南-桃源.
+    591:湖南-梅洲.
+    592:湖南-永州.
+    593:湖南-汨罗城关镇.
+    594:湖南-河背.
+    595:湖南-洪桥.
+    596:湖南-涟源.
+    597:湖南-湘乡.
+    598:湖南-漳江.
+    599:湖南-石头塘.
+    600:湖南-石门.
+    601:湖南-簸箕.
+    602:湖南-耒阳.
+    603:湖南-芷江.
+    604:湖南-衡阳市.
+    605:湖南-辰阳.
+    606:湖南-道江.
+    607:湖南-郴州.
+    608:湖南-醴陵.
+    609:湖南-长沙市.
+    610:湖南-韶山.
+    611:湖南-黄石.
+    612:湖南-龙阳.
+    613:甘肃.
+    614:甘肃-临夏城关镇.
+    615:甘肃-临洮县.
+    616:甘肃-兰州.
+    617:甘肃-嘉峪关市.
+    618:甘肃-定西.
+    619:甘肃-席胡渠.
+    620:甘肃-平凉.
+    621:甘肃-张掖.
+    622:甘肃-敦煌市.
+    623:甘肃-新宁.
+    624:甘肃-武威.
+    625:甘肃-白银.
+    626:甘肃-缪岭.
+    627:甘肃-酒泉市.
+    628:甘肃-金昌.
+    629:西藏自治区.
+    630:西藏自治区-中.
+    631:西藏自治区-岗堆.
+    632:西藏自治区-拉萨.
+    633:西藏自治区-昌嘎.
+    634:西藏自治区-松多.
+    635:西藏自治区-陇.
+    636:贵州.
+    637:贵州-东皇.
+    638:贵州-六盘水市.
+    639:贵州-兴义.
+    640:贵州-安顺市.
+    641:贵州-毕节.
+    642:贵州-者讲.
+    643:贵州-贵阳.
+    644:贵州-遵义市.
+    645:贵州-金沙县.
+    646:辽宁.
+    647:辽宁-丹东市.
+    648:辽宁-北镇.
+    649:辽宁-嘎岔.
+    650:辽宁-大连.
+    651:辽宁-抚顺市.
+    652:辽宁-新兴.
+    653:辽宁-昌图.
+    654:辽宁-本溪市.
+    655:辽宁-沈阳.
+    656:辽宁-葫芦岛.
+    657:辽宁-辽阳市.
+    658:辽宁-锦州市.
+    659:辽宁-阜新市.
+    660:辽宁-鞍山市.
+    661:辽宁-黑背.
+    662:重庆.
+    663:重庆-北碚.
+    664:重庆-古南.
+    665:重庆-垫江县.
+    666:重庆-复建.
+    667:重庆-奉节县.
+    668:重庆-扇沱.
+    669:重庆-杨家坪.
+    670:重庆-永川.
+    671:重庆-汉丰.
+    672:重庆-江津市.
+    673:重庆-覃家岗.
+    674:重庆-重庆.
+    675:重庆-铜梁县.
+    676:重庆-龙洲湾.
+    677:闽.
+    678:闽-三明市.
+    679:闽-下埔.
+    680:闽-下磜.
+    681:闽-东平.
+    682:闽-临江.
+    683:闽-丹洲.
+    684:闽-仙友.
+    685:闽-仙师.
+    686:闽-仙游县.
+    687:闽-兰源.
+    688:闽-凤城.
+    689:闽-十方.
+    690:闽-南坪.
+    691:闽-南境.
+    692:闽-厦门市.
+    693:闽-双峰村.
+    694:闽-双溪.
+    695:闽-吴苏.
+    696:闽-城东.
+    697:闽-城兜.
+    698:闽-城阳.
+    699:闽-埔埕.
+    700:闽-大祖.
+    701:闽-太拔.
+    702:闽-宁德市.
+    703:闽-小干.
+    704:闽-尤溪城关镇.
+    705:闽-平川.
+    706:闽-晋江.
+    707:闽-武夷山.
+    708:闽-水头.
+    709:闽-永安.
+    710:闽-泉州市.
+    711:闽-漳州市.
+    712:闽-漳平.
+    713:闽-潭城.
+    714:闽-熊山镇.
+    715:闽-石狮.
+    716:闽-石码.
+    717:闽-福州市.
+    718:闽-福鼎.
+    719:闽-绥安.
+    720:闽-翠江.
+    721:闽-芝城.
+    722:闽-苏前.
+    723:闽-苏坑.
+    724:闽-莲峰.
+    725:闽-赤壁.
+    726:闽-邵武.
+    727:闽-金水.
+    728:闽-长乐.
+    729:闽-黄石.
+    730:闽-龙岩.
+    731:陕西.
+    732:陕西-下南.
+    733:陕西-中曲.
+    734:陕西-北屯.
+    735:陕西-咸宁.
+    736:陕西-咸阳.
+    737:陕西-城关镇.
+    738:陕西-安康.
+    739:陕西-宝鸡市.
+    740:陕西-张县村.
+    741:陕西-张李巷.
+    742:陕西-杨陵.
+    743:陕西-柞水县.
+    744:陕西-榆林.
+    745:陕西-汉滨区.
+    746:陕西-洋洲.
+    747:陕西-渭南.
+    748:陕西-灞桥.
+    749:陕西-申阳.
+    750:陕西-礼泉城关镇.
+    751:陕西-纪阳.
+    752:陕西-虢镇镇.
+    753:陕西-西乡县.
+    754:陕西-西安.
+    755:陕西-铜川.
+    756:陕西-阎良.
+    757:青海省.
+    758:青海省-西宁.
+    759:黑龙江省.
+    760:黑龙江省-五常.
+    761:黑龙江省-伊春.
+    762:黑龙江省-佳木斯市.
+    763:黑龙江省-兰西.
+    764:黑龙江省-双鸭山市.
+    765:黑龙江省-哈尔滨.
+    766:黑龙江省-大庆.
+    767:黑龙江省-太和.
+    768:黑龙江省-安达.
+    769:黑龙江省-尚志.
+    770:黑龙江省-海伦.
+    771:黑龙江省-海北.
+    772:黑龙江省-海林.
+    773:黑龙江省-牡丹江.
+    774:黑龙江省-绥化.
+    775:黑龙江省-绥芬河.
+    776:黑龙江省-肇东.
+    777:黑龙江省-虎林市.
+    778:黑龙江省-鸡西市.
+    779:黑龙江省-鹤岗.
+    780:黑龙江省-黑河市.
+    781:黑龙江省-齐齐哈尔市.
+    782:黑龙江省-龙凤. 
+    1001:台北市.
+    1002:台南市.
+    1003:台南市-同安寮.
+    1004:台南市-善化.
+    1005:基隆市.
+    1006:基隆市-八堵.
+    1007:基隆市-百福.
+    1008:新北市-三重.
+    1009:新北市-中和.
+    1010:新北市-土城.
+    1011:新北市-忠山里.
+    1012:新北市-板橋.
+    1013:新北市-林口.
+    1014:新北市-泰山.
+    1015:新竹市.
+    1016:新竹市-竹北.
+    1017:苗栗縣.
+    1018:苗栗縣-北坪.
+    1019:苗栗縣-北苗.
+    1020:苗栗縣-苗栗.
+    1021:高雄市.
+    1022:高雄市-安招.
+    1023:高雄市-林内.
+    1024:高雄市-潮寮.
+    1025:高雄市-草衙.
+    1026:高雄市-高雄市.
