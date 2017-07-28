@@ -5,6 +5,8 @@ HOST: https://api.droibaas.com
 
 SpeedTest API 任务下发及获取结果.
 
+# Group Token
+
 ## 取得Session Token [/rest/users/v2/login]
 
 ### Get a Session Token [POST]
@@ -56,7 +58,9 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Error Base)
-            
+
+# Group 創建任務
+
 ## 任务下发 [/api/v2/speedtest/v1/st]
 
 ### Create New SpeedTest Tasks [POST]
@@ -91,7 +95,9 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json)
 
     + Attributes (Response Error Base)
-    
+
+# Group 任务状态
+
 ## 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]    
             
 ### List All SpeedTest Tasks [GET]
@@ -154,6 +160,8 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json)
 
     + Attributes (Response Error Base)         
+
+# Group 任务统计结果
 
 ## 取得HTTP任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?HTTP}]
     
@@ -247,6 +255,8 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json)
 
     + Attributes (Response Error Base)
+
+# Group 任务详细结果
 
 ## 取得HTTP任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?HTTP}]
     
@@ -349,7 +359,9 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json)
 
     + Attributes (Response Error Base)    
-            
+
+# Group 活跃使用者数
+
 ## 取得活跃使用者数 [/api/v2/speedtest/v1/st/users{?Carrier}{?Country_City}{?Network}{?LastToken}]
     
 ### get the number of active clients [GET]
