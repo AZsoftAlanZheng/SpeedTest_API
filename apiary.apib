@@ -57,15 +57,11 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
             
-## 任务下发 & 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]
+## 任务下发 [/api/v2/speedtest/v1/st]
 
 ### Create New SpeedTest Tasks [POST]
 
 新增多个任务给Server
-
-+ Parameters
-
-    + LastToken (optional, string) - 创建任务时用不到
 
 + Request (application/json)
 
@@ -95,6 +91,8 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json)
 
     + Attributes (Response Error Base)
+    
+## 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]    
             
 ### List All SpeedTest Tasks [GET]
 
