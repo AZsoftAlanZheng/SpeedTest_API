@@ -28,7 +28,7 @@ SpeedTest API 任务下发及获取结果.
                 "Type": "general"
             }
             
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
     + Attributes (Response Base)
     
@@ -51,11 +51,11 @@ SpeedTest API 任务下发及获取结果.
             + ExpiredAt: `2017-04-15T01:54:05.513Z` (required, string)
             + Token: fbc751dc6a96ca47 (required, string) - SessionToken
 
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
-+ Response 200 (application/json; charset=utf-8)
++ Response 200 (application/json)
 
     + Attributes (Response Error Base)
 
@@ -88,7 +88,7 @@ SpeedTest API 任务下发及获取结果.
                 + 597ad147a68bd900360004a7 (required, string)
                 + 597ad147a68bd900360004a8 (required, string)
 
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -124,7 +124,7 @@ SpeedTest API 任务下发及获取结果.
             + Task (required, array[Status HTTP Base, Status HTTPS Base, Status DNS Base])
             + LastToken: 597ad147a68bd900360004a7 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
 
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -153,7 +153,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status HTTP Base)
 
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -161,6 +161,38 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)         
 
+# Group 停止任務
+
+## 停止任務 [/api/v2/speedtest/v1/st/stop]
+
+### Stop a Task [POST]
+
+停止已派發的任務
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: e135ab2a3a0c74cd
+            
+    + Attributes (object)
+        + TaskID: 597ad147a68bd900360004a6 (required, string)
+        
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (Response Base)ad
+    
+        + Result (required, object)
+
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
 # Group 任务统计结果
 
 ## 取得HTTP任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?HTTP}]
@@ -186,7 +218,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Result HTTP Base)
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -217,7 +249,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Result HTTPS Base)
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -248,7 +280,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Result DNS Base)
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -284,7 +316,7 @@ SpeedTest API 任务下发及获取结果.
             + Raw (required, array[Raw HTTP Base])
             + LastToken:597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -318,7 +350,7 @@ SpeedTest API 任务下发及获取结果.
             + Raw (required, array[Raw HTTPS Base])
             + LastToken:597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -352,7 +384,7 @@ SpeedTest API 任务下发及获取结果.
             + Raw (required, array[Raw DNS Base])
             + LastToken:597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
  
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -388,7 +420,7 @@ SpeedTest API 任务下发及获取结果.
             + Users (required, array[Sample Base])
             + LastToken: 597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料 
 
-+ Response 200 ()
++ Response 200 (application/json; charset=utf)
 
     + Attributes (Error Base)
 
@@ -582,35 +614,34 @@ SpeedTest API 任务下发及获取结果.
     
 ## Error Base (object)
 
-+ ErrorCode:1410002 (required, number)
-
-    错误码.
-    1410001:内部错误，请洽开发人员.
-    1410002:权限不足.
-    1410003:TaskID不存在.
-    1410004:NextToken错误.
-    1410005:SessionToken错误.
-    1410006:JSON错误.
-    1410007:Type错误.
-    1410008:URL错误.
-    1410009:Host错误.
-    1410010:限制条件错误.
-    1410011:电信商代码错误.
-    1410012:省份代码错误.
-    1410013:网路类别错误.
-    1410014:指定超时时长错误.10~120s，预设值60s
-    1410015:取样客户端数量错误.预设每项1个，上限10个
-    1410016:项目数量过多, 最多10组.上限10组
-    1410017:使用者不存在.
-    1410018:密码错误.
-    1410019:创建任务间隔太近.目前设定间隔五分钟
-    1410020:缺少TaskID.
-    1410021:Size错误.目前上限设1,048,576(1MB)
-    1410022:MD5错误
++ Code: 0 (required, number)
++ Result (required, object)
+    + ErrorCode:1410002 (required, number)
+        错误码.
+        1410001:内部错误，请洽开发人员.
+        1410002:权限不足.
+        1410003:TaskID不存在.
+        1410004:NextToken错误.
+        1410005:SessionToken错误.
+        1410006:JSON错误.
+        1410007:Type错误.
+        1410008:URL错误.
+        1410009:Host错误.
+        1410010:限制条件错误.
+        1410011:电信商代码错误.
+        1410012:省份代码错误.
+        1410013:网路类别错误.
+        1410014:指定超时时长错误.10~120s，预设值60s
+        1410015:取样客户端数量错误.预设每项1个，上限10个
+        1410016:项目数量过多, 最多10组.上限10组
+        1410017:使用者不存在.
+        1410018:密码错误.
+        1410019:创建任务间隔太近.目前设定间隔五分钟
+        1410020:缺少TaskID.
+        1410021:Size错误.目前上限设1,048,576(1MB)
+        1410022:MD5错误
     
-+ MSG:权限不足 (required, string)
-
-    错误讯息
+    + MSG:权限不足 (required, string) - 错误讯息
 
 ## Response Base (object)
 
