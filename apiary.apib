@@ -456,10 +456,11 @@ SpeedTest API 任务下发及获取结果.
 
 
 ## Status Base (object)
-+ Status: 2 (required, number) - 0: Waiting, 1:OnGoing, 2:Finished
++ Status: 2 (required, number) - -2:Stopped, 0:Waiting, 1:OnGoing, 2:Finished
 + Description: Finished (required, enum)
     - default: Finished
     - Members
+        - Stopped
         - Waiting
         - OnGoing
         - Finished
@@ -639,6 +640,8 @@ SpeedTest API 任务下发及获取结果.
         1410020:缺少TaskID.
         1410021:Size错误.目前上限设1,048,576(1MB)
         1410022:MD5错误
+        1410023:Task已经完成了
+        1410024:Task已经停止了
     
     + MSG:权限不足 (required, string) - 错误讯息
 
