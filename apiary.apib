@@ -76,7 +76,7 @@ SpeedTest API 任务下发及获取结果.
             X-Droi-Session-Token: e135ab2a3a0c74cd
             
     + Attributes (object)
-        + Task (required, array[SpeedTest HTTP Base, SpeedTest HTTPS Base, SpeedTest DNS Base])
+        + Task (required, array[SpeedTest HTTP Base, SpeedTest HTTPS Base, SpeedTest DNS Base, SpeedTest PING Base, SpeedTest TRACEROUTE Base])
         
 + Response 200 (application/json; charset=utf-8)
 
@@ -87,6 +87,8 @@ SpeedTest API 任务下发及获取结果.
                 + 597ad147a68bd900360004a6 (required, string)
                 + 597ad147a68bd900360004a7 (required, string)
                 + 597ad147a68bd900360004a8 (required, string)
+                + todo (required, string)
+                + todo (required, string)
 
 + Response 200 (application/json; charset=utf)
 
@@ -121,8 +123,8 @@ SpeedTest API 任务下发及获取结果.
     + Attributes (Response Base)
     
         + Result (required, object)
-            + Task (required, array[Status HTTP Base, Status HTTPS Base, Status DNS Base])
-            + LastToken: 597ad147a68bd900360004a7 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+            + Task (required, array[Status HTTP Base, Status HTTPS Base, Status DNS Base, Status PING Base, Status TRACEROUTE Base])
+            + LastToken: todo (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
 
 + Response 200 (application/json; charset=utf)
 
@@ -287,6 +289,68 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
+## 取得PING任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?PING}] 
+
+### get a SpeedTest Task result (PING) [GET]
+
++ Parameters
+
+    + TaskID: todo (required, string) - 任务辨别码
+    + PING (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: e135ab2a3a0c74cd
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Result PING Base)
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
+## 取得TRACEROUTE任务统计结果 [/api/v2/speedtest/v1/st/result{?TaskID}{?TRACEROUTE}] 
+
+### get a SpeedTest Task result (TRACEROUTE) [GET]
+
++ Parameters
+
+    + TaskID: todo (required, string) - 任务辨别码
+    + TRACEROUTE (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: e135ab2a3a0c74cd
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Result TRACEROUTE Base)
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
 # Group 任务详细结果
 
 ## 取得HTTP任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?HTTP}]
@@ -347,7 +411,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status HTTPS Base)
             + Raw (required, array[Raw HTTPS Base])
-            + LastToken:597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+            + LastToken:597ad147a68bd900360004a7 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
  
 + Response 200 (application/json; charset=utf)
 
@@ -381,7 +445,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status DNS Base)
             + Raw (required, array[Raw DNS Base])
-            + LastToken:597ad147a68bd900360004a6 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+            + LastToken:597ad147a68bd900360004a8 (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
  
 + Response 200 (application/json; charset=utf)
 
@@ -389,7 +453,75 @@ SpeedTest API 任务下发及获取结果.
 
 + Response 200 (application/json)
 
-    + Attributes (Response Error Base)    
+    + Attributes (Response Error Base)
+
+## 取得PING任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?PING}]
+    
+### get raw data of Task [GET]
+
++ Parameters
+
+    + TaskID:todo (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + PING (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: e135ab2a3a0c74cd
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status PING Base)
+            + Raw (required, array[Raw PING Base])
+            + LastToken:todo (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
+## 取得TRACEROUTE任务详细结果 [/api/v2/speedtest/v1/st/raw{?TaskID}{?LastToken}{?TRACEROUTE}]
+    
+### get raw data of Task [GET]
+
++ Parameters
+
+    + TaskID:todo (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + TRACEROUTE (optional, string) - 不用带上
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: e135ab2a3a0c74cd
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status TRACEROUTE Base)
+            + Raw (required, array[Raw TRACEROUTE Base])
+            + LastToken:todo (required, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
 
 # Group 活跃使用者数
 
@@ -429,7 +561,6 @@ SpeedTest API 任务下发及获取结果.
 
 # Data Structures
 
-
 ## SpeedTest HTTP Base (object)
 + Type: HTTP (required, string)   
 + URL: `http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
@@ -452,6 +583,16 @@ SpeedTest API 任务下发及获取结果.
 + Type: DNS (required, string)
 + Host: www.amazon.com (required, string) - IP or Domain name
 + DNSSerIP:168.95.1.1 (optional, string) - 可指定dns server
++ Restriction (required, Restriction Base) - 加入限制条件
+
+## SpeedTest PING Base (object)
++ Type: PING (required, string)
++ Host: www.hinet.net (required, string) - IP or Domain name
++ Restriction (required, Restriction Base) - 加入限制条件
+
+## SpeedTest TRACEROUTE Base (object)
++ Type: TRACEROUTE (required, string)
++ Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
 
 
@@ -477,6 +618,15 @@ SpeedTest API 任务下发及获取结果.
 + TaskID:597ad147a68bd900360004a8 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest DNS Base) - 创建任务的设定
 
+## Status PING Base (Status Base)
++ TaskID:todo (required, string) - 任务辨别码
++ SpeedTest (required, SpeedTest PING Base) - 创建任务的设定
+
+## Status TRACEROUTE Base (Status Base)
++ TaskID:todo (required, string) - 任务辨别码
++ SpeedTest (required, SpeedTest TRACEROUTE Base) - 创建任务的设定
+
+
 ## Time HTTP Base (object)
 + DNS:1 (required, number) - DNS解析时间
 + R:0 (required, number) - 重定向时间  
@@ -498,6 +648,14 @@ SpeedTest API 任务下发及获取结果.
 
 ## Time DNS Base (object)
 + DNS:5 (required, number) - DNS解析时间
+
+## Time PING Base (object)
++ DNS:5 (required, number) - DNS解析时间
++ RTT:595 (required, number) - 总下载时间
+
+## Time TRACEROUTE Base (object)
++ DNS:5 (required, number) - DNS解析时间
++ RTT (array[Node1 Base, Node2 Base, Node3 Base, Node4 Base]) - TRACEROUTE解析资料
 
 ## Ans Record1 Base (object)
 + Name:www.amazon.com. (required, string) - 查询的FQDN
@@ -529,16 +687,16 @@ SpeedTest API 任务下发及获取结果.
   
 
 ## Node1 Base (object)
-+ IP:10.128.83.284 (required, string)
-+ RTT:712 (required, number)
++ IP:10.128.83.284 (optional, string)
++ RTT:712 (optional, number)
 
 ## Node2 Base (object)
-+ IP:10.128.101.2 (required, string)
-+ RTT:449 (required, number)
++ IP:10.128.101.2 (optional, string)
++ RTT:449 (optional, number)
 
 ## Node3 Base (object)
-+ IP:61.216.24.254 (required, string)
-+ RTT:2364 (required, number)
++ IP:61.216.24.254 (optional, string)
++ RTT:2364 (optional, number)
 
 ## Node4 Base (object)
 + IP:210.71.222.164 (required, string)
@@ -586,6 +744,20 @@ SpeedTest API 任务下发及获取结果.
     + Time (required, object)
         + DNS (Statistics Base)
     + Ans (array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base])
+    
+## Result PING Base (Status PING Base)
++ Result (required, object)
+    + IP:210.71.222.164 (required, string)
+    + Time (required, object)
+        + DNS (Statistics Base)
+        + RTT (Statistics Base)
+    
+## Result TRACEROUTE Base (Status TRACEROUTE Base)
++ Result (required, object)
+    + IP:210.71.222.164 (required, string)
+    + Time (required, object)
+        + DNS (Statistics Base)
+    + RTT (array[Node1 Base, Node2 Base, Node3 Base, Node4 Base])
 
 ## Raw Base (object)
 + IP:111.23.45.67 (required, string) - Server's IP or Resolved IP
@@ -605,6 +777,14 @@ SpeedTest API 任务下发及获取结果.
 + _Id:597ad147a68bd900360004a8 (required, string) - ID of Raw data, 可用来查询更之后的资料
 + Time (required, Time DNS Base)
 + ANS (required, array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base]) - DNS解析资料
+
+## Raw PING Base (Raw Base)
++ _Id:todo (required, string) - ID of Raw data, 可用来查询更之后的资料
++ Time (required, Time PING Base)
+
+## Raw TRACEROUTE Base (Raw Base)
++ _Id:todo (required, string) - ID of Raw data, 可用来查询更之后的资料
++ Time (required, Time TRACEROUTE Base)
 
 ## Sample Base (object)
 + Carrier:0 (required, number) - 指定电信商代码. 0:中国电信. 1:中国移动. 2:中国联通.
