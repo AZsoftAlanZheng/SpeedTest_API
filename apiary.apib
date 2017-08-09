@@ -741,6 +741,8 @@ SpeedTest API 任务下发及获取结果.
 ## Result DNS Base (Status DNS Base)
 + Result (required, object)
     + IP:111.23.45.67 (required, string)
+    + ClientStatus (required, object)
+        + 0: 1 (optional, number) - Client status code '0' 的数量      
     + Time (required, object)
         + DNS (Statistics Base)
     + Ans (array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base])
@@ -748,6 +750,8 @@ SpeedTest API 任务下发及获取结果.
 ## Result PING Base (Status PING Base)
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
+    + ClientStatus (required, object)
+        + 0: 1 (optional, number) - Client status code '0' 的数量      
     + Time (required, object)
         + DNS (Statistics Base)
         + RTT (Statistics Base)
@@ -755,6 +759,8 @@ SpeedTest API 任务下发及获取结果.
 ## Result TRACEROUTE Base (Status TRACEROUTE Base)
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
+    + ClientStatus (required, object)
+        + 0: 1 (optional, number) - Client status code '0' 的数量      
     + Time (required, object)
         + DNS (Statistics Base)
     + RTT (array[Node1 Base, Node2 Base, Node3 Base, Node4 Base])
