@@ -8,7 +8,7 @@ var Country_City = ['','上海-上海','云南','云南-临沧','云南-丽江',
 var Carrier = ['中国电信','中国移动','中国联通'];
 var Network = ['','Wifi','2G','3G','4G'];
 
-fast_csv.fromPath("/home/alan/opt/apm/jmeter/TestPlanSpeedTestAPI_Log.csv",{"delimiter":"!"}).on("data", function(data){
+fast_csv.fromPath("/home/alan/opt/backup/git/SpeedTest_API/jmeter_test/20170811/TestPlanSpeedTestAPI_Log.csv",{"delimiter":"!"}).on("data", function(data){
 //    tempArray.push(data[0]);
 //    console.log(ip.findSync(data[0]))
 	if(data.length >= 3) {
