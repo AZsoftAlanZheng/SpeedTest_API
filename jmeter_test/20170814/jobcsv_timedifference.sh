@@ -26,10 +26,10 @@ do
   #time=`cat ../20170811/job.中国联通.csv | grep $city| cut -f 1 -d ,`
   time=`cat $2 | grep $city| cut -f 1 -d ,`
   if [ -z "$time" ] ; then
-  		echo $city ",null"
+  		echo $city",null"
 	else
 		if [ "$time" == "null" ] ; then
-  			echo $city ",null"
+  			echo $city",null"
   		else
 			#echo $time
 			diff=`dateutils.ddiff -i "%d/%m/%y %T" "$startTime" "$time"`
