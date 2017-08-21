@@ -1,0 +1,7 @@
+node ./jmeter_cdn_speedtest_csv.js 20170818/TestPlanSpeedTestAPI_Log.Carrier_4G.txt > 20170818/Carrier_4G.csv
+
+node ./jmeter_cdn_speedtest_csv.js 20170818/TestPlanSpeedTestAPI_Log.Carrier_4G.txt  中国电信 > 20170818/Carrier_4G.中国电信.csv ; ./jobcsv_timedifference.sh diff 20170818/Carrier_4G.中国电信.csv
+
+node ./jmeter_cdn_speedtest_csv.js 20170818/TestPlanSpeedTestAPI_Log.Carrier_4G.txt  中国移动 > 20170818/Carrier_4G.中国移动.csv ; ./jobcsv_timedifference.sh diff 20170818/Carrier_4G.中国移动.csv
+
+node ./jmeter_cdn_speedtest_csv.js 20170818/TestPlanSpeedTestAPI_Log.Carrier_4G.txt  中国联通 > 20170818/Carrier_4G.中国联通.csv ; ./jobcsv_timedifference.sh diff 20170818/Carrier_4G.中国联通.csv
