@@ -68,3 +68,9 @@ Country_City_Code.forEach(function(citycode) {
 		});
 	});
 });
+
+if(taskArray.length != 0) {
+	writeToFile("task"+pad(file_count,2)+".json",taskArray);
+	taskArray = [];
+	file_count++;
+}
