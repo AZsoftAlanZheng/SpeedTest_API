@@ -87,8 +87,8 @@ SpeedTest API 任务下发及获取结果.
                 + 59b8d23cfd4bd5004101d4f3 (required, string)
                 + 59b8d23cfd4bd5004101d4f4 (required, string)
                 + 59b8d23cfd4bd5004101d4f5 (required, string)
-                + 598bc7002cb2fe00930000ca (required, string)
-                + 598bc7002cb2fe00930000cb" (required, string)
+                + 59b8d23cfd4bd5004101d4f6 (required, string)
+                + 59b8d23cfd4bd5004101d4f7" (required, string)
 
 + Response 200 (application/json; charset=utf)
 
@@ -124,7 +124,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, object)
             + Task (required, array[Status HTTP Base, Status HTTPS Base, Status DNS Base, Status PING Base, Status TRACEROUTE Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
 
 + Response 200 (application/json; charset=utf)
 
@@ -295,7 +295,7 @@ SpeedTest API 任务下发及获取结果.
 
 + Parameters
 
-    + TaskID: 598bc7002cb2fe00930000ca (required, string) - 任务辨别码
+    + TaskID: 59b8d23cfd4bd5004101d4f6 (required, string) - 任务辨别码
     + PING (optional, string) - 不用带上
     
 + Request (application/json)
@@ -326,7 +326,7 @@ SpeedTest API 任务下发及获取结果.
 
 + Parameters
 
-    + TaskID: 598bc7002cb2fe00930000cb (required, string) - 任务辨别码
+    + TaskID: 59b8d23cfd4bd5004101d4f7 (required, string) - 任务辨别码
     + TRACEROUTE (optional, string) - 不用带上
     
 + Request (application/json)
@@ -377,7 +377,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status HTTP Base)
             + Raw (required, array[Raw HTTP Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
  
 + Response 200 (application/json; charset=utf)
 
@@ -411,7 +411,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status HTTPS Base)
             + Raw (required, array[Raw HTTPS Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
  
 + Response 200 (application/json; charset=utf)
 
@@ -445,7 +445,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status DNS Base)
             + Raw (required, array[Raw DNS Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
  
 + Response 200 (application/json; charset=utf)
 
@@ -461,7 +461,7 @@ SpeedTest API 任务下发及获取结果.
 
 + Parameters
 
-    + TaskID:598bc7002cb2fe00930000ca (required,string) - 任务辨别码
+    + TaskID:59b8d23cfd4bd5004101d4f6 (required,string) - 任务辨别码
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
     + PING (optional, string) - 不用带上
     
@@ -479,7 +479,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status PING Base)
             + Raw (required, array[Raw PING Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
  
 + Response 200 (application/json; charset=utf)
 
@@ -495,7 +495,7 @@ SpeedTest API 任务下发及获取结果.
 
 + Parameters
 
-    + TaskID:598bc7002cb2fe00930000cb (required,string) - 任务辨别码
+    + TaskID:59b8d23cfd4bd5004101d4f7 (required,string) - 任务辨别码
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
     + TRACEROUTE (optional, string) - 不用带上
     
@@ -513,7 +513,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, Status TRACEROUTE Base)
             + Raw (required, array[Raw TRACEROUTE Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
  
 + Response 200 (application/json; charset=utf)
 
@@ -549,7 +549,7 @@ SpeedTest API 任务下发及获取结果.
     
         + Result (required, object)
             + Users (required, array[Sample Base])
-            + LastToken: 598bc7002cb2fe00930000cb" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+            + LastToken: 59b8d23cfd4bd5004101d4f7" (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
 
 + Response 200 (application/json; charset=utf)
 
@@ -619,11 +619,11 @@ SpeedTest API 任务下发及获取结果.
 + SpeedTest (required, SpeedTest DNS Base) - 创建任务的设定
 
 ## Status PING Base (Status Base)
-+ TaskID:598bc7002cb2fe00930000ca (required, string) - 任务辨别码
++ TaskID:59b8d23cfd4bd5004101d4f6 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest PING Base) - 创建任务的设定
 
 ## Status TRACEROUTE Base (Status Base)
-+ TaskID:598bc7002cb2fe00930000cb (required, string) - 任务辨别码
++ TaskID:59b8d23cfd4bd5004101d4f7 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest TRACEROUTE Base) - 创建任务的设定
 
 
