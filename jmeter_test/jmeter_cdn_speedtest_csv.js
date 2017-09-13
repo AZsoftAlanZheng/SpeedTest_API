@@ -1,11 +1,10 @@
-//Usage: node js {csv_file_path} {optional:carrier_name}
-//ex:
+//Usage: node js {csv_file_path} 
 //	node ./jmeter_cdn_speedtest_csv.js /home/alan/opt/backup/git/SpeedTest_API/jmeter_test/20170814/TestPlanSpeedTestAPI_Log.4G.txt
-//	node ./jmeter_cdn_speedtest_csv.js /home/alan/opt/backup/git/SpeedTest_API/jmeter_test/20170814/TestPlanSpeedTestAPI_Log.4G.txt 中国移动
+//
 // CSV example:
 // 06/09/17 21:00:08!Create tasks!{"Code":0,"Result":{"Task":["59aff16e34da251b3d01e414","59aff16e34da251b3d01e415","59aff16e34da251b3d01e416","59aff16e34da251b3d01e417","59aff16e34da251b3d01e418","59aff16e34da251b3d01e419","59aff16e34da251b3d01e41a","59aff16e34da251b3d01e41b","59aff16e34da251b3d01e41c","59aff16e34da251b3d01e41d","59aff16e34da251b3d01e41e"]}}
 // 06/09/17 21:00:41!finished!59aff16d5de88d22480300ca!{"Size":100,"MD5":"36a92cc94a9e0fa21f625f8bfb007adf","Type":"HTTP","URL":"http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt","Restriction":{"Country_City":304,"Carrier":0,"Network":3,"Client":1,"Timeout":60},"Headers":{"Key1":"Value1"}}!{"TaskID":"59aff16d5de88d22480300ca","Result":{"HttpStatus":{"200":3},"ClientStatus":{"0":3},"IP":"202.100.79.90","Time":{"DNS":{"Max":2,"Min":1,"Count":3,"Avg":1.3333333333333},"RTT":{"Max":444,"Min":175,"Count":3,"Avg":266.33333333333},"TTFB":{"Max":438,"Min":171,"Count":3,"Avg":262},"R":{"Max":-1,"Min":-1,"Count":0,"Avg":0},"Req":{"Max":-1,"Min":-1,"Count":0,"Avg":0},"Res":{"Max":6,"Min":3,"Count":3,"Avg":4.3333333333333},"Connect":{"Max":87,"Min":63,"Count":3,"Avg":75.333333333333}}},"SpeedTest":{"Size":100,"MD5":"36a92cc94a9e0fa21f625f8bfb007adf","Type":"HTTP","URL":"http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt","Restriction":{"Country_City":304,"Carrier":0,"Network":3,"Client":1,"Timeout":60},"Headers":{"Key1":"Value1"}},"Status":2,"Description":"Finished"}
-
+//
 //output example:
 //06/09/17 21:01:10,START
 //06/09/17 21:01:42,59aff1a75de88d28010121bd,云南,中国移动,4G
@@ -45,7 +44,11 @@ function final() {
 						var startDate = moment(results.StartTime, 'DD-MM-YY HH:mm:ss')
 						var endDate = moment(results[city][carrier][network].FinishTime, 'DD-MM-YY HH:mm:ss')
 						var secondsDiff = endDate.diff(startDate, 'seconds')
-						object[key] = endDate.diff(startDate, 'seconds')
+						if(Number.isNaN(secondsDiff)) {
+							object[key] = "null";
+						} else {
+							object[key] = endDate.diff(startDate, 'seconds')
+						}
 					}
 				} catch (error) {
 					object[key] = "X";
