@@ -628,7 +628,7 @@ SpeedTest API 任务下发及获取结果.
 
 
 ## Time HTTP Base (object)
-+ DNS:1 (required, number) - DNS解析时间
++ DNS:1 (required, number) - DNS解析时间(Client可能有cache)
 + R:0 (required, number) - 重定向时间  
 + Connect:185 (required, number) - 建联时间 
 + Req:0 (required, number) - 内容上传时间   
@@ -637,7 +637,7 @@ SpeedTest API 任务下发及获取结果.
 + RTT:1202 (required, number) - 总下载时间
 
 ## Time HTTPS Base (object)
-+ DNS:1 (required, number) - DNS解析时间
++ DNS:1 (required, number) - DNS解析时间(Client可能有cache)
 + R:0 (required, number) - 重定向时间  
 + Connect:185 (required, number) - 建联时间   
 + SSL:607 (required, number) - ssl握手时间
@@ -647,14 +647,14 @@ SpeedTest API 任务下发及获取结果.
 + RTT:595 (required, number) - 总下载时间
 
 ## Time DNS Base (object)
-+ DNS:5 (required, number) - DNS解析时间
++ DNS:5 (required, number) - DNS解析时间(Client不會cache)
 
 ## Time PING Base (object)
-+ DNS:5 (required, number) - DNS解析时间
++ DNS:5 (required, number) - DNS解析时间(Client可能有cache)
 + RTT:595 (required, number) - 总下载时间
 
 ## Time TRACEROUTE Base (object)
-+ DNS:5 (required, number) - DNS解析时间
++ DNS:5 (required, number) - DNS解析时间(Client可能有cache)
 + RTT (array[Node1 Base, Node2 Base, Node3 Base, Node4 Base]) - TRACEROUTE解析资料
 
 ## Ans Record1 Base (object)
@@ -830,6 +830,8 @@ SpeedTest API 任务下发及获取结果.
         1410023:Task已经完成了
         1410024:Task已经停止了
         1410025:Task已经过期了
+        1410026:网路类别错误，只开放Wifi测试
+        1410027:测试配额用尽
     
     + MSG:权限不足 (required, string) - 错误讯息
 
