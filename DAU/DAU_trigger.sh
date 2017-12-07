@@ -2,7 +2,7 @@
 #dateutils.dseq 2017-05-13 2017-09-21 -f %Y%m%d
 #./DAU_trigger.sh 2017-05-26 2017-09-19
 #
-versions=( "0" "6" "7" "8" )
+versions=( "0" "6" "7" "8" "9" )
 
 function usage() {
   echo "$0 {START,ex:2017-05-13 } {END,ex:2017-09-21}"
