@@ -1,3 +1,4 @@
+//計算queryDate+queryAppID，每個deviceid在SDK_Statistics內的core版號
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
 
