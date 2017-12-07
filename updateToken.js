@@ -16,7 +16,7 @@ request(options, function (error, response, body) {
 	var obj = JSON.parse(body);
 	try {
 		if (obj.Result.Token === null) throw new Error('body.Result.Token === null');
-		cp.execSync("sed -i '/X-Droi-Session-Token:/ c\\            X-Droi-Session-Token: '"+obj.Result.Token+" ./apiary.apib", {stdio: 'inherit'})
+		cp.execSync("sed -i '/X-Droi-Session-Token:/ c\\            X-Droi-Session-Token: "+obj.Result.Token+"' ./apiary.apib", {stdio: 'inherit'})
 	} catch (error) {
 		throw error;
 	}
