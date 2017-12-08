@@ -2,6 +2,8 @@ var request = require("request");
 var cp = require('child_process');
 var assert = require('assert');
 
+assert(process.platform === 'linux','Error: only support linux');
+
 var options = { method: 'POST',
 	url: 'https://api.droibaas.com/rest/users/v2/login',
 	headers: 
@@ -16,7 +18,8 @@ request(options, function (error, response, body) {
 	var obj = JSON.parse(body);
 	try {
 		if (obj.Result.Token === null) throw new Error('body.Result.Token === null');
-		cp.execSync("sed -i '/X-Droi-Session-Token:/ c\\            X-Droi-Session-Token: "+obj.Result.Token+"' ./apiary.apib", {stdio: 'inherit'})
+		cp.execSync("sed -i '/X-Droi-Session-Token:/ c\\            X-Droi-Session-Token: "+obj.Result.Token+"' ./apiary.apib", {stdio: 'inherit'});
+		console.log('done');
 	} catch (error) {
 		throw error;
 	}
