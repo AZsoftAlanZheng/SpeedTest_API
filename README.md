@@ -5,5 +5,5 @@ $npm install
 
 #test
 ```
-$dredd
+$npm test
 ```
