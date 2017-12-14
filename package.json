@@ -1,7 +1,6 @@
 {
   "name": "speedtest_api",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "node test.js"
@@ -17,6 +16,9 @@
   },
   "homepage": "https://github.com/AZsoftAlanZheng/SpeedTest_API#readme",
   "dependencies": {
+    "dredd": "^4.9.1",
     "request": "^2.83.0"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
