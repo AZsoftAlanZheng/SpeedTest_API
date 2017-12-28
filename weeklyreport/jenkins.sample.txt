@@ -1,0 +1,75 @@
+import groovy.json.*
+
+def initialFunction
+
+// load backend configuration
+def backend_config = load_config.backend()
+
+// define build information
+def job_folder = 'Tool'
+def job_name = 'statistic_cli'
+
+def repo_host = 'github.com'
+def repo_owner = 'DroiTaipei'
+def repo_statistic = 'statistic_cli'
+def repo_showdown = 'markdown_to_html'
+def date = new Date().format( 'yyyy-MM-dd' )
+def notification = 1
+def mail_addr = mail_addr //This Jenkins variable
+
+node('Crontab') {
+  //to-do check container status and folder
+  print mail_addr
+  deleteDir()
+  stage('Generate Markdown')
+  checkout([$class: 'GitSCM', branches: [[name: 'remotes/origin/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: repo_statistic], [$class: 'LocalBranch', localBranch: 'master']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: backend_config['dev']['repo_credentialsId'], url: "git@${repo_host}:${repo_owner}/${repo_statistic}.git"]]])
+  dir("./${repo_statistic}") {
+    env.GOPATH = pwd()
+    sh '''
+    GIT_SSH=${JENKINS_HOME}/.ssh/ssh-git.sh PKEY=${JENKINS_HOME}/.ssh/jarvis git submodule update --init --recursive
+    export PATH=$PATH:/usr/local/go/bin
+    go get github.com/constabulary/gb/...
+    export PATH=$PATH:$GOPATH
+    mv bin/gb .
+    rm -rf src/github.com/constabulary/gb
+    make run act=report
+    sudo mkdir -p /tmp/statistic_cli
+    sudo mv *Report.md /tmp/statistic_cli/source.md
+    '''
+  }
+
+  stage('Convert html')
+  sh '''
+  sudo docker pull 10.128.112.15:5000/markdown_to_html:v0.0.2
+  sudo docker run -i -t -d --name statistic_cli -p 8000:8000 -v /tmp/statistic_cli:/code/tmp 10.128.112.15:5000/markdown_to_html:v0.0.2
+  '''
+  sleep 5 //wait for docker up
+
+  stage('Convert PDF')
+  sh '''
+  sudo docker run -d --name athenapdf-service -p 8083:8080 arachnysdocker/athenapdf-service
+  '''
+  sleep 5  //wait for docker up
+  withEnv(["DATE=${date}"]){//single quote and double quote issue, ${date} would be empty.
+    sh '''
+    export PATH=$PATH:/sbin
+    ip=\"$(ifconfig eth0 |  awk \'/inet addr/{print substr($2,6)}\')\"
+    curl http://$ip:8083/convert\\?auth\\=arachnys-weaver\\&url\\=http://$ip:8000/ > ${DATE}.pdf
+    '''
+  }
+
+  stage('Send PDF Report')
+    withEnv(["JENKINS_HOME=${env.JENKINS_HOME}"]){
+      if(mail_addr!='none' ){
+        sh "python ${env.JENKINS_HOME}/workflow-libs/helper/util/sendgmail.py Weekly ./${date}.pdf ${date}.pdf  ${mail_addr}"
+      }else{
+        sh "python ${env.JENKINS_HOME}/workflow-libs/helper/util/sendgmail.py Weekly ./${date}.pdf ${date}.pdf"
+      }
+    }
+
+    stage('Shut down Docker Containers')
+    sh '''
+    sudo docker rm -f athenapdf-service statistic_cli
+    sudo rm -rf /tmp/statistic_cli
+    '''
+}

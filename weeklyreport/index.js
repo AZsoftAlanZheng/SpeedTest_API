@@ -1,0 +1,132 @@
+'use strict';
+
+var REQUEST = require('request');
+var ASSERT = require('assert');
+var CONFIG = require('../Config.js');
+
+var UserInfo = {
+    name: 'qiniu',
+    pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
+    token: null
+};
+
+var ctx = {
+    user:{
+        name: 'qiniu',
+        pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
+        token: null
+    },
+    dateObjArray: []
+}
+
+initDateObjArray(ctx.dateObjArray);
+
+CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
+    if(error) {
+        console.log(error);
+    } else {
+        outputUser(ctx.user.name);
+        ctx.user.token = token;
+        CONFIG.loadCites(token, function(error, citesObject){
+            if(error){
+                console.log(error);
+            } else {
+                outputCites(citesObject);
+                CONFIG.loadFare(token, function(error, fareObject){
+                    if(error){
+                        console.log(error);
+                    } else {
+                        outputFare(fareObject);
+                        series(ctx.dateObjArray, 0);
+                    }
+                })
+            }
+        })
+    }
+});
+
+function initDateObjArray(array) {
+    array.splice(0, array.length);
+    array.push({date:'2017-12-21', latestID:null, rows:[]});
+    array.push({date:'2017-12-22', latestID:null, rows:[]});
+    array.push({date:'2017-12-23', latestID:null, rows:[]});
+    array.push({date:'2017-12-24', latestID:null, rows:[]});
+    array.push({date:'2017-12-25', latestID:null, rows:[]});
+    array.push({date:'2017-12-26', latestID:null, rows:[]});
+    array.push({date:'2017-12-27', latestID:null, rows:[]});
+}
+
+function final() {
+    outputRows(ctx.dateObjArray);
+}
+
+//callback: function(error)
+function loadMoreRows(dateObj, callback) {
+    CONFIG.loadMore(ctx.user.token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
+        if(error) {
+            callback(error);
+        } else {
+            if(data.length > 0) {
+                dateObj.latestID = returnLatestID;
+                dateObj.rows = dateObj.rows.concat(data);
+                loadMoreRows(dateObj, callback);
+            } else {
+                callback(null);
+            }
+        }
+    });
+}
+
+function series(dateObjArray, index) {
+    if(dateObjArray[index]) {
+        loadMoreRows(dateObjArray[index], function(error){
+            if(error) {
+                console.log(error);
+            } else {
+                series(dateObjArray, ++index);
+            }
+        })
+    } else {
+        return final();
+    }
+}
+
+function outputUser(userName) {
+    console.log('## 用戶ID');
+    console.log('* '+userName);
+}
+
+function outputCites(citesObject) {
+    console.log('## 城市分類');
+    for(var i=1;i<4;i++) {
+        console.log('### '+i+'級城市');
+        citesObject['Category'+i].forEach(function(element, index, array){
+            console.log('* '+element);
+        })
+    }
+}
+
+function outputFare(fareObject) {
+    console.log('## 价格矩阵');
+    console.log(' |  | HTTP/PING/DNS/UDP/TCP (Wi-fi<512KB, Cell<1KB) | HTTP/PING/DNS/UDP/TCP(Wi-fi>512KB, 1KB< Cell<4KB) | TraceRoute ');
+    console.log(' 1級城市 | Wi-Fi | '+fareObject['111']+' | '+fareObject['112']+' | '+fareObject['113']+' ');
+    console.log('  | Cellular | '+fareObject['121']+' | '+fareObject['122']+' | '+fareObject['123']+' ');
+    console.log(' 2級城市 | Wi-Fi | '+fareObject['211']+' | '+fareObject['212']+' | '+fareObject['213']+' ');
+    console.log('  | Cellular | '+fareObject['221']+' | '+fareObject['222']+' | '+fareObject['223']+' ');
+    console.log(' 3級城市 | Wi-Fi | '+fareObject['311']+' | '+fareObject['312']+' | '+fareObject['313']+' ');
+    console.log('  | Cellular | '+fareObject['321']+' | '+fareObject['322']+' | '+fareObject['323']+' ');
+}
+
+function outputRows(dateObjArray) {
+    console.log('## 计量报表');
+    for(var i=0;i<dateObjArray.length;i++) {
+        var obj = dateObjArray[i];
+        console.log('### '+ obj.date);
+        console.log('创建任务时间 | 任务辨别码 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+        console.log('--- | --- | --- | --- | --- | --- | --- | --- | ---')
+        for(var j=0;j<obj.rows.length;j++) {
+            var row = obj.rows[j];
+            console.log(row.Date+' | '+row.TaskID+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+        }
+    }
+}

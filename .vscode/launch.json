@@ -8,10 +8,9 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${file}",
+            "name": "run weekly report",
+            "program": "${workspaceFolder}/weeklyreport/index.js",
             "args": [
-                "/Volumes/alan-opt/backup/git/SpeedTest_API/jmeter_test/20170913-1/TestPlanSpeedTestAPI_Log.AllCity_Carrier_Wifi2017_09_13_14_33_43.txt"
             ]
         }
     ]
