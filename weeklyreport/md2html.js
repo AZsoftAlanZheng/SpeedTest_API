@@ -8,7 +8,7 @@ var path = require("path");
 
 converter = new showdown.Converter();
 converter.setOption('tables', true);
-var tmpl_f = path.join(process.cwd(), 'tmpl.html');
+var tmpl_f = path.join(__dirname, 'tmpl.html');
 
 fs.readFile(tmpl_f, 'utf8', function (err, tmpl) {
     if (err) {
