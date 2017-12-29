@@ -20,7 +20,8 @@ var ctx = {
         pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
         token: null
     },
-    dateObjArray: []
+    dateObjArray: [],
+    cites: null
 }
 
 initDateObjArray(ctx.dateObjArray);
@@ -35,7 +36,8 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
             if(error){
                 console.log(error);
             } else {
-                outputCites(citesObject);
+                ctx.cites = citesObject;
+                outputCites(ctx.cites);
                 CONFIG.loadFare(token, function(error, fareObject){
                     if(error){
                         console.log(error);
@@ -51,13 +53,28 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
 
 function initDateObjArray(array) {
     array.splice(0, array.length);
-    array.push({date:'2017-12-21', latestID:null, rows:[]});
-    array.push({date:'2017-12-22', latestID:null, rows:[]});
-    array.push({date:'2017-12-23', latestID:null, rows:[]});
-    array.push({date:'2017-12-24', latestID:null, rows:[]});
-    array.push({date:'2017-12-25', latestID:null, rows:[]});
-    array.push({date:'2017-12-26', latestID:null, rows:[]});
-    array.push({date:'2017-12-27', latestID:null, rows:[]});
+    // array.push({date:'2017-12-21', latestID:null, rows:[]});
+    // array.push({date:'2017-12-22', latestID:null, rows:[]});
+    // array.push({date:'2017-12-23', latestID:null, rows:[]});
+    // array.push({date:'2017-12-24', latestID:null, rows:[]});
+    // array.push({date:'2017-12-25', latestID:null, rows:[]});
+    // array.push({date:'2017-12-26', latestID:null, rows:[]});
+    // array.push({date:'2017-12-27', latestID:null, rows:[]});
+
+    Date.prototype.yyyymmdd = function() {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+
+        return [this.getFullYear(),
+            (mm>9 ? '-' : '0') + mm,
+            (dd>9 ? '-' : '0') + dd
+            ].join('');
+    };
+    for(var i=7;i>0;i--) {
+        var d = new Date(); // Today!
+        d.setDate(d.getDate() - i);
+        array.push({date:d.yyyymmdd(), latestID:null, rows:[]});
+    }
 }
 
 function final() {
@@ -101,6 +118,7 @@ function outputUser(userName) {
 }
 
 function outputCites(citesObject) {
+    return;
     console.log('## 城市分類');
     for(var i=1;i<4;i++) {
         console.log('### '+i+'級城市');
@@ -124,12 +142,12 @@ function outputFare(fareObject) {
 
 function outputRows(dateObjArray) {
     console.log('## 计量报表');
-    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
-    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
         var obj = dateObjArray[i];
         if(obj.rows.length == 0) {
-            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  | ')
+            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  |  | ')
         } else {
             for(var j=0;j<obj.rows.length;j++) {
                 var str;
@@ -139,8 +157,23 @@ function outputRows(dateObjArray) {
                     str = '|  | ';
                 }
                 var row = obj.rows[j];
-                console.log(str + row.Date+' | '+row.TaskID+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+                var citetag = ctx.cites.city2category[row.City];
+                switch(ctx.cites.city2category[row.City]) {
+                    case 1:
+                        citetag = '1級城市';
+                        break;
+                    case2 :
+                        citetag = '2級城市';
+                        break;
+                    case 3:
+                        citetag = '3級城市';
+                        break;
+                    default:
+                        citetag = '';
+                }
+                console.log(str + row.Date+' | '+row.TaskID+' | '+' | '+citetag+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
             }
         }
     }
 }
+
