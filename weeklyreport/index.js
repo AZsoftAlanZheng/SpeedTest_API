@@ -1,5 +1,9 @@
+#!/usr/bin/env node
+//usage: node index.js > source.md
+
 'use strict';
 
+var fs = require('fs');
 var REQUEST = require('request');
 var ASSERT = require('assert');
 var CONFIG = require('../Config.js');
@@ -108,25 +112,35 @@ function outputCites(citesObject) {
 
 function outputFare(fareObject) {
     console.log('## 价格矩阵');
-    console.log(' |  | HTTP/PING/DNS/UDP/TCP (Wi-fi<512KB, Cell<1KB) | HTTP/PING/DNS/UDP/TCP(Wi-fi>512KB, 1KB< Cell<4KB) | TraceRoute ');
-    console.log(' 1級城市 | Wi-Fi | '+fareObject['111']+' | '+fareObject['112']+' | '+fareObject['113']+' ');
-    console.log('  | Cellular | '+fareObject['121']+' | '+fareObject['122']+' | '+fareObject['123']+' ');
-    console.log(' 2級城市 | Wi-Fi | '+fareObject['211']+' | '+fareObject['212']+' | '+fareObject['213']+' ');
-    console.log('  | Cellular | '+fareObject['221']+' | '+fareObject['222']+' | '+fareObject['223']+' ');
-    console.log(' 3級城市 | Wi-Fi | '+fareObject['311']+' | '+fareObject['312']+' | '+fareObject['313']+' ');
-    console.log('  | Cellular | '+fareObject['321']+' | '+fareObject['322']+' | '+fareObject['323']+' ');
+    console.log('| | | HTTP/PING/DNS/UDP/TCP (Wi-fi<512KB, Cell<1KB) | HTTP/PING/DNS/UDP/TCP(Wi-fi>512KB, 1KB< Cell<4KB) | TraceRoute ');
+    console.log('|--- | --- | --- | --- | --- ');
+    console.log('| 1級城市 | Wi-Fi | '+fareObject['111']+' | '+fareObject['112']+' | '+fareObject['113']+' ');
+    console.log('| | Cellular | '+fareObject['121']+' | '+fareObject['122']+' | '+fareObject['123']+' ');
+    console.log('| 2級城市 | Wi-Fi | '+fareObject['211']+' | '+fareObject['212']+' | '+fareObject['213']+' ');
+    console.log('| | Cellular | '+fareObject['221']+' | '+fareObject['222']+' | '+fareObject['223']+' ');
+    console.log('| 3級城市 | Wi-Fi | '+fareObject['311']+' | '+fareObject['312']+' | '+fareObject['313']+' ');
+    console.log('| | Cellular | '+fareObject['321']+' | '+fareObject['322']+' | '+fareObject['323']+' ');
 }
 
 function outputRows(dateObjArray) {
     console.log('## 计量报表');
+    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
         var obj = dateObjArray[i];
-        console.log('### '+ obj.date);
-        console.log('创建任务时间 | 任务辨别码 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
-        console.log('--- | --- | --- | --- | --- | --- | --- | --- | ---')
-        for(var j=0;j<obj.rows.length;j++) {
-            var row = obj.rows[j];
-            console.log(row.Date+' | '+row.TaskID+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+        if(obj.rows.length == 0) {
+            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  | ')
+        } else {
+            for(var j=0;j<obj.rows.length;j++) {
+                var str;
+                if(j==0) {
+                    str = '| '+obj.date+' | ';
+                } else {
+                    str = '|  | ';
+                }
+                var row = obj.rows[j];
+                console.log(str + row.Date+' | '+row.TaskID+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+            }
         }
     }
 }
