@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "report": "sh ./weeklyreport/genReport.sh"
   },
   "repository": {
     "type": "git",

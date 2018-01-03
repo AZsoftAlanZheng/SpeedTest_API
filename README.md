@@ -7,3 +7,8 @@ $npm install
 ```
 $npm test
 ```
+
+#report
+```
+$npm run report
+```
