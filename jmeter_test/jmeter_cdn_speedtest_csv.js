@@ -23,6 +23,7 @@ var createdTask = new Array();
 var queryTask = new Array();
 
 var results = {};
+var sessionToken = null;
 
 function final() {
 	var outputArray = [];
@@ -71,7 +72,7 @@ function series(element) {
 		headers: {
 			'X-Droi-AppID': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA',
 			'X-Droi-Api-Key': 'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
-			'X-Droi-Session-Token': 'efe85d5ce1482a6f'
+			'X-Droi-Session-Token': sessionToken
 		},
 		uri: 'https://api.droibaas.com/api/v2/speedtest/v1/st?TaskID='+element,
 		method: 'GET'
@@ -151,44 +152,52 @@ if(filterCarrierName && config.Carrier.indexOf(filterCarrierName) < 0) {
 	process.exit(1);
 }
 
-fast_csv.fromPath(csvFilePath,{"delimiter":"!"}).on("data", function(data){
-	if(data[1] == "Create tasks") {
-		//console.log("Create tasks");
-		var json = JSON.parse(data[2]);
-		json.Result.Task.forEach(function(taskid){
-			createdTask.push(taskid);
+//login
+config.login('restful_api_test', '464c7a646393b68d1a42076c010b5aae418d8d322f233ca0b8cd8e2c6bcd9676', function(error,token){
+    if(error) {
+        console.log(error);
+    } else {
+		sessionToken = token;
+		fast_csv.fromPath(csvFilePath,{"delimiter":"!"}).on("data", function(data){
+			if(data[1] == "Create tasks") {
+				//console.log("Create tasks");
+				var json = JSON.parse(data[2]);
+				json.Result.Task.forEach(function(taskid){
+					createdTask.push(taskid);
+				})
+				results.StartTime = data[0];
+			} else if(data.length >= 3 && data[1] != "Create tasks") {
+				if(createdTask.length < 1) {
+					console.error("createdTask.length:"+createdTask.length+", < 1");
+					process.exit(1);
+				}
+				if(results.StartTime === undefined || results.StartTime === null) {
+					console.error("StartTime === undefined || null");
+					process.exit(1);
+				}
+		
+				var json = JSON.parse(data[3]);	
+				finishedTask.push(data[2]);
+		
+				var ret = exportRestriction(json);
+		
+				if(filterCarrierName && filterCarrierName != ret.oCarrierName) {
+					return;
+				}
+		
+				addTaskResult(results,data[0],data[2],ret)
+			}
 		})
-		results.StartTime = data[0];
-	} else if(data.length >= 3 && data[1] != "Create tasks") {
-		if(createdTask.length < 1) {
-			console.error("createdTask.length:"+createdTask.length+", < 1");
-			process.exit(1);
-		}
-		if(results.StartTime === undefined || results.StartTime === null) {
-			console.error("StartTime === undefined || null");
-			process.exit(1);
-		}
-
-		var json = JSON.parse(data[3]);	
-		finishedTask.push(data[2]);
-
-		var ret = exportRestriction(json);
-
-		if(filterCarrierName && filterCarrierName != ret.oCarrierName) {
-			return;
-		}
-
-		addTaskResult(results,data[0],data[2],ret)
-	}
-})
-  .on("end", function(){
-  	createdTask.forEach(function(element) {
-	    if (finishedTask.indexOf(element) > -1) {
-		    //In the array!
-		} else {
-		    //Not in the array
-		    queryTask.push(element);
-		}
-	});
-	series(queryTask.shift());
+		  .on("end", function(){
+			  createdTask.forEach(function(element) {
+				if (finishedTask.indexOf(element) > -1) {
+					//In the array!
+				} else {
+					//Not in the array
+					queryTask.push(element);
+				}
+			});
+			series(queryTask.shift());
+		});
+    }
 });
