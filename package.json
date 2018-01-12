@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/AZsoftAlanZheng/SpeedTest_API#readme",
   "dependencies": {
+    "assert": "^1.4.1",
     "dredd": "^4.9.1",
     "fast-csv": "^2.4.1",
     "moment": "^2.20.1",
