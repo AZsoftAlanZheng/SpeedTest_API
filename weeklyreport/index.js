@@ -66,8 +66,8 @@ function initDateObjArray(array) {
         var dd = this.getDate();
 
         return [this.getFullYear(),
-            (mm>9 ? '-' : '0') + mm,
-            (dd>9 ? '-' : '0') + dd
+            (mm>9 ? '-' : '-0') + mm,
+            (dd>9 ? '-' : '-0') + dd
             ].join('');
     };
     for(var i=7;i>0;i--) {
@@ -130,8 +130,8 @@ function outputCites(citesObject) {
 
 function outputFare(fareObject) {
     console.log('## 价格矩阵');
-    console.log('| | | HTTP/PING/DNS/UDP/TCP (Wi-fi<512KB, Cell<1KB) | HTTP/PING/DNS/UDP/TCP(Wi-fi>512KB, 1KB< Cell<4KB) | TraceRoute ');
-    console.log('|--- | --- | --- | --- | --- ');
+    console.log('| | | HTTP/PING/DNS/UDP/TCP<br>(Wi-fi<512KB, Cell<1KB) | HTTP/PING/DNS/UDP/TCP<br>(Wi-fi>512KB, 1KB< Cell<4KB) | TraceRoute ');
+    console.log('| :--- | :---: | ---: | ---: | ---: ');
     console.log('| 1級城市 | Wi-Fi | '+fareObject['111']+' | '+fareObject['112']+' | '+fareObject['113']+' ');
     console.log('| | Cellular | '+fareObject['121']+' | '+fareObject['122']+' | '+fareObject['123']+' ');
     console.log('| 2級城市 | Wi-Fi | '+fareObject['211']+' | '+fareObject['212']+' | '+fareObject['213']+' ');
