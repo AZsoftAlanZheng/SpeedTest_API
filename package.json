@@ -20,8 +20,10 @@
     "assert": "^1.4.1",
     "dredd": "^4.9.1",
     "fast-csv": "^2.4.1",
+    "html-pdf": "^2.2.0",
     "moment": "^2.20.1",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "showdown": "^1.8.6"
   },
   "devDependencies": {},
   "description": ""
