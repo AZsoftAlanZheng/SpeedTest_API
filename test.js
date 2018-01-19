@@ -29,7 +29,7 @@ runScript('./updateToken.js', function (err) {
     if (err) throw err;
     console.log('finished running updateToken.js');
     try {
-        cp.execSync("node node_modules/dredd/bin/dredd", {stdio: 'inherit'});
+        cp.execSync("dredd", {stdio: 'inherit'});
     } catch (error) {
         console.log(error);
         throw error;
