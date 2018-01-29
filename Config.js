@@ -1,9 +1,10 @@
 var REQUEST = require('request');
 
 //openapi
+loginHeaders = {'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2'}
 commandheaders = {
 	'X-Droi-AppID':'85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA',
-	'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
+	'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ',
 	'Cache-Control':'no-cache'
 }
 
@@ -65,6 +66,12 @@ module.exports={
 				"Type": "general"
 			})
 		};
+
+		//add headers for login
+		for (var key in loginHeaders) {
+			options.headers[key] = loginHeaders[key];
+		}
+		
 		REQUEST(options, function(error, response, body){
 			var token;
 			if(!error) {

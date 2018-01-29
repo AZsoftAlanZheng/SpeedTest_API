@@ -8,12 +8,6 @@ var REQUEST = require('request');
 var ASSERT = require('assert');
 var CONFIG = require('../Config.js');
 
-var UserInfo = {
-    name: 'qiniu',
-    pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
-    token: null
-};
-
 var ctx = {
     user:{
         name: 'qiniu',
@@ -28,7 +22,7 @@ initDateObjArray(ctx.dateObjArray);
 
 CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
     if(error) {
-        console.log(error);
+        throw new Error(error);
     } else {
         outputUser(ctx.user.name);
         ctx.user.token = token;
