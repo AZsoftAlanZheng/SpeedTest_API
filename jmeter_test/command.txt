@@ -18,3 +18,4 @@ node ./jmeter_cdn_speedtest_csv.js 20170818/TestPlanSpeedTestAPI_Log.Carrier_4G.
 */
 
 node ./jmeter_cdn_speedtest_csv.js 20180104/TestPlanSpeedTestAPI_Log.AllCity_Carrier_Wifi2018_01_04_16_37_37.txt
+//output file: ./outputfile.csv

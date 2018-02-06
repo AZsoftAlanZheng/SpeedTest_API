@@ -1,5 +1,6 @@
 //Usage: node js {csv_file_path} 
 //	node ./jmeter_cdn_speedtest_csv.js /home/alan/opt/backup/git/SpeedTest_API/jmeter_test/20170814/TestPlanSpeedTestAPI_Log.4G.txt
+//output file: ./outputfile.csv
 //
 // CSV example:
 // 06/09/17 21:00:08!Create tasks!{"Code":0,"Result":{"Task":["59aff16e34da251b3d01e414","59aff16e34da251b3d01e415","59aff16e34da251b3d01e416","59aff16e34da251b3d01e417","59aff16e34da251b3d01e418","59aff16e34da251b3d01e419","59aff16e34da251b3d01e41a","59aff16e34da251b3d01e41b","59aff16e34da251b3d01e41c","59aff16e34da251b3d01e41d","59aff16e34da251b3d01e41e"]}}
@@ -34,6 +35,7 @@ function final() {
 		index = config.Country_City.indexOf(city);
 		object['城市代碼']=index<0?"null":config.Country_City_Code[index];
 		index = config.Top101Cites.indexOf(city)
+		if(index<0) return;
 		object['前101城市']=index<0?"N":"Y";
 		config.Carrier.forEach(function(carrier) {
 			config.Network.forEach(function(network) {
@@ -50,8 +52,70 @@ function final() {
 						} else {
 							object[key] = endDate.diff(startDate, 'seconds')
 						}
+						//輸出Time
+						try {
+							object[key+'_DNSCount'] = results[city][carrier][network].Time.DNS.Count;
+						} catch (error) {
+							object[key+'_DNSCount'] = 'X';
+						}
+						try {
+							object[key+'_DNSMax'] = results[city][carrier][network].Time.DNS.Max;
+						} catch (error) {
+							object[key+'_DNSMax'] = 'X';
+						}
+						try {
+							object[key+'_DNSMin'] = results[city][carrier][network].Time.DNS.Min;
+						} catch (error) {
+							object[key+'_DNSMin'] = 'X';
+						}
+						try {
+							object[key+'_DNSAvg'] = results[city][carrier][network].Time.DNS.Avg;
+						} catch (error) {
+							object[key+'_DNSAvg'] = 'X';
+						}
+						try {
+							object[key+'_ConnectCount'] = results[city][carrier][network].Time.Connect.Count;
+						} catch (error) {
+							object[key+'_ConnectCount'] = 'X';
+						}
+						try {
+							object[key+'_ConnectMax'] = results[city][carrier][network].Time.Connect.Max;
+						} catch (error) {
+							object[key+'_ConnectMax'] = 'X';
+						}
+						try {
+							object[key+'_ConnectMin'] = results[city][carrier][network].Time.Connect.Min;
+						} catch (error) {
+							object[key+'_ConnectMin'] = 'X';
+						}
+						try {
+							object[key+'_ConnectAvg'] = results[city][carrier][network].Time.Connect.Avg;
+						} catch (error) {
+							object[key+'_ConnectAvg'] = 'X';
+						}
+						try {
+							object[key+'_RTTCount'] = results[city][carrier][network].Time.RTT.Count;
+						} catch (error) {
+							object[key+'_RTTCount'] = 'X';
+						}
+						try {
+							object[key+'_RTTMax'] = results[city][carrier][network].Time.RTT.Max;
+						} catch (error) {
+							object[key+'_RTTMax'] = 'X';
+						}
+						try {
+							object[key+'_RTTMin'] = results[city][carrier][network].Time.RTT.Min;
+						} catch (error) {
+							object[key+'_RTTMin'] = 'X';
+						}
+						try {
+							object[key+'_RTTAvg'] = results[city][carrier][network].Time.RTT.Avg;
+						} catch (error) {
+							object[key+'_RTTAvg'] = 'X';
+						}
 					}
 				} catch (error) {
+					// console.log(error);
 					object[key] = "X";
 				}
 			});
@@ -99,14 +163,14 @@ function series(element) {
 	}
 }
 
-function addTaskResult(array,finishTime,taskid,restrictions) {
+function addTaskResult(array,finishTime,taskid,restrictions,time) {
 	if(array[restrictions.oCountry_CityName] === undefined || array[restrictions.oCountry_CityName] === null) {
 		array[restrictions.oCountry_CityName] = {};
 	}
 	if(array[restrictions.oCountry_CityName][restrictions.oCarrierName] === undefined || array[restrictions.oCountry_CityName][restrictions.oCarrierName] === null) {
 		array[restrictions.oCountry_CityName][restrictions.oCarrierName] = {};
 	}
-	array[restrictions.oCountry_CityName][restrictions.oCarrierName][restrictions.oNetworkName] = {FinishTime:finishTime,TaskID:taskid,Restriction:restrictions};
+	array[restrictions.oCountry_CityName][restrictions.oCarrierName][restrictions.oNetworkName] = {FinishTime:finishTime,TaskID:taskid,Restriction:restrictions,Time:time};
 }
 
 function exportRestriction(obj) {
@@ -185,7 +249,8 @@ config.login('restful_api_test', '464c7a646393b68d1a42076c010b5aae418d8d322f233c
 					return;
 				}
 		
-				addTaskResult(results,data[0],data[2],ret)
+				var time = JSON.parse(data[4]);	
+				addTaskResult(results,data[0],data[2],ret,time.Result.Time);
 			}
 		})
 		  .on("end", function(){
