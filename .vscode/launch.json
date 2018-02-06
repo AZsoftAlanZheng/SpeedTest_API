@@ -7,6 +7,12 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/app.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "run weekly report",
             "program": "${workspaceFolder}/weeklyreport/index.js",
             "args": [
@@ -18,6 +24,14 @@
             "name": "run jmeter log analyser",
             "program": "${workspaceFolder}/jmeter_test/jmeter_cdn_speedtest_csv.js",
             "args": ["${workspaceFolder}/jmeter_test/20180104/TestPlanSpeedTestAPI_Log.AllCity_Carrier_Wifi2018_01_04_16_37_37.txt", "中国电信"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run SpeedTest demo for dnion",
+            "program": "${workspaceFolder}/SpeedTest_dnion_demo/index.js",
+            "args": [
             ]
         }
     ]
