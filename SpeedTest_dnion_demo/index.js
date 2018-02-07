@@ -7,8 +7,6 @@ var ASSERT = require('assert');
 var CONFIG = require('../Config.js');
 
 var FileOutput = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/Task.json';
-var FileHTTP = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/HTTP_Task.json';
-var FileDNS = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/DNS_Task.json';
 var FileERROR = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/ERROR_Task.json';
 
 var HTTP_TEST_COMMAND = [
