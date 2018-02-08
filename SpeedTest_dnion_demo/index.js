@@ -105,7 +105,7 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
                 body: JSON.stringify(DNS_TEST_COMMAND[i])
             };
 
-            REQUEST(httpoptions, function (error, response, body) {
+            REQUEST(dnsoptions, function (error, response, body) {
                 if (error) {
                     throw new Error(error)
                 } else {
