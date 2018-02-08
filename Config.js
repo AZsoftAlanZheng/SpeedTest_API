@@ -3,6 +3,7 @@ var REQUEST = require('request');
 //openapi
 loginHeaders = {'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2'}
 getDataHeaders = {'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ'}
+postDataHeaders = {'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ'}
 commandheaders = {
 	'X-Droi-AppID':'85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA',
 	'Cache-Control':'no-cache'
@@ -33,9 +34,8 @@ function getData(token, conditions, tableName, callback) {
 		else options.url = options.url+'&'+conditions;
 	}
 	REQUEST(options, function(error, response, body){
-		var data;
 		if(!error) {
-			data = JSON.parse(body);
+			var data = JSON.parse(body);
 			if(data.Code == undefined || data.Code != 0) {
 				error = new Error("ERROR: data.Code="+data.Code);
 			} else if(data.Count == undefined) {
@@ -51,6 +51,48 @@ function getData(token, conditions, tableName, callback) {
 		}
 		callback(error,data);
 	}); 
+}
+
+//token:string
+//tableName:string, [CityCategory, FareCategory, Accounting]
+//body: body
+//callback:function(error, data)
+//TODO: verify this function!!!!!
+function postData(token, tableName, body, callback) {
+	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
+	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
+	var options = {
+		method: 'GET',
+		url: 'https://api.droibaas.com/rest/objects/v2/'+tableName,
+		encoding: null,
+		headers: Object.assign({}, commandheaders),
+		body: body
+	};
+	//add headers for getting data
+	for (var key in postDataHeaders) {
+		options.headers[key] = postDataHeaders[key];
+	}
+
+	options.headers['X-Droi-Session-Token'] = token;
+
+	REQUEST(options, function (error, response, body) {
+        if (!error) {
+			var data = JSON.parse(body);
+            if(data.Code == undefined || data.Code != 0) {
+                error = new Error("ERROR: data.Code="+data.Code);
+            } else if(data.Result == undefined) {
+                error = new Error("ERROR: data.Result="+data.Result);
+            } else if(data.Result.Created == undefined) {
+                error = new Error("ERROR: data.Result.Created="+data.Result.Created);
+            } else if(data.Result._Id == undefined) {
+                error = new Error("ERROR: data.Result._Id="+data.Result._Id);
+            } else if(data.Result.UpdatedAt == undefined) {
+                error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
+            } else {
+            }
+		}
+		callback(error,data);
+	});
 }
 
 module.exports={
@@ -273,4 +315,24 @@ module.exports={
 			callback(error, data.Result, returnLatestID);
 		});
 	},
+	//token: string
+	//tableName: string
+	//body: json string
+	//callback: function(error, data)
+	//TODO: verify this function!!!!!
+	createObject: function(token, tableName, body, callback) {
+		postData(token, tableName, body, function(error, data){
+			if(!error) {
+				// EX:{
+				//     "Code": 0,
+				//     "Result": {
+				// 		"Created": true,
+				// 		"_Id": "5a7a91729f765e0007762c93",
+				// 		"UpdatedAt": "2018-02-07T05:41:06.182Z"
+				// 	}
+				// }
+			}
+			callback(error, data);
+		})
+	}
 }
