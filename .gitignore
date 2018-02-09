@@ -1,3 +1,4 @@
-APM計量/node_module/
+node_modules/
+APM計量/node_modules/
 jmeter_test/node_modules
 SDK_Statistics/node_modules
