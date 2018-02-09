@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "launch",
@@ -29,9 +30,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "run SpeedTest demo for dnion",
+            "name": "run SpeedTest demo for dnion!!!",
             "program": "${workspaceFolder}/SpeedTest_dnion_demo/index.js",
             "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run readJS_PostObject",
+            "program": "${workspaceFolder}/SpeedTest_dnion_demo/readJS_PostObject.js",
+            "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json","-o","${workspaceFolder}/SpeedTest_dnion_demo/statistic.csv","-c","${workspaceFolder}/SpeedTest_dnion_demo/forDnion.csv"
             ]
         }
     ]
