@@ -1,4 +1,4 @@
-//Usage: node js {-i inputfile} [-p] [-o outputfile]
+//Usage: node js {-i inputfile} [-p] [-o outputfile] [-c CSV_outputfile]
 //-i input json file
 //-o output csv file
 //-p post object to baas mongo
@@ -14,13 +14,18 @@ var REQUEST = require('request');
 var fast_csv = require('fast-csv');
 var CONFIG = require('../Config.js');
 var argv = require('minimist')(process.argv.slice(2));
+var running = 0;
 console.dir(argv);
 
 var FileERROR = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/ERROR_PostObjcect.json';
 var FileInput = argv.i;
 var FileOutput = argv.o;
+var FileCSVOutput = argv.c;
 var csvStream = null;
 var postObject = argv.p;
+var queryTask = new Array();
+var outputResult = {};
+var csvOutputArray = new Array();
 if(!fs.existsSync(FileInput)) {
     console.error("ERROR: Input File Path: " + FileInput + " does not exists!!! ");
 	process.exit(1);
@@ -43,6 +48,110 @@ var ctx = {
     }
 }
 
+function final() {
+    if(FileCSVOutput) {
+        for (var k in outputResult){
+            if (outputResult.hasOwnProperty(k)) {
+                var object = {};
+                object['City'] = k
+                for (var v in outputResult[k]){
+                    if (outputResult[k].hasOwnProperty(v)) {
+                        object[v+'_Connect_Avg'] = outputResult[k][v].Connect_Sum/outputResult[k][v].Connect_Count;
+                        object[v+'_RTT_Avg'] = outputResult[k][v].RTT_Sum/outputResult[k][v].RTT_Count;
+                    }
+                }
+                csvOutputArray.push(object);
+            }
+        }
+        fast_csv.writeToPath(FileCSVOutput, csvOutputArray, {headers: true})
+        .on("finish", function(){
+            console.log("END");
+        });
+    }
+}
+function series(element) {
+	if(element) {
+        var options = {
+            method: 'GET',
+            url: 'https://api.droibaas.com/api/v2/speedtest/v1/st/result',
+            qs: { TaskID: element.TaskID },
+            headers: { 
+                'cache-control': 'no-cache',
+                'x-droi-session-token': ctx.user.token,
+                'x-droi-api-key': 'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
+                'x-droi-appid': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA'
+            } 
+        };
+        
+        REQUEST(options, function (error, response, body) {
+            if (error) throw new Error(error);
+            var data = JSON.parse(body)
+            var obj = {};
+            obj.timestamp = element.ts;
+            obj.TaskID = element.TaskID;
+            obj.Type = data.Result.SpeedTest.Type;
+            obj.Country_City = CONFIG.Country_City[CONFIG.Country_City_Code.indexOf(data.Result.SpeedTest.Restriction.Country_City)];
+            obj.Carrier = CONFIG.Carrier[CONFIG.Carrier_Code.indexOf(data.Result.SpeedTest.Restriction.Carrier)];
+            obj.Network = CONFIG.Network[CONFIG.Network_Code.indexOf(data.Result.SpeedTest.Restriction.Network)];
+            if(data.Result.Status == 2) {
+                obj.DNS_Max = data.Result.Result.Time.DNS.Max;
+                obj.DNS_Min = data.Result.Result.Time.DNS.Min;
+                obj.DNS_Avg = data.Result.Result.Time.DNS.Avg;
+                obj.Connect_Max = data.Result.Result.Time.Connect.Max;
+                obj.Connect_Min = data.Result.Result.Time.Connect.Min;
+                obj.Connect_Avg = data.Result.Result.Time.Connect.Avg;
+                obj.RTT_Max = data.Result.Result.Time.RTT.Max;
+                obj.RTT_Min = data.Result.Result.Time.RTT.Min;
+                obj.RTT_Avg = data.Result.Result.Time.RTT.Avg;
+
+                if(FileCSVOutput) {
+                    if( outputResult[obj.Country_City] == null) {
+                        outputResult[obj.Country_City] = {}
+                    }
+                    if( outputResult[obj.Country_City][obj.Carrier] == null) {
+                        outputResult[obj.Country_City][obj.Carrier] = {}
+                    }
+                    if(outputResult[obj.Country_City][obj.Carrier].Connect_Sum = null) {
+                        outputResult[obj.Country_City][obj.Carrier].Connect_Sum = 0
+                    }
+                    if(outputResult[obj.Country_City][obj.Carrier].Connect_Count = null) {
+                        outputResult[obj.Country_City][obj.Carrier].Connect_Count = 0;
+                    }
+                    if(outputResult[obj.Country_City][obj.Carrier].RTT_Sum = null) {
+                        outputResult[obj.Country_City][obj.Carrier].RTT_Sum = 0
+                    }
+                    if(outputResult[obj.Country_City][obj.Carrier].RTT_Count = null) {
+                        outputResult[obj.Country_City][obj.Carrier].RTT_Count = 0;
+                    }
+                    outputResult[obj.Country_City][obj.Carrier].Connect_Sum += obj.Connect_Min;
+                    outputResult[obj.Country_City][obj.Carrier].Connect_Count++;
+                    outputResult[obj.Country_City][obj.Carrier].RTT_Sum += obj.RTT_Min;
+                    outputResult[obj.Country_City][obj.Carrier].RTT_Count++;
+                }
+            } else {
+                obj.DNS_Max = 'X';
+                obj.DNS_Min = 'X';
+                obj.DNS_Avg = 'X';
+                obj.Connect_Max = 'X';
+                obj.Connect_Min = 'X';
+                obj.Connect_Avg = 'X';
+                obj.RTT_Max = 'X';
+                obj.RTT_Min = 'X';
+                obj.RTT_Avg = 'X';
+            }
+
+            csvStream.write(obj);
+            // console.log(body);
+            series(queryTask.shift());
+            // setTimeout(function(){ series(queryTask.shift()); }, 100);
+        }); 
+	} else {
+        running--;
+        if(running == 0)
+		    return final();
+	}
+}
+
 CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
     if(error) {
         throw new Error(error);
@@ -50,46 +159,21 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
         ctx.user.token = token;
         var lineReader = require('readline').createInterface({
             input: fs.createReadStream(FileInput)
+        }).on('close', function(){
+            running = 50;
+            for(var i=0; i< running;i++) {
+                series(queryTask.shift());
+            }
         }).on('line', function (line) {
             var obj = JSON.parse(line);
             console.dir(obj);
-        
+            if(obj.Type == 134)
+                return;
             if(FileOutput) {
                 //Query task
                 let ts = obj.ts;
                 obj.Task.forEach(function(element) {
-                    var options = {
-                        method: 'GET',
-                        url: 'https://api.droibaas.com/api/v2/speedtest/v1/st/result',
-                        qs: { TaskID: 'element' },
-                        headers: { 
-                            'cache-control': 'no-cache',
-                            'x-droi-session-token': 'aad8597d910daf62',
-                            'x-droi-api-key': 'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
-                            'x-droi-appid': ctx.user.token
-                        } 
-                    };
-                    
-                    REQUEST(options, function (error, response, body) {
-                        if (error) throw new Error(error);
-                        var data = JSON.parse(body)
-                        var obj = {};
-                        obj.Type = data.Result.SpeedTest.Type;
-                        obj.Country_City = CONFIG.Country_City[CONFIG.Country_City_Code.indexOf(data.Result.SpeedTest.Type.Restriction.Country_City)];
-                        obj.Carrier = CONFIG.Carrier[CONFIG.Carrier_Code.indexOf(data.Result.SpeedTest.Type.Restriction.Carrier)];
-                        obj.Network = CONFIG.Network[CONFIG.Network_Code.indexOf(data.Result.SpeedTest.Type.Restriction.Network)];
-                        obj.DNS_Max = data.Result.esult.Time.DNS.Max;
-                        obj.DNS_Min = data.Result.esult.Time.DNS.Min;
-                        obj.DNS_Avg = data.Result.esult.Time.DNS.Avg;
-                        obj.Connect_Max = data.Result.esult.Time.Connect.Max;
-                        obj.Connect_Min = data.Result.esult.Time.Connect.Min;
-                        obj.Connect_Avg = data.Result.esult.Time.Connect.Avg;
-                        obj.RTT_Max = data.Result.esult.Time.RTT.Max;
-                        obj.RTT_Min = data.Result.esult.Time.RTT.Min;
-                        obj.RTT_Avg = data.Result.esult.Time.RTT.Avg;
-                        csvStream.write(obj);
-                        console.log(body);
-                    }); 
+                    queryTask.push({ts:ts,TaskID:element});
                 });
             }
         
