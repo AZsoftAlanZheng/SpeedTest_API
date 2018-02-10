@@ -98,6 +98,7 @@ module.exports={
 
 	//token: string
 	//callback: function(error,citesObject)
+	//目前不支援超過1000筆
 	loadCites: function(token, callback) {
 		getData(token, null, 'CityCategory', function(error,data){
 			var citesObject = {};
@@ -122,6 +123,8 @@ module.exports={
 				//         },...
 				//     ]
 				// }
+				//CategoryX存放X級城市列表
+				//city2category存放城市名對應x級城市，可能有null
 				citesObject['Category1'] = [];
 				citesObject['Category2'] = [];
 				citesObject['Category3'] = [];
@@ -147,6 +150,7 @@ module.exports={
 	
 	//token: string
 	//callback: function(error,citesObject)
+	//目前不支援超過1000筆
 	loadFare: function(token, callback) {
 		getData(token, null, 'FareCategory', function(error,data){
 			var fareObject = {};
