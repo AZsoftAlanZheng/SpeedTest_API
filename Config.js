@@ -82,12 +82,6 @@ function postData(token, tableName, body, callback) {
                 error = new Error("ERROR: data.Code="+data.Code);
             } else if(data.Result == undefined) {
                 error = new Error("ERROR: data.Result="+data.Result);
-            } else if(data.Result.Created == undefined) {
-                error = new Error("ERROR: data.Result.Created="+data.Result.Created);
-            } else if(data.Result._Id == undefined) {
-                error = new Error("ERROR: data.Result._Id="+data.Result._Id);
-            } else if(data.Result.UpdatedAt == undefined) {
-                error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
             } else {
             }
 		}
@@ -335,6 +329,14 @@ module.exports={
 				// 		"UpdatedAt": "2018-02-07T05:41:06.182Z"
 				// 	}
 				// }
+				if(data.Result.Created == undefined) {
+					error = new Error("ERROR: data.Result.Created="+data.Result.Created);
+				} else if(data.Result._Id == undefined) {
+					error = new Error("ERROR: data.Result._Id="+data.Result._Id);
+				} else if(data.Result.UpdatedAt == undefined) {
+					error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
+				} else {
+				}
 			}
 			callback(error, data);
 		})
