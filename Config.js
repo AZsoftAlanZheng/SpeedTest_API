@@ -1,13 +1,18 @@
 var REQUEST = require('request');
 
 //openapi
-loginHeaders = {'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2'}
-getDataHeaders = {'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ'}
-postDataHeaders = {'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ'}
+loginHeaders = {'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2'};
+getDataHeaders = {'X-Droi-Api-Key':'yKPGxDnX0TDbKyEq-Ucu5tMbycFfl_WoaNsaEznknKFKUsx6e9XjNtL5m0zKv8nJ'};
+postDataHeaders = getDataHeaders;
+getAPIDataHeaders = {'X-Droi-Api-Key':'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2'};
+postAPIDataHEaders = getAPIDataHeaders;
 commandheaders = {
 	'X-Droi-AppID':'85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA',
-	'Cache-Control':'no-cache'
+	'Cache-Control':'no-cache',
+	'Content-Type': 'application/json'
 }
+
+SpeedTestBaseURL = 'https://api.droibaas.com/api/v2/speedtest/v1';
 
 //token:string
 //conditions:string
@@ -57,12 +62,14 @@ function getData(token, conditions, tableName, callback) {
 //tableName:string, [CityCategory, FareCategory, Accounting]
 //body: body
 //callback:function(error, data)
+//!!!!!
 //TODO: verify this function!!!!!
+//!!!!!
 function postData(token, tableName, body, callback) {
 	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
 	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
 	var options = {
-		method: 'GET',
+		method: 'POST',
 		url: 'https://api.droibaas.com/rest/objects/v2/'+tableName,
 		encoding: null,
 		headers: Object.assign({}, commandheaders),
@@ -71,6 +78,41 @@ function postData(token, tableName, body, callback) {
 	//add headers for getting data
 	for (var key in postDataHeaders) {
 		options.headers[key] = postDataHeaders[key];
+	}
+
+	options.headers['X-Droi-Session-Token'] = token;
+
+	REQUEST(options, function (error, response, body) {
+        if (!error) {
+			var data = JSON.parse(body);
+            if(data.Code == undefined || data.Code != 0) {
+                error = new Error("ERROR: data.Code="+data.Code);
+            } else if(data.Result == undefined) {
+                error = new Error("ERROR: data.Result="+data.Result);
+            } else {
+            }
+		}
+		callback(error,data);
+	});
+}
+
+//token:string
+//uri:string, [CityCategory, FareCategory, Accounting]
+//body: body
+//callback:function(error, data)
+function postAPIData(token, uri, body, callback) {
+	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
+	if(typeof(uri) !== 'string') callback(new Error("typeof(uri) !== 'string'"));
+	var options = {
+		method: 'POST',
+		url: SpeedTestBaseURL+uri,
+		encoding: null,
+		headers: Object.assign({}, commandheaders),
+		body: body
+	};
+	//add headers for posting data by SpeedTest API
+	for (var key in postAPIDataHEaders) {
+		options.headers[key] = postAPIDataHEaders[key];
 	}
 
 	options.headers['X-Droi-Session-Token'] = token;
@@ -317,7 +359,9 @@ module.exports={
 	//tableName: string
 	//body: json string
 	//callback: function(error, data)
+	//!!!!!
 	//TODO: verify this function!!!!!
+	//!!!!!
 	createObject: function(token, tableName, body, callback) {
 		postData(token, tableName, body, function(error, data){
 			if(!error) {
@@ -335,6 +379,37 @@ module.exports={
 					error = new Error("ERROR: data.Result._Id="+data.Result._Id);
 				} else if(data.Result.UpdatedAt == undefined) {
 					error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
+				} else {
+				}
+			}
+			callback(error, data);
+		})
+	},
+
+	//SpeedTest_API
+	//↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+	//token: string
+	//uri: string
+	//body: json string
+	//callback: function(error, data)
+	createNewTasks: function(token, body, callback) {
+		postAPIData(token, '/st', body, function(error, data){
+			if(!error) {
+				// EX:{
+				// 	"Code": 0,
+				// 	"Result": {
+				// 	  "Task": [
+				// 		"59b8e012132c1d00160001ef",
+				// 		"59b8e012132c1d00160001f0",
+				// 		"59b8e012132c1d00160001f1",
+				// 		"59b8e012132c1d00160001f2",
+				// 		"59b8e012132c1d00160001f3"
+				// 	  ]
+				// 	}
+				// }
+				if(data.Result.Task == undefined) {
+					error = new Error("ERROR: data.Result.Task="+data.Result.Task);
 				} else {
 				}
 			}
