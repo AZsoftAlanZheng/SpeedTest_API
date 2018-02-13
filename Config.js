@@ -303,7 +303,7 @@ module.exports={
 	//date: string, format(yy-mm-dd), 2017-02-29
 	//latestID: string || null
 	//callback: function(error, data, returnLatestID)
-	loadMore: function(token, date, latestID, callback) {
+	loadTasks: function(token, date, latestID, callback) {
 		if(!date || typeof(date) !== 'string') callback(new Error("!date || typeof(date) !== 'string'"));
 		var conditions;
 		if(latestID != null) {

@@ -87,19 +87,20 @@ function final(ctx) {
     outputUser(ctx.user.name);
     outputCites(ctx.cites);
     outputFare(ctx.fareObject);
+    outputAggregateData(ctx.dateObj);
     outputRows(ctx.dateObjArray, ctx.cites);
 }
 
 //callback: function(error)
-function loadMoreRows(token, dateObj, callback) {
-    CONFIG.loadMore(token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
+function loadMoreTasks(token, dateObj, callback) {
+    CONFIG.loadTasks(token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
         if(error) {
             callback(error);
         } else {
             if(data.length > 0) {
                 dateObj.latestID = returnLatestID;
                 dateObj.rows = dateObj.rows.concat(data);
-                loadMoreRows(token,dateObj, callback);
+                loadMoreTasks(token,dateObj, callback);
             } else {
                 callback(null);
             }
@@ -109,7 +110,7 @@ function loadMoreRows(token, dateObj, callback) {
 
 function series(ctx, index) {
     if(ctx.dateObjArray[index]) {
-        loadMoreRows(ctx.user.token, ctx.dateObjArray[index], function(error){
+        loadMoreTasks(ctx.user.token, ctx.dateObjArray[index], function(error){
             if(error) {
                 console.log(error);
             } else {
@@ -149,8 +150,14 @@ function outputFare(fareObject) {
     console.log('| | Cellular | '+fareObject['321']+' | '+fareObject['322']+' | '+fareObject['323']+' ');
 }
 
-function outputRows(dateObjArray, cites) {
+function outputAggregateData(dateObjArray) {
     console.log('## 计量报表');
+    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+}
+
+function outputRows(dateObjArray, cites) {
+    console.log('## 任务清单');
     console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
     console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
