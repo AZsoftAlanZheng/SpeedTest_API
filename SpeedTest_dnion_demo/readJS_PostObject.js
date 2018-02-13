@@ -1,7 +1,10 @@
-//Usage: node js {-i inputfile} [-p] [-o outputfile] [-c CSV_outputfile]
+//Usage: node js {-i inputfile} [-o outputfile] [-c CSV_outputfile] [-p]
 //-i input json file
 //-o output csv file
+//-c output csv file for report
 //-p post object to baas mongo
+//Example:
+//node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/statistic.csv -c ./SpeedTest_dnion_demo/forDnion.csv
 //inputfile format:
 //{"Type":128,"ts":1517988002,"Task":["5a7aa8d6063e41117600404d","5a7aa8d6063e41117600404e","5a7aa8d6063e41117600404f","5a7aa8d6063e411176004050","5a7aa8d6063e411176004051","5a7aa8d6063e411176004052","5a7aa8d6063e411176004053","5a7aa8d6063e411176004054","5a7aa8d6063e411176004055","5a7aa8d6063e411176004056","5a7aa8d6063e411176004057","5a7aa8d6063e411176004058","5a7aa8d6063e411176004059","5a7aa8d6063e41117600405a","5a7aa8d6063e41117600405b","5a7aa8d6063e41117600405c","5a7aa8d6063e41117600405d","5a7aa8d6063e41117600405e","5a7aa8d6063e41117600405f","5a7aa8d6063e411176004060","5a7aa8d6063e411176004061","5a7aa8d6063e411176004062","5a7aa8d6063e411176004063","5a7aa8d6063e411176004064","5a7aa8d6063e411176004065","5a7aa8d6063e411176004066","5a7aa8d6063e411176004067","5a7aa8d6063e411176004068","5a7aa8d6063e411176004069","5a7aa8d6063e41117600406a","5a7aa8d6063e41117600406b","5a7aa8d6063e41117600406c","5a7aa8d6063e41117600406d","5a7aa8d6063e41117600406e","5a7aa8d6063e41117600406f","5a7aa8d6063e411176004070","5a7aa8d6063e411176004071","5a7aa8d6063e411176004072","5a7aa8d6063e411176004073","5a7aa8d6063e411176004074","5a7aa8d6063e411176004075","5a7aa8d6063e411176004076","5a7aa8d6063e411176004077","5a7aa8d6063e411176004078","5a7aa8d6063e411176004079","5a7aa8d6063e41117600407a","5a7aa8d6063e41117600407b","5a7aa8d6063e41117600407c"]}
 //{"Type":134,"ts":1517989201,"Task":["5a7aad85aa4b2809bb015442","5a7aad85aa4b2809bb015443","5a7aad85aa4b2809bb015444","5a7aad85aa4b2809bb015445","5a7aad85aa4b2809bb015446","5a7aad85aa4b2809bb015447","5a7aad85aa4b2809bb015448","5a7aad85aa4b2809bb015449","5a7aad85aa4b2809bb01544a","5a7aad85aa4b2809bb01544b","5a7aad85aa4b2809bb01544c","5a7aad85aa4b2809bb01544d","5a7aad85aa4b2809bb01544e","5a7aad85aa4b2809bb01544f","5a7aad85aa4b2809bb015450","5a7aad85aa4b2809bb015451","5a7aad85aa4b2809bb015452","5a7aad85aa4b2809bb015453"]}
@@ -167,8 +170,9 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
         }).on('line', function (line) {
             var obj = JSON.parse(line);
             console.dir(obj);
-            if(obj.Type == 134)
-                return;
+            //bypass some type
+            // if(obj.Type == 134)
+            //     return;
             if(FileOutput) {
                 //Query task
                 let ts = obj.ts;
@@ -216,6 +220,7 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
                         }
                     }
                 });
+            }
             }
         });
     }
