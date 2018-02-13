@@ -87,7 +87,7 @@ function final(ctx) {
     outputUser(ctx.user.name);
     outputCites(ctx.cites);
     outputFare(ctx.fareObject);
-    outputAggregateData(ctx.dateObj);
+    outputAggregateData(ctx.dateObjArray);
     outputRows(ctx.dateObjArray, ctx.cites);
 }
 
@@ -152,8 +152,20 @@ function outputFare(fareObject) {
 
 function outputAggregateData(dateObjArray) {
     console.log('## 计量报表');
-    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
-    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+    console.log('| 日期 | 费用')
+    console.log('| --- | ---')
+    for(var i=0;i<dateObjArray.length;i++) {
+        var obj = dateObjArray[i];
+        if(obj.rows.length == 0) {
+            console.log('| '+obj.date+' | 0 ')
+        } else {
+            var sum = 0.0;
+            for(var j=0;j<obj.rows.length;j++) {
+                sum += obj.rows[j].Cost;
+            }
+            console.log('| '+obj.date+' | ' + sum.toFixed(2));
+        }
+    }
 }
 
 function outputRows(dateObjArray, cites) {
