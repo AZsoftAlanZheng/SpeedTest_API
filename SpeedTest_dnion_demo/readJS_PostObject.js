@@ -221,7 +221,6 @@ CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
                     }
                 });
             }
-            }
         });
     }
 });
