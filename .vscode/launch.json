@@ -40,7 +40,7 @@
             "request": "launch",
             "name": "run readJS_PostObject",
             "program": "${workspaceFolder}/SpeedTest_dnion_demo/readJS_PostObject.js",
-            "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json","-o","${workspaceFolder}/SpeedTest_dnion_demo/statistic.csv","-c","${workspaceFolder}/SpeedTest_dnion_demo/forDnion.csv"
+            "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json.201802071220_201802080940","-o","${workspaceFolder}/SpeedTest_dnion_demo/results.csv.201802071220_201802080940","-c","${workspaceFolder}/SpeedTest_dnion_demo/statistics.csv.201802071220_201802080940"
             ]
         }
     ]
