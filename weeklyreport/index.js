@@ -170,12 +170,12 @@ function outputAggregateData(dateObjArray) {
 
 function outputRows(dateObjArray, cites) {
     console.log('## 任务清单');
-    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
-    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 营运商 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
         var obj = dateObjArray[i];
         if(obj.rows.length == 0) {
-            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  |  | ')
+            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  |  |  | ')
         } else {
             for(var j=0;j<obj.rows.length;j++) {
                 var str;
@@ -199,7 +199,10 @@ function outputRows(dateObjArray, cites) {
                     default:
                         citetag = '';
                 }
-                console.log(str + row.Date+' | '+row.TaskID+' | '+citetag+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+                if(row.CarrierName == undefined) {
+                    row.CarrierName = "尚未加入";
+                }
+                console.log(str + row.Date+' | '+row.TaskID+' | '+citetag+' | '+row.CityName+' | '+row.CarrierName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
             }
         }
     }

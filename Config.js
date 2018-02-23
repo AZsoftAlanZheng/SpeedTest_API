@@ -319,6 +319,8 @@ module.exports={
 				//     "Count": 4,
 				//     "Result": [
 				//         {
+				//			   "Carrier": 0, //後來加的，舊資料可能不含這欄位，要檢查是否為undefined
+				//			   "CarrierName": "中国电信", //後來加的，舊資料可能不含這欄位，要檢查是否為undefined
 				//             "City": 1,
 				//             "CityName": "\u4e0a\u6d77-\u4e0a\u6d77",
 				//             "Date": "2017-10-02T08:06:10.661Z",
