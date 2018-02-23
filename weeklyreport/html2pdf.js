@@ -27,7 +27,8 @@ function htmlpdf (source, destination) {
   var options = {
     base: 'file://' + path.resolve(source),
     format: 'A3',
-    orientation: "landscape"
+    orientation: "landscape",
+    timeout: 60000
   }
   pdf.create(html, options).toFile(destination, function (err, res) {
     if (err) throw err
