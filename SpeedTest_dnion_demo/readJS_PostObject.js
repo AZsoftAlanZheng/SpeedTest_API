@@ -20,6 +20,7 @@ var fast_csv = require('fast-csv');
 var CONFIG = require('../Config.js');
 var argv = require('minimist')(process.argv.slice(2));
 var running = 0;
+var MAX_RUNNING = 50;
 console.dir(argv);
 
 var FileERROR = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/ERROR_PostObjcect.json';
@@ -124,6 +125,16 @@ function statistic(obj) {
     }
 }
 
+function processOutput(){
+    if(process.stdout.clearLine != undefined) {
+        process.stdout.clearLine();  // clear current text
+        process.stdout.cursorTo(0);  // move cursor to beginning of line
+        process.stdout.write("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+    } else {
+        console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+    }
+}
+
 function final() {
     if(FileStatisticOutput) {
         for (var k in outputResult){
@@ -150,22 +161,9 @@ function final() {
 
 function series(element) {
 	if(element) {
-        var options = {
-            method: 'GET',
-            url: 'https://api.droibaas.com/api/v2/speedtest/v1/st/result',
-            qs: { TaskID: element.TaskID },
-            headers: { 
-                'cache-control': 'no-cache',
-                'x-droi-session-token': ctx.user.token,
-                'x-droi-api-key': 'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
-                'x-droi-appid': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA'
-            } 
-        };
-        
-        REQUEST(options, function (error, response, body) {
+        CONFIG.getTaskResult(ctx.user.token, element.TaskID , function (error, options, response, data) {
             try {
                 if (error) throw new Error(error);
-                var data = JSON.parse(body)
                 if(data.Code != 0) {
                     throw new Error(data);
                 }
@@ -218,19 +216,21 @@ function series(element) {
                     console.error('retry');
                     taskCompleted.retryTimes++;
                     queryTask.push(element);
+                    console.log();
                 } else {
                     console.error("response:");
                     console.error(response);
                     taskCompleted.error++;
                     queryTask.push(element);
+                    console.log();
                     //throw error;
                 }
             } finally {
                 //log
-                console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+                processOutput();
                 series(queryTask.shift());
             }
-        }); 
+        });
 	} else {
         running--;
         if(running == 0)
@@ -260,7 +260,7 @@ if(FileInputRsultsCSV) {
                 input: fs.createReadStream(FileInput)
             }).on('close', function(){
                 //https query
-                running = 50<queryTask.length? 50:queryTask.length();
+                running = MAX_RUNNING<queryTask.length? MAX_RUNNING:queryTask.length;
                 for(var i=0; i< running;i++) {
                     series(queryTask.shift());
                 }
