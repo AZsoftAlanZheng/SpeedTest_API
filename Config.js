@@ -23,6 +23,7 @@ function getData(token, conditions, tableName, callback) {
 	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
 	var options = {
 		method: 'GET',
+		forever: true,
 		url: ObjectBaseURL+'/'+tableName+'?limit=1000',
 		encoding: null,
 		headers: Object.assign({}, commandheaders)
@@ -73,6 +74,7 @@ function postData(token, tableName, body, callback) {
 	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
 	var options = {
 		method: 'POST',
+		forever: true,
 		url: ObjectBaseURL+'/'+tableName,
 		encoding: null,
 		headers: Object.assign({}, commandheaders),
@@ -107,14 +109,15 @@ function postData(token, tableName, body, callback) {
 
 
 //token:string
-//uri:string, [CityCategory, FareCategory, Accounting]
+//uri:string
 //qs: paramaters, {key:value}
-//callback:function(error, response, data)
+//callback:function(error, requestOptions, response, data)
 function getAPIData(token, uri, paramaters, callback) {
 	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
 	if(typeof(uri) !== 'string') callback(new Error("typeof(uri) !== 'string'"));
 	var options = {
 		method: 'GET',
+		forever: true,
 		url: SpeedTestBaseURL+uri,
 		qs: paramaters,
 		headers: Object.assign({}, commandheaders)
@@ -142,7 +145,7 @@ function getAPIData(token, uri, paramaters, callback) {
 		} catch (e) {
 			error = e
 		} finally {
-			callback(error, response, data);
+			callback(error, options, response, data);
 		}
 	}); 
 }
@@ -150,12 +153,13 @@ function getAPIData(token, uri, paramaters, callback) {
 //token:string
 //uri:string
 //body: body
-//callback:function(error, data)
+//callback:function(error, requestOptions, response, data)
 function postAPIData(token, uri, body, callback) {
 	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
 	if(typeof(uri) !== 'string') callback(new Error("typeof(uri) !== 'string'"));
 	var options = {
 		method: 'POST',
+		forever: true,
 		url: SpeedTestBaseURL+uri,
 		encoding: null,
 		headers: Object.assign({}, commandheaders),
@@ -183,7 +187,7 @@ function postAPIData(token, uri, body, callback) {
 		} catch(e) {
 			error = e;
 		} finally {
-			callback(error,data);
+			callback(error,options, response, data);
 		}
 	});
 }
@@ -455,7 +459,7 @@ module.exports={
 	//body: json string
 	//callback: function(error, data)
 	createNewTasks: function(token, body, callback) {
-		postAPIData(token, '/st', body, function(error, data){
+		postAPIData(token, '/st', body, function(error, requestOptions, response, data){
 			if(!error) {
 				// EX:{
 				// 	"Code": 0,
@@ -475,6 +479,15 @@ module.exports={
 				}
 			}
 			callback(error, data);
+		})
+	},
+
+	//token:string
+	//TaskID:string
+	//callback:function(error, requestOptions, response, data)
+	getTaskResult: function(token, TaskID, callback) {
+		getAPIData(token, '/st/result', { TaskID: TaskID },function(error, requestOptions, response, data){
+			callback(error, requestOptions, response, data);
 		})
 	}
 }
