@@ -45,8 +45,8 @@ if(argv.h || process.argv[2] == null  ) {
     console.log("Usage: node js {-i inputfile} [-o outputfile] [-c CSV_outputfile] [-p]");
     console.log("-i input json file");
     console.log("-o output csv file");
-    console.log("-r input data from result file (CSV)");
-    console.log("-c output csv file for report");
+    console.log("-r input data from result file (CSV) (results.csv)");
+    console.log("-c output csv file for report (statistics.cs)");
     console.log("-p post object to baas mongo");
     console.log("Example:");
     console.log("node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv");
@@ -209,9 +209,6 @@ function series(element) {
                     taskCompleted.httpcurrent++;
                 }
                 taskCompleted.current++;
-                //log
-                console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
-                series(queryTask.shift());
             } catch (error) {
                 console.error('options');
                 console.error(options);
@@ -228,6 +225,10 @@ function series(element) {
                     queryTask.push(element);
                     //throw error;
                 }
+            } finally {
+                //log
+                console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+                series(queryTask.shift());
             }
         }); 
 	} else {
@@ -259,7 +260,7 @@ if(FileInputRsultsCSV) {
                 input: fs.createReadStream(FileInput)
             }).on('close', function(){
                 //https query
-                running = 50;
+                running = 50<queryTask.length? 50:queryTask.length();
                 for(var i=0; i< running;i++) {
                     series(queryTask.shift());
                 }
@@ -290,45 +291,6 @@ if(FileInputRsultsCSV) {
                             throw error;
                         }
                     });
-                    /*
-                    var httpoptions = {
-                        method: 'POST',
-                        url: 'http://10.10.20.60:30110/objects/v2/LongTermTask_dnion',
-                        headers: {
-                            'cache-control': 'no-cache',
-                            'x-droi-role': 'AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr',
-                            'x-droi-appid': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA' },
-                        body: JSON.stringify(obj)
-                    };
-                
-                    REQUEST(httpoptions, function (error, response, body) {
-                        if (error) {
-                            throw new Error(error)
-                        } else {
-                            var data = JSON.parse(body);
-                            if(data.Code == undefined || data.Code != 0) {
-                                error = new Error("ERROR: data.Code="+data.Code);
-                            } else if(data.Result == undefined) {
-                                error = new Error("ERROR: data.Result="+data.Result);
-                            } else if(data.Result.Created == undefined) {
-                                error = new Error("ERROR: data.Result.Created="+data.Result.Created);
-                            } else if(data.Result._Id == undefined) {
-                                error = new Error("ERROR: data.Result._Id="+data.Result._Id);
-                            } else if(data.Result.UpdatedAt == undefined) {
-                                error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
-                            } else {
-                            }
-                            if(error) {
-                                console.log(body);
-                                jsonfile.writeFile(FileERROR, obj, {flag: 'a'}, function (err) {
-                                    console.log(body);
-                                    console.error(err)
-                                })
-                                throw error;
-                            }
-                        }
-                    });
-                    */
                 }
             });
         }
