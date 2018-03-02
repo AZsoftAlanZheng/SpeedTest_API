@@ -11,7 +11,7 @@ commandheaders = {
 	'Cache-Control':'no-cache',
 	'Content-Type': 'application/json'
 }
-
+ObjectBaseURL = 'https://api.droibaas.com/rest/objects/v2';
 SpeedTestBaseURL = 'https://api.droibaas.com/api/v2/speedtest/v1';
 
 //token:string
@@ -23,7 +23,7 @@ function getData(token, conditions, tableName, callback) {
 	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
 	var options = {
 		method: 'GET',
-		url: 'https://api.droibaas.com/rest/objects/v2/'+tableName+'?limit=1000',
+		url: ObjectBaseURL+'/'+tableName+'?limit=1000',
 		encoding: null,
 		headers: Object.assign({}, commandheaders)
 	};
@@ -62,15 +62,12 @@ function getData(token, conditions, tableName, callback) {
 //tableName:string, [CityCategory, FareCategory, Accounting]
 //body: body
 //callback:function(error, data)
-//!!!!!
-//TODO: verify this function!!!!!
-//!!!!!
 function postData(token, tableName, body, callback) {
 	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
 	if(typeof(tableName) !== 'string') callback(new Error("typeof(tableName) !== 'string'"));
 	var options = {
 		method: 'POST',
-		url: 'https://api.droibaas.com/rest/objects/v2/'+tableName,
+		url: ObjectBaseURL+'/'+tableName,
 		encoding: null,
 		headers: Object.assign({}, commandheaders),
 		body: body
@@ -361,9 +358,6 @@ module.exports={
 	//tableName: string
 	//body: json string
 	//callback: function(error, data)
-	//!!!!!
-	//TODO: verify this function!!!!!
-	//!!!!!
 	createObject: function(token, tableName, body, callback) {
 		postData(token, tableName, body, function(error, data){
 			if(!error) {

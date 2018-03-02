@@ -280,6 +280,17 @@ if(FileInputRsultsCSV) {
             
                 //POST Object
                 if(postObject) {
+                    CONFIG.createObject('AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr','LongTermTask_dnion',JSON.stringify(obj),function(error,data){
+                        if(error) {
+                            console.log(body);
+                            jsonfile.writeFile(FileERROR, obj, {flag: 'a'}, function (err) {
+                                console.log(body);
+                                console.error(err)
+                            })
+                            throw error;
+                        }
+                    });
+                    /*
                     var httpoptions = {
                         method: 'POST',
                         url: 'http://10.10.20.60:30110/objects/v2/LongTermTask_dnion',
@@ -317,6 +328,7 @@ if(FileInputRsultsCSV) {
                             }
                         }
                     });
+                    */
                 }
             });
         }
