@@ -39,22 +39,27 @@ function getData(token, conditions, tableName, callback) {
 		else options.url = options.url+'&'+conditions;
 	}
 	REQUEST(options, function(error, response, body){
-		if(!error) {
-			var data = JSON.parse(body);
-			if(data.Code == undefined || data.Code != 0) {
-				error = new Error("ERROR: data.Code="+data.Code);
-			} else if(data.Count == undefined) {
-				error = new Error("ERROR: data.Count="+data.Count);
-			} else if(data.Result == undefined) {
-				error = new Error("ERROR: data.Result="+data.Result);
-			} else if(data.Count != data.Result.length) {
-				error = new Error("ERROR: data.Count != data.Result.length");
-			} else if(data.Result.length != 0 && data.Result[data.Result.length-1]._Id == undefined) {
-				error = new Error("ERROR: data.Result.length != 0 && data.Result[data.Result.length-1]._Id == undefined");
-			} else {
+		try {
+			if(!error) {
+				var data = JSON.parse(body);
+				if(data.Code == undefined || data.Code != 0) {
+					error = new Error("ERROR: data.Code="+data.Code);
+				} else if(data.Count == undefined) {
+					error = new Error("ERROR: data.Count="+data.Count);
+				} else if(data.Result == undefined) {
+					error = new Error("ERROR: data.Result="+data.Result);
+				} else if(data.Count != data.Result.length) {
+					error = new Error("ERROR: data.Count != data.Result.length");
+				} else if(data.Result.length != 0 && data.Result[data.Result.length-1]._Id == undefined) {
+					error = new Error("ERROR: data.Result.length != 0 && data.Result[data.Result.length-1]._Id == undefined");
+				} else {
+				}
 			}
+		} catch(e) {
+			error = e;
+		} finally {
+			callback(error,data);
 		}
-		callback(error,data);
 	}); 
 }
 
@@ -80,21 +85,26 @@ function postData(token, tableName, body, callback) {
 	options.headers['X-Droi-Session-Token'] = token;
 
 	REQUEST(options, function (error, response, body) {
-        if (!error) {
-			var data = JSON.parse(body);
-            if(data.Code == undefined || data.Code != 0) {
-                error = new Error("ERROR: data.Code="+data.Code);
-            } else if(data.Result == undefined) {
-                error = new Error("ERROR: data.Result="+data.Result);
-            } else {
-            }
+		try {
+			if (!error) {
+				var data = JSON.parse(body);
+				if(data.Code == undefined || data.Code != 0) {
+					error = new Error("ERROR: data.Code="+data.Code);
+				} else if(data.Result == undefined) {
+					error = new Error("ERROR: data.Result="+data.Result);
+				} else {
+				}
+			}
+		} catch(e) {
+			error = e;
+		} finally {
+			callback(error,data);
 		}
-		callback(error,data);
 	});
 }
 
 //token:string
-//uri:string, [CityCategory, FareCategory, Accounting]
+//uri:string
 //body: body
 //callback:function(error, data)
 function postAPIData(token, uri, body, callback) {
@@ -115,16 +125,21 @@ function postAPIData(token, uri, body, callback) {
 	options.headers['X-Droi-Session-Token'] = token;
 
 	REQUEST(options, function (error, response, body) {
-        if (!error) {
-			var data = JSON.parse(body);
-            if(data.Code == undefined || data.Code != 0) {
-                error = new Error("ERROR: data.Code="+data.Code);
-            } else if(data.Result == undefined) {
-                error = new Error("ERROR: data.Result="+data.Result);
-            } else {
-            }
+		try {
+			if (!error) {
+				var data = JSON.parse(body);
+				if(data.Code == undefined || data.Code != 0) {
+					error = new Error("ERROR: data.Code="+data.Code);
+				} else if(data.Result == undefined) {
+					error = new Error("ERROR: data.Result="+data.Result);
+				} else {
+				}
+			}
+		} catch(e) {
+			error = e;
+		} finally {
+			callback(error,data);
 		}
-		callback(error,data);
 	});
 }
 
@@ -168,19 +183,24 @@ module.exports={
 		
 		REQUEST(options, function(error, response, body){
 			var token;
-			if(!error) {
-				var data = JSON.parse(body);
-				if(data.Code == undefined || data.Code != 0) {
-					error = new Error("ERROR: data.Code="+data.Code);
-				} else if(data.Result == undefined) {
-					error = new Error("ERROR: data.Result="+data.Result);
-				} else if(data.Result.Token == undefined) {
-					error = new Error("ERROR: data.Token="+data.Result.Token);
-				} else {
-					token = data.Result.Token;
+			try {
+				if(!error) {
+					var data = JSON.parse(body);
+					if(data.Code == undefined || data.Code != 0) {
+						error = new Error("ERROR: data.Code="+data.Code);
+					} else if(data.Result == undefined) {
+						error = new Error("ERROR: data.Result="+data.Result);
+					} else if(data.Result.Token == undefined) {
+						error = new Error("ERROR: data.Token="+data.Result.Token);
+					} else {
+						token = data.Result.Token;
+					}
 				}
+			} catch(e) {
+				error = e;
+			} finally {
+				callback(error,token);
 			}
-			callback(error,token);
 		}); 
 	},
 
