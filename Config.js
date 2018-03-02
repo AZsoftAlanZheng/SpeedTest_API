@@ -39,9 +39,10 @@ function getData(token, conditions, tableName, callback) {
 		else options.url = options.url+'&'+conditions;
 	}
 	REQUEST(options, function(error, response, body){
+		var data = null;
 		try {
 			if(!error) {
-				var data = JSON.parse(body);
+				data = JSON.parse(body);
 				if(data.Code == undefined || data.Code != 0) {
 					error = new Error("ERROR: data.Code="+data.Code);
 				} else if(data.Count == undefined) {
@@ -85,9 +86,10 @@ function postData(token, tableName, body, callback) {
 	options.headers['X-Droi-Session-Token'] = token;
 
 	REQUEST(options, function (error, response, body) {
+		var data = null;
 		try {
 			if (!error) {
-				var data = JSON.parse(body);
+				data = JSON.parse(body);
 				if(data.Code == undefined || data.Code != 0) {
 					error = new Error("ERROR: data.Code="+data.Code);
 				} else if(data.Result == undefined) {
@@ -101,6 +103,48 @@ function postData(token, tableName, body, callback) {
 			callback(error,data);
 		}
 	});
+}
+
+
+//token:string
+//uri:string, [CityCategory, FareCategory, Accounting]
+//qs: paramaters, {key:value}
+//callback:function(error, response, data)
+function getAPIData(token, uri, paramaters, callback) {
+	if(typeof(token) !== 'string') callback(new Error("typeof(token) !== 'string'"));
+	if(typeof(uri) !== 'string') callback(new Error("typeof(uri) !== 'string'"));
+	var options = {
+		method: 'GET',
+		url: SpeedTestBaseURL+uri,
+		qs: paramaters,
+		headers: Object.assign({}, commandheaders)
+	};
+
+	//add headers for posting data by SpeedTest API
+	for (var key in getAPIDataHeaders) {
+		options.headers[key] = getAPIDataHeaders[key];
+	}
+
+	options.headers['X-Droi-Session-Token'] = token;
+
+	REQUEST(options, function (error, response, body) {
+		var data = null;
+		try {
+			if (!error) {
+				data = JSON.parse(body);
+				if(data.Code == undefined || data.Code != 0) {
+					error = new Error("ERROR: data.Code="+data.Code);
+				} else if(data.Result == undefined) {
+					error = new Error("ERROR: data.Result="+data.Result);
+				} else {
+				}
+			}
+		} catch (e) {
+			error = e
+		} finally {
+			callback(error, response, data);
+		}
+	}); 
 }
 
 //token:string
@@ -125,9 +169,10 @@ function postAPIData(token, uri, body, callback) {
 	options.headers['X-Droi-Session-Token'] = token;
 
 	REQUEST(options, function (error, response, body) {
+		var data = null;
 		try {
 			if (!error) {
-				var data = JSON.parse(body);
+				data = JSON.parse(body);
 				if(data.Code == undefined || data.Code != 0) {
 					error = new Error("ERROR: data.Code="+data.Code);
 				} else if(data.Result == undefined) {
