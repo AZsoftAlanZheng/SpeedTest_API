@@ -607,22 +607,27 @@ SpeedTest API 任务下发及获取结果.
         - Finished
 
 ## Status HTTP Base (Status Base)
++ TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:59b8e012132c1d00160001ef (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest HTTP Base) - 创建任务的设定
 
 ## Status HTTPS Base (Status Base)
++ TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:59b8e012132c1d00160001f0 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest HTTPS Base) - 创建任务的设定
 
 ## Status DNS Base (Status Base)
++ TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:59b8e012132c1d00160001f1 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest DNS Base) - 创建任务的设定
 
 ## Status PING Base (Status Base)
++ TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:59b8e012132c1d00160001f2 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest PING Base) - 创建任务的设定
 
 ## Status TRACEROUTE Base (Status Base)
++ TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:59b8e012132c1d00160001f3 (required, string) - 任务辨别码
 + SpeedTest (required, SpeedTest TRACEROUTE Base) - 创建任务的设定
 
@@ -710,7 +715,10 @@ SpeedTest API 任务下发及获取结果.
         + 200: 123 (optional, number) - HTTP status code '200' 的数量
         + 404: 1 (optional, number) - HTTP status code '404' 的数量
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量  
+        + 0: 1 (optional, number) - Client status code '0' 的数量
+    + Availability (required, object)
+        + Success: 123 (required, number) - 成功完成任务的数量
+        + Failure: 1 (required, number) - 任务失败的数量
     + Time (required, object)
         + DNS (Statistics Base)
         + R (Statistics Base)
@@ -727,7 +735,10 @@ SpeedTest API 任务下发及获取结果.
         + 200: 123 (optional, number) - HTTP status code '200' 的数量
         + 404: 1 (optional, number) - HTTP status code '404' 的数量
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量  
+        + 0: 1 (optional, number) - Client status code '0' 的数量
+    + Availability (required, object)
+        + Success: 123 (required, number) - 成功完成任务的数量
+        + Failure: 1 (required, number) - 任务失败的数量
     + Time (required, object)
         + DNS (Statistics Base)
         + R (Statistics Base)
@@ -742,7 +753,10 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:111.23.45.67 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量      
+        + 0: 1 (optional, number) - Client status code '0' 的数量
+    + Availability (required, object)
+        + Success: 1 (required, number) - 成功完成任务的数量
+        + Failure: 0 (required, number) - 任务失败的数量
     + Time (required, object)
         + DNS (Statistics Base)
     + Ans (array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base])
@@ -751,7 +765,10 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量      
+        + 0: 1 (optional, number) - Client status code '0' 的数量   
+    + Availability (required, object)
+        + Success: 1 (required, number) - 成功完成任务的数量
+        + Failure: 0 (required, number) - 任务失败的数量
     + Time (required, object)
         + DNS (Statistics Base)
         + RTT (Statistics Base)
@@ -760,7 +777,10 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量      
+        + 0: 1 (optional, number) - Client status code '0' 的数量
+    + Availability (required, object)
+        + Success: 1 (required, number) - 成功完成任务的数量
+        + Failure: 0 (required, number) - 任务失败的数量
     + Time (required, object)
         + DNS (Statistics Base)
     + RTT (array[Node1 Base, Node2 Base, Node3 Base, Node4 Base])
