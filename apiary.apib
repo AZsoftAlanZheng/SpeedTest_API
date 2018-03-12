@@ -794,24 +794,29 @@ SpeedTest API 任务下发及获取结果.
 ## Raw HTTP Base (Raw Base)
 + _Id:5aa5ea9ca770935b22024559 (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code
++ ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time HTTP Base)
 
 ## Raw HTTPS Base (Raw Base)
 + _Id:5aa5ea9ca770935b2202455a (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code 
++ ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time HTTPS Base)
 
 ## Raw DNS Base (Raw Base)
 + _Id:5aa5ea9ca770935b2202455b (required, string) - ID of Raw data, 可用来查询更之后的资料
++ ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time DNS Base)
 + ANS (required, array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base]) - DNS解析资料
 
 ## Raw PING Base (Raw Base)
 + _Id:5aa5ea9ca770935b2202455c (required, string) - ID of Raw data, 可用来查询更之后的资料
++ ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time PING Base)
 
 ## Raw TRACEROUTE Base (Raw Base)
 + _Id:5aa5ea9ca770935b2202455d (required, string) - ID of Raw data, 可用来查询更之后的资料
++ ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time TRACEROUTE Base)
 
 ## Sample Base (object)
