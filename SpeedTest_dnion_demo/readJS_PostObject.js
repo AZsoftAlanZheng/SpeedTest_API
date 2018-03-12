@@ -38,6 +38,7 @@ var taskCompleted = {
     current:0,
     httpcurrent:0,
     retryTimes:0,
+    postObjects:0,
     error:0
 };
 
@@ -45,7 +46,7 @@ if(argv.h || process.argv[2] == null  ) {
     console.log("help:");
     console.log("Usage: node js {-i inputfile} [-o outputfile] [-c CSV_outputfile] [-p]");
     console.log("-i input json file");
-    console.log("-o output csv file");
+    console.log("-o output csv file (results.csv)");
     console.log("-r input data from result file (CSV) (results.csv)");
     console.log("-c output csv file for report (statistics.cs)");
     console.log("-p post object to baas mongo");
@@ -129,9 +130,9 @@ function processOutput(){
     if(process.stdout.clearLine != undefined) {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line
-        process.stdout.write("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+        process.stdout.write("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error+", postObjects:"+taskCompleted.postObjects);
     } else {
-        console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+        console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error+", postObjects:"+taskCompleted.postObjects);
     }
 }
 
@@ -152,7 +153,7 @@ function final() {
         }
         fast_csv.writeToPath(FileStatisticOutput, statisticOutputArray, {headers: true})
         .on("finish", function(){
-            console.log("END(FileStatisticOutput)");
+            console.log("\nEND(FileStatisticOutput)");
         });
     } else {
         console.log("END");
@@ -289,6 +290,8 @@ if(FileInputRsultsCSV) {
                                 console.error(err)
                             })
                             throw error;
+                        } else {
+                            taskCompleted.postObjects++;
                         }
                     });
                 }
