@@ -562,11 +562,11 @@ SpeedTest API 任务下发及获取结果.
 
 # Group 创建长时任务
 
-## HTTP/S长时任务下发 [/api/v2/speedtest/v1/lst]
+## 长时任务下发 [/api/v2/speedtest/v1/lst]
 
-### Create a Long-Term HTTP/S Task [POST]
+### Create a Long-Term Task [POST]
 
-新增一个HTTP/S长时任务给Server
+新增一个长时任务给Server
 
 + Request (application/json)
 
@@ -578,7 +578,7 @@ SpeedTest API 任务下发及获取结果.
             
     + Attributes (object)
         
-        + LongTermTask (required, LongTerm HTTP/S Base)
+        + LongTermTask (required, LongTerm Base)
         
 + Response 200 (application/json; charset=utf-8)
 
@@ -620,7 +620,7 @@ SpeedTest API 任务下发及获取结果.
     + Attributes (Response Base)
     
         + Result (required, object)
-            + LongTermTask (required, array[Status LongTerm HTTP/S Base])
+            + LongTermTask (required, array[Status LongTerm Base])
             + LastToken: 5aa9ccae6a1ec42f67001610 (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
 
 + Response 200 (application/json; charset=utf)
@@ -650,7 +650,7 @@ SpeedTest API 任务下发及获取结果.
 + Response 200 (application/json; charset=utf-8)
     + Attributes (Response Base)
     
-        + Result (required, Status LongTerm HTTP/S Base)
+        + Result (required, Status LongTerm Base)
 
 + Response 200 (application/json; charset=utf)
 
@@ -724,7 +724,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Base)
     
-        + Result (required, Status LongTerm HTTP/S Base)
+        + Result (required, Status LongTerm Base)
             + Raw (required, array[])
                 - default: HTTP
                 - Members
@@ -745,21 +745,18 @@ SpeedTest API 任务下发及获取结果.
     
 # Data Structures
 
-## LongTerm HTTP/S Base (object)
-+ Task (required, enum)
+## LongTerm Base (object)
++ Tasks (required, array[enum]) - 選擇長時任務要包含那些測試項目
     - Members
         - HTTP (SpeedTest HTTP Base)
         - HTTPS (SpeedTest HTTPS Base)
+        - DNS (SpeedTest DNS Base)
+        - PING (SpeedTest PING Base)
+        - TRACEROUTE (SpeedTest TRACEROUTE Base)
 + Period (required, object)
     + Start: 1520583602 (required, number) - 任務開始時間(UTC)
     + End: 1520584602 (required, number) - 任務結束時間(UTC)
     + Interval: 1200 (required, number) - 任務執行週期(秒)
-+ Options (optional, array[enum]) - 選擇是否要同時新增其它測試項目
-    - default: DNS
-    - Members
-        - DNS
-        - PING
-        - TRACEROUTE
 
 ## SpeedTest HTTP Base (object)
 + Type: HTTP (required, string)   
@@ -806,10 +803,10 @@ SpeedTest API 任务下发及获取结果.
         - OnGoing
         - Finished
 
-## Status LongTerm HTTP/S Base (Status Base)
+## Status LongTerm Base (Status Base)
 + LTaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 長時任务创建的时间
 + LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 長時任务辨别码
-+ LSpeedTest (required, LongTerm HTTP/S Base) - 创建長時任务的设定
++ LSpeedTest (required, LongTerm Base) - 创建長時任务的设定
 
 ## Status HTTP Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
@@ -1051,7 +1048,7 @@ SpeedTest API 任务下发及获取结果.
         1410009:Host错误.
         1410010:限制条件错误.
         1410011:营运商代码错误.
-        1410012:省份代码错误.
+        1410012:省份代码错
         1410013:网路类别错误.
         1410014:指定超时时长错误.10~120s，预设值60s
         1410015:取样客户端数量错误.预设每项1个，上限10个
@@ -1068,13 +1065,14 @@ SpeedTest API 任务下发及获取结果.
         1410026:网路类别错误，只开放Wifi测试
         1410027:测试配额不足
         1410101:LTaskID不存在.
-        1410102:缺少LTaskID. 
-        1410103:LTask已经完成了
-        1410104:LTask已经停止了
-        1410105:LTask已经过期了
+        1410102:缺少LTaskID.
+        1410103:长时任务已经完成了
+        1410104:长时任务已经停止了
+        1410105:长时任务已经过期了
         1410106:Start不符合UTC格式
         1410107:End不符合UTC格式
-        1410108:End不晚於Start
+        1410108:End不晚于Start
+        1410109:长时任务内的任务组合错误，可用组合:{组合列表}
     
     + MSG:权限不足 (required, string) - 错误讯息
 
