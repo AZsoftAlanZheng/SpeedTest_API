@@ -693,18 +693,17 @@ SpeedTest API 任务下发及获取结果.
 
 # Group 長時任务详细结果
 
-## 取得HTTP/S長時任务详细结果 [/api/v2/speedtest/v1/lst/raw{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
+## 取得長時任务详细结果 [/api/v2/speedtest/v1/lst/raw{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
     
-### get raw data of LongTerm Task (HTTP/S) [GET]
+### get raw data of LongTerm Task [GET]
 
 + Parameters
 
     + LTaskID: 5aa9ccae6a1ec42f67001610 (required,string) - 任务辨别码
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
-    + Start: 1520583602 (optional, number) - 查詢晚於Start創建的長時任務(UTC)
-    + End: 1520584602 (optional, number) - 查詢早於End創建的長時任務(UTC)
+    + Start: 1520583602 (optional, number) - 查詢晚於Start創建的長時任務,UTC
+    + End: 1520584602 (optional, number) - 查詢早於End創建的長時任務,UTC
     + Type (optional, string) - 限定回傳的測試類別
-        - default: HTTP
         - Members
             - HTTP
             - HTTPS
@@ -754,9 +753,9 @@ SpeedTest API 任务下发及获取结果.
         - PING (SpeedTest PING Base)
         - TRACEROUTE (SpeedTest TRACEROUTE Base)
 + Period (required, object)
-    + Start: 1520583602 (required, number) - 任務開始時間(UTC)
-    + End: 1520584602 (required, number) - 任務結束時間(UTC)
-    + Interval: 1200 (required, number) - 任務執行週期(秒)
+    + Start: 1520583602 (required, number) - 任務開始時間,UTC
+    + End: 1520584602 (required, number) - 任務結束時間,UTC
+    + Interval: 1200 (required, number) - 任務執行週期,秒
 
 ## SpeedTest HTTP Base (object)
 + Type: HTTP (required, string)   
