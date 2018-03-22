@@ -99,7 +99,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 任务状态
+# Group 查询任务
 
 ## 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]    
             
@@ -560,7 +560,202 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
+# Group 创建长时任务
+
+## 长时任务下发 [/api/v2/speedtest/v1/lst]
+
+### Create a Long-Term Task [POST]
+
+新增一个长时任务给Server
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+            
+    + Attributes (object)
+        
+        + LongTermTask (required, LongTerm Base)
+        
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 長時任务辨别码
+
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
+# Group 查詢長時任务
+
+## 查询長時任务状态 [/api/v2/speedtest/v1/lst{?LastToken}]    
+            
+### List All LongTerm Tasks [GET]
+
+取得所有的長時任务清单及查询長任务状态.
+
++ Parameters
+
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    
++ Request (application/json)
+    
+    + Headers
+    
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, object)
+            + LongTermTask (required, array[Status LongTerm Base])
+            + LastToken: 5aa9ccae6a1ec42f67001610 (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+            
+## 查询单一長時任务状态 [/api/v2/speedtest/v1/lst{?LTaskID}]
+
+### View a LongTerm Task Detail [GET]
+
++ Parameters
+
+    + LTaskID: 5aa9ccae6a1ec42f67001610 (required, string) - 長時任务辨别码
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+            
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (Response Base)
+    
+        + Result (required, Status LongTerm Base)
+
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)  
+
+# Group 停止長時任务
+
+## 停止長時任务 [/api/v2/speedtest/v1/lst/stop]
+
+### Stop a LongTerm Task [POST]
+
+停止已派发的長時任务
+
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+            
+    + Attributes (object)
+        + LTaskID: 5aa9ccae6a1ec42f67001610 (required, string)
+        
++ Response 200 (application/json; charset=utf-8)
+    + Attributes (Response Base)
+        + Result (required, object)
+
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+
+# Group 長時任务详细结果
+
+## 取得長時任务详细结果 [/api/v2/speedtest/v1/lst/raw{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
+    
+### get raw data of LongTerm Task [GET]
+
++ Parameters
+
+    + LTaskID: 5aa9ccae6a1ec42f67001610 (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + Start: 1520583602 (optional, number) - 查詢晚於Start創建的長時任務,UTC
+    + End: 1520584602 (optional, number) - 查詢早於End創建的長時任務,UTC
+    + Type (optional, string) - 限定回傳的測試類別
+        - Members
+            - HTTP
+            - HTTPS
+            - DNS
+            - PING
+            - TRACEROUTE
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status LongTerm Base)
+            + Raw (required, array[])
+                - default: HTTP
+                - Members
+                    - HTTP (Result HTTP Base)
+                    - HTTPS (Result HTTPS Base)
+                    - DNS (Result DNS Base)
+                    - PING (Result PING Base)
+                    - TRACEROUTE (Result TRACEROUTE Base)
+            + LastToken: 5aa9ccae6a1ec42f67001610 (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
 # Data Structures
+
+## LongTerm Base (object)
++ Tasks (required, array[enum]) - 選擇長時任務要包含那些測試項目
+    - Members
+        - HTTP (SpeedTest HTTP Base)
+        - HTTPS (SpeedTest HTTPS Base)
+        - DNS (SpeedTest DNS Base)
+        - PING (SpeedTest PING Base)
+        - TRACEROUTE (SpeedTest TRACEROUTE Base)
++ Period (required, object)
+    + Start: 1520583602 (required, number) - 任務開始時間,UTC
+    + End: 1520584602 (required, number) - 任務結束時間,UTC
+    + Interval: 1200 (required, number) - 任務執行週期,秒
 
 ## SpeedTest HTTP Base (object)
 + Type: HTTP (required, string)   
@@ -607,29 +802,39 @@ SpeedTest API 任务下发及获取结果.
         - OnGoing
         - Finished
 
+## Status LongTerm Base (Status Base)
++ LTaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 長時任务创建的时间
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 長時任务辨别码
++ LSpeedTest (required, LongTerm Base) - 创建長時任务的设定
+
 ## Status HTTP Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:5aa6146d9b53e6302000313e (required, string) - 任务辨别码
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 關聯的長時任務的長時任务辨别码，若沒關聯則為空字串
 + SpeedTest (required, SpeedTest HTTP Base) - 创建任务的设定
 
 ## Status HTTPS Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:5aa6146d9b53e6302000313f (required, string) - 任务辨别码
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 關聯的長時任務的長時任务辨别码，若沒關聯則為空字串
 + SpeedTest (required, SpeedTest HTTPS Base) - 创建任务的设定
 
 ## Status DNS Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:5aa6146d9b53e63020003140 (required, string) - 任务辨别码
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 關聯的長時任務的長時任务辨别码，若沒關聯則為空字串
 + SpeedTest (required, SpeedTest DNS Base) - 创建任务的设定
 
 ## Status PING Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:5aa6146d9b53e63020003141 (required, string) - 任务辨别码
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 關聯的長時任務的長時任务辨别码，若沒關聯則為空字串
 + SpeedTest (required, SpeedTest PING Base) - 创建任务的设定
 
 ## Status TRACEROUTE Base (Status Base)
 + TaskCreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 任务创建的时间
 + TaskID:5aa6146d9b53e63020003142 (required, string) - 任务辨别码
++ LTaskID:5aa9ccae6a1ec42f67001610 (required, string) - 關聯的長時任務的長時任务辨别码，若沒關聯則為空字串
 + SpeedTest (required, SpeedTest TRACEROUTE Base) - 创建任务的设定
 
 
@@ -842,7 +1047,7 @@ SpeedTest API 任务下发及获取结果.
         1410009:Host错误.
         1410010:限制条件错误.
         1410011:营运商代码错误.
-        1410012:省份代码错误.
+        1410012:省份代码错
         1410013:网路类别错误.
         1410014:指定超时时长错误.10~120s，预设值60s
         1410015:取样客户端数量错误.预设每项1个，上限10个
@@ -858,6 +1063,24 @@ SpeedTest API 任务下发及获取结果.
         1410025:Task已经过期了
         1410026:网路类别错误，只开放Wifi测试
         1410027:测试配额不足
+        1410101:LTaskID不存在.
+        1410102:缺少LTaskID.
+        1410103:长时任务已经完成了
+        1410104:长时任务已经停止了
+        1410105:长时任务已经过期了
+        1410106:Start错误
+        1410107:End错误
+        1410108:End不晚于Start
+        1410109:长时任务内的任务组合错误，目前可用组合:{HTTP+DNS, HTTPS+DNS}
+        1410110:缺少Period
+        1410111:缺少Start
+        1410112:缺少End
+        1410113:缺少Interval
+        1410114:Interval错误
+        1410115:缺少LongTermTask
+        1410116:缺少Tasks
+        1410117:LongTermTask错误
+        1410118:Tasks错误
     
     + MSG:权限不足 (required, string) - 错误讯息
 
