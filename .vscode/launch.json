@@ -22,6 +22,13 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "run gen_jmeter_json.js",
+            "program": "${workspaceFolder}/jmeter_test/gen_jmeter_json.js",
+            "args": []
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "run jmeter log analyser",
             "program": "${workspaceFolder}/jmeter_test/jmeter_cdn_speedtest_csv.js",
             "args": ["${workspaceFolder}/jmeter_test/20180104/TestPlanSpeedTestAPI_Log.AllCity_Carrier_Wifi2018_01_04_16_37_37.txt", "中国电信"
