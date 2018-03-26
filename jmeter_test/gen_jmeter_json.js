@@ -355,8 +355,8 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 395, Name: '黑龙江-鹤岗', Top101: false },
 { Code: 396, Name: '黑龙江-黑河', Top101: false },
 { Code: 397, Name: '黑龙江-齐齐哈', Top101: false }];
-var Carrier_Code = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-var Network_Code = [4];
+var Carrier_Code = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+var Network_Code = [1];
 
 var file_count = 1;
 var file_max_task = 50;
