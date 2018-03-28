@@ -691,11 +691,11 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 長時任务详细结果
+# Group 長時任务各子任務統計结果
 
-## 取得長時任务详细结果 [/api/v2/speedtest/v1/lst/raw{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
+## 取得長時任务各子任務的統計结果 [/api/v2/speedtest/v1/lst/subtasks{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
     
-### get raw data of LongTerm Task [GET]
+### get subtasks of LongTerm Task [GET]
 
 + Parameters
 
@@ -724,7 +724,7 @@ SpeedTest API 任务下发及获取结果.
     + Attributes (Response Base)
     
         + Result (required, Status LongTerm Base)
-            + Raw (required, array[])
+            + Subtasks (required, array[])
                 - default: HTTP
                 - Members
                     - HTTP (Result HTTP Base)
