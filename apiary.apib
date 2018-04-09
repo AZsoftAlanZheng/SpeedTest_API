@@ -524,6 +524,41 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
+# Group 格式化任务详细结果
+
+## 取得HTTP/S格式化任务详细结果 [/api/v2/speedtest/v1/st/rawFormat{?TaskID}{?LastToken}]
+    
+### get raw data of Task with format (HTTP/S) [GET]
+
++ Parameters
+
+    + TaskID:5aa6146d9b53e6302000313e (required,string) - 任务辨别码
+    + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    
++ Request (application/json)
+
+    + Headers
+
+            X-Droi-AppID: 85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA
+            X-Droi-Api-Key: nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2
+            X-Droi-Session-Token: c23d2300089f3c46
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Attributes (Response Base)
+    
+        + Result (required, Status HTTP Base)
+            + Raw (required, array[Raw HTTP Format Base])
+            + LastToken: 59b8db6eeff465001a000192 (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。沒有代表沒資料了
+ 
++ Response 200 (application/json; charset=utf)
+
+    + Attributes (Error Base)
+
++ Response 200 (application/json)
+
+    + Attributes (Response Error Base)
+    
 # Group 活跃使用者数
 
 ## 取得活跃使用者数 [/api/v2/speedtest/v1/st/users{?Carrier}{?Country_City}{?Network}{?LastToken}]
@@ -1023,6 +1058,34 @@ SpeedTest API 任务下发及获取结果.
 + _Id:5aa6146d9b53e63020003142 (required, string) - ID of Raw data, 可用来查询更之后的资料
 + ClientStatus: 0 (required, number) - Client status code
 + Time (required, Time TRACEROUTE Base)
+
+## Raw HTTP Format Base (object)
++ _Id:59b8db6eeff465001a000192 (required, string) - ID of Raw data, 可用来查询更之后的资料
++ 任务id:5aa6146d9b53e6302000313f (required, string)
++ 任务名称:自订名称 (required, string)
++ 任务类型:HTTPS (required, string)
++ 任务URL:`https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string)
++ 任务域名:`c6mvmbzh-sand.droibaascdn.com` (required, string)
++ 下载错误描述 (required, string)
++ 监测时间:`2018-02-21T02:21:08.530Z` (required, string)
++ 总传输字节数:100 (required, number)
++ 传输用时:595 (required, number)
++ 平均传输速度:168 (required, number)
++ DNS查询时间:1 (required, number)
++ TCP连接时间:185 (required, number)
++ 首包时间:589 (required, number)
++ 发送请求时间:`2018-02-21T02:21:08.530Z` (required, string)
++ 目标IP:111.23.45.67 (required, string)
++ 目标省:湖南 (required, string)
++ 目标城市:长沙 (required, string)
++ 目标运营商:中国移动 (required, string)
++ 监测点省:上海 (required, string)
++ 监测点城市:上海 (required, string)
++ 监测点运营商:中国电信 (required, string)
++ 监测点DNS (required, string)
++ 监测点IP:1.2.3.4 (required, string)
++ UUID:`7b50aa1e-1ecb-45e7-150f-62b3ebe98c58` (required, string)
++ 监测点网路类别:Wifi
 
 ## Sample Base (object)
 + Carrier:0 (required, number) - 指定营运商代码. 0:中国电信. 1:中国移动. 2:中国联通.
