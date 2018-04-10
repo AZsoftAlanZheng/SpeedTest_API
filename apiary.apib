@@ -526,14 +526,15 @@ SpeedTest API 任务下发及获取结果.
 
 # Group 格式化任务详细结果
 
-## 取得HTTP/S格式化任务详细结果 [/api/v2/speedtest/v1/st/rawFormat{?TaskID}{?LastToken}]
+## 取得HTTP/S格式化任务详细结果 [/api/v2/speedtest/v1/st/rawFormat{?TaskID}{?LastToken}{?Format}]
     
-### get raw data of Task with format (HTTP/S) [GET]
+### get raw data of Task with the format (HTTP/S) [GET]
 
 + Parameters
 
     + TaskID:5aa6146d9b53e6302000313e (required,string) - 任务辨别码
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + Format:chengyu (required, string) - 代入需要的格式代号
     
 + Request (application/json)
 
