@@ -1,7 +1,10 @@
 var fs = require('fs');
 
 //要結合成一個檔案，就cat task_HTTP_*.json >> task_HTTP_ALL.json
-var COMMANDS = ["HTTP","DNS"];
+var COMMANDS = ["HTTPS","DNS","PING","TRACEROUTE"];
+// var Carrier_Code = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+var Carrier_Code = [0,1,2];
+var Network_Code = [1];
 //除西藏、青海、新疆、台灣、香港、澳門
 var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 2, Name: '云南', Top101: false },
@@ -355,8 +358,6 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 395, Name: '黑龙江-鹤岗', Top101: false },
 { Code: 396, Name: '黑龙江-黑河', Top101: false },
 { Code: 397, Name: '黑龙江-齐齐哈', Top101: false }];
-var Carrier_Code = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-var Network_Code = [1];
 
 var file_count = 1;
 var file_max_task = 50;
@@ -403,11 +404,11 @@ function genRestriction(city,carrier,network,type) {
     //   }
 	// };
 	var templete = {
-		HTTP:{"Type":"HTTP","URL":"http://www.oo523.com/index.php","Size":1024,"Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
-		HTTPS:{"Type":"HTTPS","URL":"https://www.oo523.com/index.php","Size":1024,"Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
-		DNS:{"Type":"DNS","Host":"www.oo523.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
-		PING:{"Type":"PING","Host":"www.oo523.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
-		TRACEROUTE:{"Type":"TRACEROUTE","Host":"www.oo523.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}}
+		// HTTP:{"Type":"HTTP","URL":"http://m.zhbservice.com/m/js/index.32dd1b82.bundle.js","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		HTTPS:{"Type":"HTTPS","URL":"https://m.zhbservice.com/m/js/index.32dd1b82.bundle.js","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		DNS:{"Type":"DNS","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		PING:{"Type":"PING","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		TRACEROUTE:{"Type":"TRACEROUTE","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}}
 	}
 
     templete[type].Restriction.Country_City = city;

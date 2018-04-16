@@ -50,6 +50,14 @@
             // "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json.201802071220_201802080940","-c","${workspaceFolder}/SpeedTest_dnion_demo/statistics.csv.201802071220_201802080940"
             "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json.201802141120_201802211020","-c","${workspaceFolder}/SpeedTest_dnion_demo/statistics.csv.201802141120_201802211020"
             ]
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run jsonToCsv",
+            "program": "${workspaceFolder}/jsonToCsv/index.js",
+            "args": [
+            ]
+        },
     ]
 }
