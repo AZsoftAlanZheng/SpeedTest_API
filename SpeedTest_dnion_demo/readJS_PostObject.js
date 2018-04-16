@@ -5,7 +5,7 @@
 //-c output statistic file for report (CSV)
 //-p post object to baas mongo
 //Example:
-//node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv
+//node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv [-p]
 //node js -r ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv
 //inputfile format:
 //{"Type":128,"ts":1517988002,"Task":["5a7aa8d6063e41117600404d","5a7aa8d6063e41117600404e","5a7aa8d6063e41117600404f","5a7aa8d6063e411176004050","5a7aa8d6063e411176004051","5a7aa8d6063e411176004052","5a7aa8d6063e411176004053","5a7aa8d6063e411176004054","5a7aa8d6063e411176004055","5a7aa8d6063e411176004056","5a7aa8d6063e411176004057","5a7aa8d6063e411176004058","5a7aa8d6063e411176004059","5a7aa8d6063e41117600405a","5a7aa8d6063e41117600405b","5a7aa8d6063e41117600405c","5a7aa8d6063e41117600405d","5a7aa8d6063e41117600405e","5a7aa8d6063e41117600405f","5a7aa8d6063e411176004060","5a7aa8d6063e411176004061","5a7aa8d6063e411176004062","5a7aa8d6063e411176004063","5a7aa8d6063e411176004064","5a7aa8d6063e411176004065","5a7aa8d6063e411176004066","5a7aa8d6063e411176004067","5a7aa8d6063e411176004068","5a7aa8d6063e411176004069","5a7aa8d6063e41117600406a","5a7aa8d6063e41117600406b","5a7aa8d6063e41117600406c","5a7aa8d6063e41117600406d","5a7aa8d6063e41117600406e","5a7aa8d6063e41117600406f","5a7aa8d6063e411176004070","5a7aa8d6063e411176004071","5a7aa8d6063e411176004072","5a7aa8d6063e411176004073","5a7aa8d6063e411176004074","5a7aa8d6063e411176004075","5a7aa8d6063e411176004076","5a7aa8d6063e411176004077","5a7aa8d6063e411176004078","5a7aa8d6063e411176004079","5a7aa8d6063e41117600407a","5a7aa8d6063e41117600407b","5a7aa8d6063e41117600407c"]}
@@ -20,6 +20,7 @@ var fast_csv = require('fast-csv');
 var CONFIG = require('../Config.js');
 var argv = require('minimist')(process.argv.slice(2));
 var running = 0;
+var MAX_RUNNING = 50;
 console.dir(argv);
 
 var FileERROR = '/home/alan/opt/backup/git/SpeedTest_API/SpeedTest_dnion_demo/ERROR_PostObjcect.json';
@@ -37,6 +38,7 @@ var taskCompleted = {
     current:0,
     httpcurrent:0,
     retryTimes:0,
+    postObjects:0,
     error:0
 };
 
@@ -44,9 +46,9 @@ if(argv.h || process.argv[2] == null  ) {
     console.log("help:");
     console.log("Usage: node js {-i inputfile} [-o outputfile] [-c CSV_outputfile] [-p]");
     console.log("-i input json file");
-    console.log("-o output csv file");
-    console.log("-r input data from result file (CSV)");
-    console.log("-c output csv file for report");
+    console.log("-o output csv file (results.csv)");
+    console.log("-r input data from result file (CSV) (results.csv)");
+    console.log("-c output csv file for report (statistics.cs)");
     console.log("-p post object to baas mongo");
     console.log("Example:");
     console.log("node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv");
@@ -91,8 +93,10 @@ if(FileOutput) {
 
 var ctx = {
     user:{
-        name: 'dnion',
-        pw: '250b402a5c95f64cf1cafde438b38a3c5ce03bc2003fcd8c917a97700fb52c3c',
+//        name: 'dnion',
+//        pw: '250b402a5c95f64cf1cafde438b38a3c5ce03bc2003fcd8c917a97700fb52c3c',
+        name: 'restful_api_test',
+        pw: '464c7a646393b68d1a42076c010b5aae418d8d322f233ca0b8cd8e2c6bcd9676',
         token: null
     }
 }
@@ -124,6 +128,16 @@ function statistic(obj) {
     }
 }
 
+function processOutput(){
+    if(process.stdout.clearLine != undefined) {
+        process.stdout.clearLine();  // clear current text
+        process.stdout.cursorTo(0);  // move cursor to beginning of line
+        process.stdout.write("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error+", postObjects:"+taskCompleted.postObjects);
+    } else {
+        console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error+", postObjects:"+taskCompleted.postObjects);
+    }
+}
+
 function final() {
     if(FileStatisticOutput) {
         for (var k in outputResult){
@@ -141,7 +155,7 @@ function final() {
         }
         fast_csv.writeToPath(FileStatisticOutput, statisticOutputArray, {headers: true})
         .on("finish", function(){
-            console.log("END(FileStatisticOutput)");
+            console.log("\nEND(FileStatisticOutput)");
         });
     } else {
         console.log("END");
@@ -150,22 +164,9 @@ function final() {
 
 function series(element) {
 	if(element) {
-        var options = {
-            method: 'GET',
-            url: 'https://api.droibaas.com/api/v2/speedtest/v1/st/result',
-            qs: { TaskID: element.TaskID },
-            headers: { 
-                'cache-control': 'no-cache',
-                'x-droi-session-token': ctx.user.token,
-                'x-droi-api-key': 'nz-pvPNyKKMCufYgefFzas5LPhIZuKttV93lCxp2BBOaI8TK3_4ayOukxjYU56s2',
-                'x-droi-appid': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA'
-            } 
-        };
-        
-        REQUEST(options, function (error, response, body) {
+        CONFIG.getTaskResult(ctx.user.token, element.TaskID , function (error, options, response, data) {
             try {
                 if (error) throw new Error(error);
-                var data = JSON.parse(body)
                 if(data.Code != 0) {
                     throw new Error(data);
                 }
@@ -209,9 +210,6 @@ function series(element) {
                     taskCompleted.httpcurrent++;
                 }
                 taskCompleted.current++;
-                //log
-                console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
-                series(queryTask.shift());
             } catch (error) {
                 console.error('options');
                 console.error(options);
@@ -221,15 +219,21 @@ function series(element) {
                     console.error('retry');
                     taskCompleted.retryTimes++;
                     queryTask.push(element);
+                    console.log();
                 } else {
                     console.error("response:");
                     console.error(response);
                     taskCompleted.error++;
                     queryTask.push(element);
+                    console.log();
                     //throw error;
                 }
+            } finally {
+                //log
+                processOutput();
+                series(queryTask.shift());
             }
-        }); 
+        });
 	} else {
         running--;
         if(running == 0)
@@ -259,7 +263,7 @@ if(FileInputRsultsCSV) {
                 input: fs.createReadStream(FileInput)
             }).on('close', function(){
                 //https query
-                running = 50;
+                running = MAX_RUNNING<queryTask.length? MAX_RUNNING:queryTask.length;
                 for(var i=0; i< running;i++) {
                     series(queryTask.shift());
                 }
@@ -280,41 +284,16 @@ if(FileInputRsultsCSV) {
             
                 //POST Object
                 if(postObject) {
-                    var httpoptions = {
-                        method: 'POST',
-                        url: 'http://10.10.20.60:30110/objects/v2/LongTermTask_dnion',
-                        headers: {
-                            'cache-control': 'no-cache',
-                            'x-droi-role': 'AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr',
-                            'x-droi-appid': '85kvmbzhq2gdJIXW5iNhM1CLD5CJ1Ua1lQC0hBwA' },
-                        body: JSON.stringify(obj)
-                    };
-                
-                    REQUEST(httpoptions, function (error, response, body) {
-                        if (error) {
-                            throw new Error(error)
-                        } else {
-                            var data = JSON.parse(body);
-                            if(data.Code == undefined || data.Code != 0) {
-                                error = new Error("ERROR: data.Code="+data.Code);
-                            } else if(data.Result == undefined) {
-                                error = new Error("ERROR: data.Result="+data.Result);
-                            } else if(data.Result.Created == undefined) {
-                                error = new Error("ERROR: data.Result.Created="+data.Result.Created);
-                            } else if(data.Result._Id == undefined) {
-                                error = new Error("ERROR: data.Result._Id="+data.Result._Id);
-                            } else if(data.Result.UpdatedAt == undefined) {
-                                error = new Error("ERROR: data.Result.UpdatedAt="+data.Result.UpdatedAt);
-                            } else {
-                            }
-                            if(error) {
+                    CONFIG.createObject('AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr','LongTermTask_dnion',JSON.stringify(obj),function(error,data){
+                        if(error) {
+                            console.log(body);
+                            jsonfile.writeFile(FileERROR, obj, {flag: 'a'}, function (err) {
                                 console.log(body);
-                                jsonfile.writeFile(FileERROR, obj, {flag: 'a'}, function (err) {
-                                    console.log(body);
-                                    console.error(err)
-                                })
-                                throw error;
-                            }
+                                console.error(err)
+                            })
+                            throw error;
+                        } else {
+                            taskCompleted.postObjects++;
                         }
                     });
                 }
