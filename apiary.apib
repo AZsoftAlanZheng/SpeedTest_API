@@ -851,21 +851,22 @@ SpeedTest API 任务下发及获取结果.
 # Data Structures
 
 ## Chengyu LongTerm Base (object)
-+ 探针任务名:自订名称 (required, string)
-+ 业务类型:HTTP (required, string) - HTTP or HTTPS
-+ 探测地址:`http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
-+ 探测点 (required, array[enum])
++ TaskName:自订名称 (required, string) - 探针任务名
++ TaskType:HTTP (required, string) - 任务类型 HTTP or HTTPS
++ TaskURL:`http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - 探测地址 URL
++ Target (required, array[enum]) - 探测点
     - Members
         - (object)
-            + 城市:1 (required, number)
-            + 运营商:0 (required, number)
-            + 节点数量:1 (required, number)
+            + City:1 (required, number) - 城市
+            + ISP:0 (required, number) - 运营商
+            + ClientNum:1 (required, number) - 节点数量
+            + Network:1 (required, number) - 监测点网路类别
 + Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取
 + MD5: 36a92cc94a9e0fa21f625f8bfb007adf (optional, string) - 档案下载部份的MD5检查码，有填值就会做完整性检查
-+ 强制DNS测试: false (required, boolean) - true:强制测试点做dns测试，false，dns可能会用cache的
-+ 开始时间: 1520583602 (required, number) - 任务开始时间,UTC
-+ 结束时间: 1520584602 (required, number) - 任务结束时间,UTC
-+ 频率: 300 (required, number) - 任务执行周期,秒
++ DNSTest: false (required, boolean) - 强制DNS测试, true:强制测试点做dns测试，false，dns可能会用cache的
++ Start: 1520583602 (required, number) - 开始时间,任务开始时间,UTC
++ End: 1520584602 (required, number) - 结束时间,任务结束时间,UTC
++ Period: 300 (required, number) - 频率,任务执行周期,秒
     
 ## LongTerm Base (object)
 + Tasks (required, array[enum]) - 选择长时任务要包含那些测试项目
