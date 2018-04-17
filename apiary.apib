@@ -1154,31 +1154,31 @@ SpeedTest API 任务下发及获取结果.
 
 ## Raw HTTP Format Base (object)
 + _Id:59b8db6eeff465001a000192 (required, string) - ID of Raw data, 可用来查询更之后的资料
-+ 任务id:5aa6146d9b53e6302000313f (required, string)
-+ 任务名称:自订名称 (required, string)
-+ 任务类型:HTTPS (required, string)
-+ 任务URL:`https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string)
-+ 任务域名:`c6mvmbzh-sand.droibaascdn.com` (required, string)
-+ 下载错误描述 (required, string)
-+ 监测时间:`2018-02-21T02:21:08.530Z` (required, string)
-+ 总传输字节数:100 (required, number)
-+ 传输用时:595 (required, number)
-+ 平均传输速度:168 (required, number)
-+ DNS查询时间:1 (required, number)
-+ TCP连接时间:185 (required, number)
-+ 首包时间:589 (required, number)
-+ 发送请求时间:`2018-02-21T02:21:08.530Z` (required, string)
-+ 目标IP:111.23.45.67 (required, string)
-+ 目标省:湖南 (required, string)
-+ 目标城市:长沙 (required, string)
-+ 目标运营商:中国移动 (required, string)
-+ 监测点省:上海 (required, string)
-+ 监测点城市:上海 (required, string)
-+ 监测点运营商:中国电信 (required, string)
-+ 监测点DNS (required, string)
-+ 监测点IP:1.2.3.4 (required, string)
++ TaskID:5aa6146d9b53e6302000313f (required, string) - 任务id
++ TaskName:自订名称 (required, string) - 任务名称
++ TaskType:HTTPS (required, string) - 任务类型
++ TaskURL:`https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - 任务URL
++ TaskDomain:`c6mvmbzh-sand.droibaascdn.com` (required, string) - 任务域名
++ ErrorDescription (required, string) - 下载错误描述
++ MonitorTime:`2018-02-21T02:21:08.530Z` (required, string) - 监测时间
++ Size:100 (required, number) - 总传输字节数
++ RTT:595 (required, number) - 传输用时
++ AvgRate:168 (required, number) - 平均传输速度
++ DNS:1 (required, number) - DNS查询时间
++ Connect:185 (required, number) - TCP连接时间
++ TTFB:589 (required, number) - 首包时间
++ CreationTime:`2018-02-21T02:21:08.530Z` (required, string) - 发送请求时间
++ TargetIP:111.23.45.67 (required, string) - 目标IP
++ TargetProvince:湖南 (required, string) - 目标省
++ TargetCity:长沙 (required, string) - 目标城市
++ TargetISP:中国移动 (required, string) - 目标运营商
++ ClientProvince:上海 (required, string) - 监测点省
++ ClientCity:上海 (required, string) - 监测点城市
++ ClientISP:中国电信 (required, string) - 监测点运营商
++ CleintDNS (required, string) - 监测点DNS
++ ClientIP:1.2.3.4 (required, string) - 监测点IP
++ Network:Wifi (required, string) - 监测点网路类别
 + UUID:`7b50aa1e-1ecb-45e7-150f-62b3ebe98c58` (required, string)
-+ 监测点网路类别:Wifi
 
 ## Sample Base (object)
 + Carrier:0 (required, number) - 指定营运商代码. 0:中国电信. 1:中国移动. 2:中国联通.
