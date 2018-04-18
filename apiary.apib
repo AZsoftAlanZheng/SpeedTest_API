@@ -893,8 +893,8 @@ SpeedTest API 任务下发及获取结果.
 ## SpeedTest HTTPS Base (object)
 + Type: HTTPS (required, string)   
 + URL: `https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
-+ Size: 100 (optional, number) - 下载档案的大小
-+ MD5: 36a92cc94a9e0fa21f625f8bfb007adf (optional, string) - 下载档案的MD5检查码   
++ Size: 100 (optional, number) - 下载档案的大小，设定后会抓取此固定大小，不足会报错，没设定则不检查
++ MD5: 36a92cc94a9e0fa21f625f8bfb007adf (optional, string) - 下载档案的MD5检查码，设定后会检查完整性，没设定则不检查
 + Headers (required, object) - 填加自定义header头域
     - Key1: Value1 (optional, string) -- 自定义Key及Value
 + Restriction (required, Restriction Base) - 加入限制条件
