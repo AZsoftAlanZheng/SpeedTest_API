@@ -1,12 +1,34 @@
 var fs = require('fs');
 
 //要結合成一個檔案，就cat task_HTTP_*.json >> task_HTTP_ALL.json
-var COMMANDS = ["HTTPS","DNS","PING","TRACEROUTE"];
+var COMMANDS = ["HTTP","DNS"];
+
+var Client = 5;
 // var Carrier_Code = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-var Carrier_Code = [0,1,2];
-var Network_Code = [1];
+var Carrier = [{ Code: 0, Name: '中国电信' },
+{ Code: 1, Name: '中国移动' },
+{ Code: 2, Name: '中国联通' },
+{ Code: 3, Name: '中国铁通' },
+{ Code: 4, Name: '教育网' },
+{ Code: 5, Name: '鹏博士' },
+{ Code: 6, Name: '阿里云' },
+{ Code: 7, Name: '歌华有线' },
+{ Code: 8, Name: '方正宽带' },
+// { Code: 9, Name: '浙江华数' },
+// { Code: 10, Name: '河北广电'},
+// { Code: 11, Name: '重庆广电' },
+// { Code: 12, Name: '广电网' },
+// { Code: 13, Name: '科技网' },
+{ Code: 14, Name: '江苏有线' }]
+
+var Network = [	{ Code: 1, Name: 'Wifi' },
+// { Code: 2, Name: '2G' },
+// { Code: 3, Name: '3G' },
+// { Code: 4, Name: '4G' },
+];
+
 //除西藏、青海、新疆、台灣、香港、澳門
-var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
+var Country_City = [ { Code: 1, Name: '上海-上海', Top101: true },
 { Code: 2, Name: '云南', Top101: false },
 { Code: 3, Name: '云南-临沧', Top101: false },
 { Code: 4, Name: '云南-丽江', Top101: false },
@@ -38,6 +60,16 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 30, Name: '内蒙古-锡林郭勒盟', Top101: false },
 { Code: 31, Name: '内蒙古-阿拉善盟', Top101: false },
 { Code: 32, Name: '北京-北京', Top101: true },
+// { Code: 33, Name: '台湾', Top101: false },
+// { Code: 34, Name: '台湾-台中市', Top101: false },
+// { Code: 35, Name: '台湾-台北市', Top101: false },
+// { Code: 36, Name: '台湾-台南市', Top101: false },
+// { Code: 37, Name: '台湾-屏东县', Top101: false },
+// { Code: 38, Name: '台湾-彰化县', Top101: false },
+// { Code: 39, Name: '台湾-新北市', Top101: false },
+// { Code: 40, Name: '台湾-桃园市', Top101: false },
+// { Code: 41, Name: '台湾-苗栗县', Top101: false },
+// { Code: 42, Name: '台湾-高雄市', Top101: false },
 { Code: 43, Name: '吉林', Top101: false },
 { Code: 44, Name: '吉林-吉林市', Top101: true },
 { Code: 45, Name: '吉林-四平', Top101: false },
@@ -161,6 +193,22 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 163, Name: '广西-贺州', Top101: false },
 { Code: 164, Name: '广西-钦州', Top101: false },
 { Code: 165, Name: '广西-防城港', Top101: false },
+// { Code: 166, Name: '新疆', Top101: false },
+// { Code: 167, Name: '新疆-乌鲁木齐', Top101: true },
+// { Code: 168, Name: '新疆-伊犁哈萨克自治州', Top101: false },
+// { Code: 169, Name: '新疆-克孜勒苏柯尔克孜自治州', Top101: false },
+// { Code: 170, Name: '新疆-克拉玛依', Top101: false },
+// { Code: 171, Name: '新疆-博尔塔拉蒙古自治州', Top101: false },
+// { Code: 172, Name: '新疆-吐鲁番', Top101: false },
+// { Code: 173, Name: '新疆-和田地区', Top101: false },
+// { Code: 174, Name: '新疆-哈密', Top101: false },
+// { Code: 175, Name: '新疆-喀什地区', Top101: false },
+// { Code: 176, Name: '新疆-塔城地区', Top101: false },
+// { Code: 177, Name: '新疆-巴音郭楞蒙古自治州', Top101: false },
+// { Code: 178, Name: '新疆-昌吉回族自治州', Top101: false },
+// { Code: 179, Name: '新疆-石河子', Top101: false },
+// { Code: 180, Name: '新疆-阿克苏地区', Top101: false },
+// { Code: 181, Name: '新疆-阿勒泰地区', Top101: false },
 { Code: 182, Name: '江苏', Top101: false },
 { Code: 183, Name: '江苏-南京', Top101: true },
 { Code: 184, Name: '江苏-南通', Top101: true },
@@ -230,25 +278,25 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 248, Name: '浙江-舟山', Top101: false },
 { Code: 249, Name: '浙江-衢州', Top101: false },
 { Code: 250, Name: '浙江-金华', Top101: true },
-{ Code: 251, Name: '海南', Top101: false },
-{ Code: 252, Name: '海南-万宁', Top101: false },
-{ Code: 253, Name: '海南-三亚', Top101: false },
-{ Code: 254, Name: '海南-东方', Top101: false },
-{ Code: 255, Name: '海南-临高县', Top101: false },
-{ Code: 256, Name: '海南-乐东黎族自治县', Top101: false },
-{ Code: 257, Name: '海南-五指山', Top101: false },
-{ Code: 258, Name: '海南-保亭黎族苗族自治县', Top101: false },
-{ Code: 259, Name: '海南-儋州', Top101: false },
-{ Code: 260, Name: '海南-定安县', Top101: false },
-{ Code: 261, Name: '海南-屯昌县', Top101: false },
-{ Code: 262, Name: '海南-文昌', Top101: false },
-{ Code: 263, Name: '海南-昌江黎族自治县', Top101: false },
-{ Code: 264, Name: '海南-海口', Top101: true },
-{ Code: 265, Name: '海南-澄迈县', Top101: false },
-{ Code: 266, Name: '海南-琼中黎族苗族自治县', Top101: false },
-{ Code: 267, Name: '海南-琼海', Top101: false },
-{ Code: 268, Name: '海南-白沙黎族自治县', Top101: false },
-{ Code: 269, Name: '海南-陵水黎族自治县', Top101: false },
+// { Code: 251, Name: '海南', Top101: false },
+// { Code: 252, Name: '海南-万宁', Top101: false },
+// { Code: 253, Name: '海南-三亚', Top101: false },
+// { Code: 254, Name: '海南-东方', Top101: false },
+// { Code: 255, Name: '海南-临高县', Top101: false },
+// { Code: 256, Name: '海南-乐东黎族自治县', Top101: false },
+// { Code: 257, Name: '海南-五指山', Top101: false },
+// { Code: 258, Name: '海南-保亭黎族苗族自治县', Top101: false },
+// { Code: 259, Name: '海南-儋州', Top101: false },
+// { Code: 260, Name: '海南-定安县', Top101: false },
+// { Code: 261, Name: '海南-屯昌县', Top101: false },
+// { Code: 262, Name: '海南-文昌', Top101: false },
+// { Code: 263, Name: '海南-昌江黎族自治县', Top101: false },
+// { Code: 264, Name: '海南-海口', Top101: true },
+// { Code: 265, Name: '海南-澄迈县', Top101: false },
+// { Code: 266, Name: '海南-琼中黎族苗族自治县', Top101: false },
+// { Code: 267, Name: '海南-琼海', Top101: false },
+// { Code: 268, Name: '海南-白沙黎族自治县', Top101: false },
+// { Code: 269, Name: '海南-陵水黎族自治县', Top101: false },
 { Code: 270, Name: '湖北', Top101: false },
 { Code: 271, Name: '湖北-仙桃', Top101: false },
 { Code: 272, Name: '湖北-十堰', Top101: false },
@@ -282,6 +330,7 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 300, Name: '湖南-邵阳', Top101: false },
 { Code: 301, Name: '湖南-郴州', Top101: false },
 { Code: 302, Name: '湖南-长沙', Top101: true },
+// { Code: 303, Name: '澳门', Top101: false },
 { Code: 304, Name: '甘肃', Top101: false },
 { Code: 305, Name: '甘肃-临夏回族自治州', Top101: false },
 { Code: 306, Name: '甘肃-兰州', Top101: true },
@@ -307,6 +356,14 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 326, Name: '福建-福州', Top101: true },
 { Code: 327, Name: '福建-莆田', Top101: false },
 { Code: 328, Name: '福建-龙岩', Top101: false },
+{ Code: 329, Name: '西藏', Top101: false },
+{ Code: 330, Name: '西藏-山南', Top101: false },
+{ Code: 331, Name: '西藏-拉萨', Top101: true },
+{ Code: 332, Name: '西藏-日喀则', Top101: false },
+{ Code: 333, Name: '西藏-昌都', Top101: false },
+{ Code: 334, Name: '西藏-林芝', Top101: false },
+{ Code: 335, Name: '西藏-那曲地区', Top101: false },
+{ Code: 336, Name: '西藏-阿里地区', Top101: false },
 { Code: 337, Name: '贵州', Top101: false },
 { Code: 338, Name: '贵州-六盘水', Top101: false },
 { Code: 339, Name: '贵州-安顺', Top101: false },
@@ -344,6 +401,16 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 371, Name: '陕西-渭南', Top101: false },
 { Code: 372, Name: '陕西-西安', Top101: true },
 { Code: 373, Name: '陕西-铜川', Top101: false },
+// { Code: 374, Name: '青海', Top101: false },
+// { Code: 375, Name: '青海-果洛藏族自治州', Top101: false },
+// { Code: 376, Name: '青海-海东', Top101: false },
+// { Code: 377, Name: '青海-海北藏族自治州', Top101: false },
+// { Code: 378, Name: '青海-海南藏族自治州', Top101: false },
+// { Code: 379, Name: '青海-海西蒙古族藏族自治州', Top101: false },
+// { Code: 380, Name: '青海-玉树藏族自治州', Top101: false },
+// { Code: 381, Name: '青海-西宁', Top101: true },
+// { Code: 382, Name: '青海-黄南藏族自治州', Top101: false },
+// { Code: 383, Name: '香港', Top101: false },
 { Code: 384, Name: '黑龙江', Top101: false },
 { Code: 385, Name: '黑龙江-七台河', Top101: false },
 { Code: 386, Name: '黑龙江-伊春', Top101: false },
@@ -357,7 +424,7 @@ var Country_City = [{ Code: 1, Name: '上海-上海', Top101: true },
 { Code: 394, Name: '黑龙江-鸡西', Top101: false },
 { Code: 395, Name: '黑龙江-鹤岗', Top101: false },
 { Code: 396, Name: '黑龙江-黑河', Top101: false },
-{ Code: 397, Name: '黑龙江-齐齐哈', Top101: false }];
+{ Code: 397, Name: '黑龙江-齐齐哈', Top101: false } ]
 
 var file_count = 1;
 var file_max_task = 50;
@@ -386,7 +453,7 @@ function writeToFile(filename, str) {
 	});
 }
 
-function genRestriction(city,carrier,network,type) {
+function genRestriction(city,carrier,network,client,type) {
 	// var templete = {
     //   "Type": "HTTP",
     //   "URL": "http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt",
@@ -404,16 +471,17 @@ function genRestriction(city,carrier,network,type) {
     //   }
 	// };
 	var templete = {
-		// HTTP:{"Type":"HTTP","URL":"http://m.zhbservice.com/m/js/index.32dd1b82.bundle.js","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		HTTP:{"Type":"HTTP","URL":"http://snsdcres.yy845.com/old/index.html","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
 		HTTPS:{"Type":"HTTPS","URL":"https://m.zhbservice.com/m/js/index.32dd1b82.bundle.js","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
-		DNS:{"Type":"DNS","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
+		DNS:{"Type":"DNS","Host":"snsdcres.yy845.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
 		PING:{"Type":"PING","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}},
 		TRACEROUTE:{"Type":"TRACEROUTE","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}}
 	}
 
     templete[type].Restriction.Country_City = city;
     templete[type].Restriction.Carrier = carrier;
-    templete[type].Restriction.Network = network;
+	templete[type].Restriction.Network = network;
+	templete[type].Restriction.Client = client;
 
 	return templete[type];
 }
@@ -422,9 +490,11 @@ COMMANDS.forEach(function(type){
 	file_count = 1;
 	Country_City.forEach(function(city) {
 		var citycode = city.Code;
-		Carrier_Code.forEach(function(carriercode) {
-			Network_Code.forEach(function(networkcode) {
-				var rrr = genRestriction(citycode,carriercode,networkcode,type);
+		Carrier.forEach(function(carrier) {
+			var carriercode = carrier.Code;
+			Network.forEach(function(network) {
+				var networkcode = network.Code;
+				var rrr = genRestriction(citycode,carriercode,networkcode,Client,type);
 				// console.log(rrr);
 				taskArray.push(rrr);
 				if(taskArray.length == file_max_task) {
