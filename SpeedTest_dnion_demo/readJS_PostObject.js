@@ -1,9 +1,9 @@
 //Usage: node js {-i inputfile} [-o outputfile] [-c statistic_outputfile] [-p]
 //-i input json file
-//-o output result file (CSV)
-//-r input data from result file (CSV)
+//-o output results file (CSV)
+//-r input data from results file (CSV)
 //-c output statistic file for report (CSV)
-//-p post object to baas mongo
+//-p post objects to baas mongo
 //Example:
 //node js -i ./SpeedTest_dnion_demo/Task.json -o ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv [-p]
 //node js -r ./SpeedTest_dnion_demo/results.csv -c ./SpeedTest_dnion_demo/statistics.csv
