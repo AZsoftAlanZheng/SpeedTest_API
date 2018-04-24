@@ -8,41 +8,53 @@ var REQUEST = require('request');
 var ASSERT = require('assert');
 var CONFIG = require('../Config.js');
 
-var ctx = {
-    user:{
-        name: 'qiniu',
-        pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
-        token: null
+var ctxs = [
+    {
+        user:{
+            name: 'dnion',
+            pw: '250b402a5c95f64cf1cafde438b38a3c5ce03bc2003fcd8c917a97700fb52c3c',
+            token: null
+        },
+        dateObjArray: [],
+        fareObject: [],
+        cites: null
     },
-    dateObjArray: [],
-    cites: null
-}
-
-initDateObjArray(ctx.dateObjArray);
-
-CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
-    if(error) {
-        throw new Error(error);
-    } else {
-        outputUser(ctx.user.name);
-        ctx.user.token = token;
-        CONFIG.loadCites(token, function(error, citesObject){
-            if(error){
-                console.log(error);
-            } else {
-                ctx.cites = citesObject;
-                outputCites(ctx.cites);
-                CONFIG.loadFare(token, function(error, fareObject){
-                    if(error){
-                        console.log(error);
-                    } else {
-                        outputFare(fareObject);
-                        series(ctx.dateObjArray, 0);
-                    }
-                })
-            }
-        })
+    {
+        user:{
+            name: 'qiniu',
+            pw: '66435514515c7751314ad10a83f0786a46d051440476a0877f5c71fe3be518f7',
+            token: null
+        },
+        dateObjArray: [],
+        fareObject: [],
+        cites: null
     }
+];
+
+ctxs.forEach(function(ctx){
+    initDateObjArray(ctx.dateObjArray);
+    CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
+        if(error) {
+            console.log(error);
+        } else {
+            ctx.user.token = token;
+            CONFIG.loadCites(token, function(error, citesObject){
+                if(error){
+                    console.log(error);
+                } else {
+                    ctx.cites = citesObject;
+                    CONFIG.loadFare(token, function(error, fareObject){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            ctx.fareObject = fareObject
+                            series(ctx, 0);
+                        }
+                    })
+                }
+            })
+        }
+    });
 });
 
 function initDateObjArray(array) {
@@ -71,20 +83,24 @@ function initDateObjArray(array) {
     }
 }
 
-function final() {
-    outputRows(ctx.dateObjArray);
+function final(ctx) {
+    outputUser(ctx.user.name);
+    outputCites(ctx.cites);
+    outputFare(ctx.fareObject);
+    outputAggregateData(ctx.dateObjArray);
+    outputRows(ctx.dateObjArray, ctx.cites);
 }
 
 //callback: function(error)
-function loadMoreRows(dateObj, callback) {
-    CONFIG.loadMore(ctx.user.token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
+function loadMoreTasks(token, dateObj, callback) {
+    CONFIG.loadTasks(token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
         if(error) {
             callback(error);
         } else {
             if(data.length > 0) {
                 dateObj.latestID = returnLatestID;
                 dateObj.rows = dateObj.rows.concat(data);
-                loadMoreRows(dateObj, callback);
+                loadMoreTasks(token,dateObj, callback);
             } else {
                 callback(null);
             }
@@ -92,17 +108,17 @@ function loadMoreRows(dateObj, callback) {
     });
 }
 
-function series(dateObjArray, index) {
-    if(dateObjArray[index]) {
-        loadMoreRows(dateObjArray[index], function(error){
+function series(ctx, index) {
+    if(ctx.dateObjArray[index]) {
+        loadMoreTasks(ctx.user.token, ctx.dateObjArray[index], function(error){
             if(error) {
                 console.log(error);
             } else {
-                series(dateObjArray, ++index);
+                series(ctx, ++index);
             }
         })
     } else {
-        return final();
+        return final(ctx);
     }
 }
 
@@ -134,14 +150,32 @@ function outputFare(fareObject) {
     console.log('| | Cellular | '+fareObject['321']+' | '+fareObject['322']+' | '+fareObject['323']+' ');
 }
 
-function outputRows(dateObjArray) {
+function outputAggregateData(dateObjArray) {
     console.log('## 计量报表');
-    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
-    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+    console.log('| 日期 | 费用')
+    console.log('| --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
         var obj = dateObjArray[i];
         if(obj.rows.length == 0) {
-            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  |  | ')
+            console.log('| '+obj.date+' | 0 ')
+        } else {
+            var sum = 0.0;
+            for(var j=0;j<obj.rows.length;j++) {
+                sum += obj.rows[j].Cost;
+            }
+            console.log('| '+obj.date+' | ' + sum.toFixed(2));
+        }
+    }
+}
+
+function outputRows(dateObjArray, cites) {
+    console.log('## 任务清单');
+    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 营运商 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
+    for(var i=0;i<dateObjArray.length;i++) {
+        var obj = dateObjArray[i];
+        if(obj.rows.length == 0) {
+            console.log('| '+obj.date+' |  |  |  |  |  |  |  |  |  |  | ')
         } else {
             for(var j=0;j<obj.rows.length;j++) {
                 var str;
@@ -151,8 +185,8 @@ function outputRows(dateObjArray) {
                     str = '|  | ';
                 }
                 var row = obj.rows[j];
-                var citetag = ctx.cites.city2category[row.City];
-                switch(ctx.cites.city2category[row.City]) {
+                var citetag = cites.city2category[row.City];
+                switch(cites.city2category[row.City]) {
                     case 1:
                         citetag = '1級城市';
                         break;
@@ -165,7 +199,10 @@ function outputRows(dateObjArray) {
                     default:
                         citetag = '';
                 }
-                console.log(str + row.Date+' | '+row.TaskID+' | '+' | '+citetag+' | '+row.CityName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+                if(row.CarrierName == undefined) {
+                    row.CarrierName = "尚未加入";
+                }
+                console.log(str + row.Date+' | '+row.TaskID+' | '+citetag+' | '+row.CityName+' | '+row.CarrierName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
             }
         }
     }

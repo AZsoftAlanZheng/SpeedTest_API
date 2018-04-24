@@ -4,6 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/app.js"
+        },
         {
             "type": "node",
             "request": "launch",
@@ -15,10 +22,42 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "run gen_jmeter_json.js",
+            "program": "${workspaceFolder}/jmeter_test/gen_jmeter_json.js",
+            "args": []
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "run jmeter log analyser",
             "program": "${workspaceFolder}/jmeter_test/jmeter_cdn_speedtest_csv.js",
             "args": ["${workspaceFolder}/jmeter_test/20180205/TestPlanSpeedTestAPI_Log.Carrier_Wifi_dnion2018_02_05_20_12_30.txt"
             ]
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run SpeedTest demo for dnion!!!",
+            "program": "${workspaceFolder}/SpeedTest_dnion_demo/index.js",
+            "args": [
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run readJS_PostObject",
+            "program": "${workspaceFolder}/SpeedTest_dnion_demo/readJS_PostObject.js",
+            // "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json.201802071220_201802080940","-c","${workspaceFolder}/SpeedTest_dnion_demo/statistics.csv.201802071220_201802080940"
+            "args": ["-i","${workspaceFolder}/SpeedTest_dnion_demo/Task.json.201802141120_201802211020","-c","${workspaceFolder}/SpeedTest_dnion_demo/statistics.csv.201802141120_201802211020"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run jsonToCsv",
+            "program": "${workspaceFolder}/jsonToCsv/index.js",
+            "args": [
+            ]
+        },
     ]
 }
