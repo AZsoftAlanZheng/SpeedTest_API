@@ -14,6 +14,7 @@ commandheaders = {
 ObjectBaseURL = 'https://api.droibaas.com/rest/objects/v2';
 SpeedTestBaseURL = 'https://api.droibaas.com/api/v2/speedtest/v1';
 
+//Get Objects
 //token:string
 //conditions:string
 //tableName:string, [CityCategory, FareCategory, Accounting]
@@ -65,6 +66,7 @@ function getData(token, conditions, tableName, callback) {
 	}); 
 }
 
+//Post Objects
 //token:string
 //tableName:string, [CityCategory, FareCategory, Accounting]
 //body: body
@@ -107,7 +109,7 @@ function postData(token, tableName, body, callback) {
 	});
 }
 
-
+//Get data via API
 //token:string
 //uri:string
 //qs: paramaters, {key:value}
@@ -150,6 +152,7 @@ function getAPIData(token, uri, paramaters, callback) {
 	}); 
 }
 
+//Post data via API
 //token:string
 //uri:string
 //body: body
@@ -799,6 +802,7 @@ module.exports={
 			conditions = 'where={"Date":{"$gte":"'+date+'T00:00:00.000Z","$lte":"'+date+'T24:00:00.000Z"}}'
 		}
 		var returnLatestID = null;
+		console.log(conditions);
 		getData(token, conditions, 'Accounting', function(error,data){
 			if(!error) {
 				//EX:{
@@ -872,6 +876,61 @@ module.exports={
 		})
 	},
 
+	//token: string
+	//tableName: string 
+	//conditions: string, ex:'{"_CreationTime":{$gte:"2018-04-18",$lte:"2018-04-19"},"SpeedTest.URL":"http://snsdcres.yy845.com/old/index.html"}'
+	//callback: function(error, data, returnLatestID)
+	getObjects: function(token, tableName, conditions, callback) {
+		//TODO: arguments checking
+		var returnLatestID = null;
+		var ccc = 'where='+conditions;
+		console.log(ccc);
+		getData(token, ccc, tableName, function(error,data){
+			if(!error) {
+				//EX:{
+				//     "Code": 0,
+				//     "Count": 4,
+				//     "Result": [
+				//         {
+				//			   "Carrier": 0, //後來加的，舊資料可能不含這欄位，要檢查是否為undefined
+				//			   "CarrierName": "中国电信", //後來加的，舊資料可能不含這欄位，要檢查是否為undefined
+				//             "City": 1,
+				//             "CityName": "\u4e0a\u6d77-\u4e0a\u6d77",
+				//             "Date": "2017-10-02T08:06:10.661Z",
+				//             "Description": "Finished",
+				//             "DesignatedCount": 1,
+				//             "Network": 1,
+				//             "NetworkName": "Wifi",
+				//             "RecievedCount": 5,
+				//             "Size": 100,
+				//             "Status": 2,
+				//             "TaskID": "59d1f372560d4b0024005382",
+				//             "Type": 129,
+				//             "TypeName": "HTTPS",
+				//             "_ACL": {
+				//                 "creator": "Master",
+				//                 "pr": false,
+				//                 "pw": false,
+				//                 "ur": [
+				//                     "1fba13c44144a530aab40ed4"
+				//                 ]
+				//             },
+				//             "_ClassName": "Accounting",
+				//             "_CreationTime": "2017-10-03T06:55:19.846Z",
+				//             "_Id": "59d334574b1e230024002bbd",
+				//             "_ModifiedTime": "2017-10-03T06:55:19.846Z",
+				//             "UserId": "1fba13c44144a530aab40ed4",
+				//             "UserName": "restful_api_test"
+				//         },...
+				//     ]
+				// }
+				if(data.Result.length > 0)
+					returnLatestID = data.Result[data.Result.length-1]._Id;
+			}
+			callback(error, data.Result, returnLatestID);
+		});
+	},
+
 	//SpeedTest_API
 	//↓↓↓↓↓↓↓↓↓↓↓↓↓
 
@@ -908,6 +967,15 @@ module.exports={
 	//callback:function(error, requestOptions, response, data)
 	getTaskResult: function(token, TaskID, callback) {
 		getAPIData(token, '/st/result', { TaskID: TaskID },function(error, requestOptions, response, data){
+			callback(error, requestOptions, response, data);
+		})
+	},
+
+	//token:string
+	//TaskID:string
+	//callback:function(error, requestOptions, response, data)
+	getTaskRawResult: function(token, TaskID, callback) {
+		getAPIData(token, '/st/raw', { TaskID: TaskID },function(error, requestOptions, response, data){
 			callback(error, requestOptions, response, data);
 		})
 	}
