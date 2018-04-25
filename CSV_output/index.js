@@ -4,7 +4,6 @@
 //-h help
 'use strict';
 
-
 const assert = require('assert');
 var fs = require('fs');
 var jsonfile = require('jsonfile')
@@ -25,12 +24,13 @@ var taskCompleted = {
     current:0,
     httpcurrent:0,
     dnscurrent:0,
-    expired:0,
+    httpexpired:0,
+    dnsexpired:0,
     retryTimes:0,
     error:0
 };
 
-if(argv.h || process.argv[3] == null  ) {
+if(argv.h || process.argv[5] == null  ) {
     console.log("help:");
     console.log("Usage: node js [-i inputfile] [-o outputfile]");
     console.log("-i input file (rtaskID_URLHost.json)");
@@ -38,7 +38,7 @@ if(argv.h || process.argv[3] == null  ) {
     return;
 }
 
-if(FileInput && !fs.existsSync(FileInput)) {
+if(!fs.existsSync(FileInput)) {
     console.error("ERROR: Input File Path: " + FileInput + " does not exists!!! ");
 	process.exit(1);
 }
@@ -46,6 +46,7 @@ if(FileInput && !fs.existsSync(FileInput)) {
 var FileOutputStream = fast_csv.createWriteStream({headers: true}),
 writableStream = fs.createWriteStream(FileOutput);
 writableStream.on("finish", function(){
+    processOutput();
     console.log("DONE!");
 });
 FileOutputStream.pipe(writableStream);
@@ -59,12 +60,13 @@ FileOutputStream.pipe(writableStream);
 // })
 
 function processOutput(){
+    var str = "total:"+taskCompleted.current+"/"+taskCompleted.total+", completed(http):"+taskCompleted.httpcurrent+", expired(http):"+taskCompleted.httpexpired+", completed(dns):"+taskCompleted.dnscurrent+", expired(dns):"+taskCompleted.dnsexpired+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error;
     if(process.stdout.clearLine != undefined) {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line
-        process.stdout.write("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", expired:"+taskCompleted.expired+", completed dns tasks:"+taskCompleted.dnscurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+        process.stdout.write(str);
     } else {
-        console.log("completed tasks:"+taskCompleted.current+"/"+taskCompleted.total+", completed http tasks:"+taskCompleted.httpcurrent+", expired:"+taskCompleted.expired+", completed dns tasks:"+taskCompleted.dnscurrent+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error);
+        console.log(str);
     }
 }
 
@@ -90,7 +92,12 @@ function series(element) {
                     taskCompleted.dnscurrent++;
                 }
                 if(task.Status == 3) {
-                    taskCompleted.expired++;
+                    if(task.SpeedTest.Type == "HTTP") {
+                        taskCompleted.httpexpired++
+                    }
+                    if(task.SpeedTest.Type == "DNS") {
+                        taskCompleted.dnsexpired++;
+                    }
                 }
 
                 if(data.Result.Raw instanceof Array) {
@@ -172,9 +179,9 @@ class CsvEntity {
         this.URL = speedtest.URL;
         this.Host = speedtest.Host;
 
-        this.Country_City = restriction.Country_City;
-        this.Carrier = restriction.Carrier;
-        this.Network = restriction.Network;
+        this.Country_City = CONFIG.Country_City_Array[restriction.Country_City-1].Name;
+        this.Carrier = CONFIG.Carrier_Array[restriction.Carrier].Name;
+        this.Network = CONFIG.Network_Array[restriction.Network-1].Name;
         this.Client = restriction.Client;
 
         this.HttpStatus = rawData.HttpStatus;
