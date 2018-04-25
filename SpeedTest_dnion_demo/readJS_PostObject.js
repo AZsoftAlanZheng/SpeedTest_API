@@ -156,6 +156,9 @@ function final() {
         fast_csv.writeToPath(FileStatisticOutput, statisticOutputArray, {headers: true})
         .on("finish", function(){
             console.log("\nEND(FileStatisticOutput)");
+            if(FileOutput) {
+                FileOutputStream.end();
+            }
         });
     } else {
         console.log("END");
