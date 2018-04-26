@@ -67,5 +67,13 @@
             "args": ["-i","${workspaceFolder}/CSV_output/taskID_URLHost.json","-o","${workspaceFolder}/CSV_output/results.csv"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run mongotest",
+            "program": "${workspaceFolder}/mongo/mgotest.js",
+            "args": [
+            ]
+        },
     ]
 }
