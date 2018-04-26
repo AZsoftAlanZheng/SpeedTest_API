@@ -63,7 +63,7 @@
             "type": "node",
             "request": "launch",
             "name": "run CSV_output",
-            "program": "${workspaceFolder}/CSV_output/index.js",
+            "program": "${workspaceFolder}/CSV_output/taskIDs2CSV.js",
             "args": ["-i","${workspaceFolder}/CSV_output/taskID_URLHost.json","-o","${workspaceFolder}/CSV_output/results.csv"
             ]
         },

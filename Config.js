@@ -971,11 +971,25 @@ module.exports={
 		})
 	},
 
-	//token:string
+	//token:string, session token
 	//TaskID:string
+	//LastToken:string
 	//callback:function(error, requestOptions, response, data)
-	getTaskRawResult: function(token, TaskID, callback) {
-		getAPIData(token, '/st/raw', { TaskID: TaskID },function(error, requestOptions, response, data){
+	getTaskRawResult: function(token, TaskID, LastToken, callback) {
+		var qs = {TaskID: TaskID};
+		if(LastToken != null && LastToken != undefined) {
+			qs['LastToken'] = LastToken;
+		}
+		getAPIData(token, '/st/raw', qs, function(error, requestOptions, response, data){
+			callback(error, requestOptions, response, data);
+		})
+	},
+
+	//token:string
+	//LTaskID:string
+	//callback:function(error, requestOptions, response, data)
+	getLTaskResult: function(token, LTaskID, callback) {
+		getAPIData(token, '/lst/subtasks', { LTaskID: LTaskID },function(error, requestOptions, response, data){
 			callback(error, requestOptions, response, data);
 		})
 	}

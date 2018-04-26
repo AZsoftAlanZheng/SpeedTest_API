@@ -77,7 +77,7 @@ function final() {
 
 function series(element) {
 	if(element) {
-        CONFIG.getTaskRawResult('AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr',element,function(error, requestOptions, response, data){
+        CONFIG.getTaskRawResult('AH3FllQBAInOz8oy5pMZWOINSkYlpieLftuiysPr',element.ID, element.LastToken, function(error, requestOptions, response, data){
             try{
                 if (error) throw new Error(error);
                 if(data.Code != 0) {
@@ -107,7 +107,12 @@ function series(element) {
                         FileOutputStream.write(csvEntity);
                     });
                 }
-                taskCompleted.current++;
+                if(data.Result.LastToken == null || data.Result.LastToken == undefined) {
+                    taskCompleted.current++;
+                } else {
+                    element.LastToken = data.Result.LastToken;
+                    TaskIDList.push(element);
+                }
             } catch(e) {
                 console.error('options');
                 console.error(requestOptions);
@@ -136,7 +141,12 @@ function series(element) {
 	}
 }
 
-var TaskIDList = JSON.parse(fs.readFileSync(FileInput, 'utf8')).TaskIDs;
+var list = JSON.parse(fs.readFileSync(FileInput, 'utf8')).TaskIDs;
+var TaskIDList = [];
+for(var i=0; i< list.length;i++) {
+    TaskIDList.push({ID:list[i]})
+}
+list = null;
 
 running = MAX_RUNNING<TaskIDList.length? MAX_RUNNING:TaskIDList.length;
 taskCompleted.total = TaskIDList.length;
