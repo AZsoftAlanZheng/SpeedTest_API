@@ -62,9 +62,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "run CSV_output",
+            "name": "run taskIDs2CSV",
             "program": "${workspaceFolder}/CSV_output/taskIDs2CSV.js",
-            "args": ["-i","${workspaceFolder}/CSV_output/taskID_URLHost.json","-o","${workspaceFolder}/CSV_output/results.csv"
+            "args": ["-i","${workspaceFolder}/CSV_output/test.json","-o","${workspaceFolder}/CSV_output/test2.csv"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run LTaskID2IDs",
+            "program": "${workspaceFolder}/CSV_output/LTaskID2IDs.js",
+            "args": ["-l","5adfe62883baf797d5001a29","-o","${workspaceFolder}/CSV_output/test2.json"
             ]
         },
     ]

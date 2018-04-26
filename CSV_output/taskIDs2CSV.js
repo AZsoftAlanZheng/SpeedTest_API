@@ -60,7 +60,7 @@ FileOutputStream.pipe(writableStream);
 // })
 
 function processOutput(){
-    var str = "total:"+taskCompleted.current+"/"+taskCompleted.total+", completed(http):"+taskCompleted.httpcurrent+", expired(http):"+taskCompleted.httpexpired+", completed(dns):"+taskCompleted.dnscurrent+", expired(dns):"+taskCompleted.dnsexpired+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error;
+    var str = "total:"+taskCompleted.current+"/"+taskCompleted.total+", total(http/s):"+taskCompleted.httpcurrent+", expired(http/s):"+taskCompleted.httpexpired+", total(dns/ping/traceroute):"+taskCompleted.dnscurrent+", expired(dns):"+taskCompleted.dnsexpired+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error;
     if(process.stdout.clearLine != undefined) {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line
@@ -85,21 +85,6 @@ function series(element) {
                 }
                 var task = new TaskObj(data.Result);
 
-                if(task.SpeedTest.Type == "HTTP") {
-                    taskCompleted.httpcurrent++
-                }
-                if(task.SpeedTest.Type == "DNS") {
-                    taskCompleted.dnscurrent++;
-                }
-                if(task.Status == 3) {
-                    if(task.SpeedTest.Type == "HTTP") {
-                        taskCompleted.httpexpired++
-                    }
-                    if(task.SpeedTest.Type == "DNS") {
-                        taskCompleted.dnsexpired++;
-                    }
-                }
-
                 if(data.Result.Raw instanceof Array) {
                     data.Result.Raw.forEach(element => {
                         var raw = new RawData(element);
@@ -109,6 +94,20 @@ function series(element) {
                 }
                 if(data.Result.LastToken == null || data.Result.LastToken == undefined) {
                     taskCompleted.current++;
+                    if(task.SpeedTest.Type == "HTTP" || task.SpeedTest.Type == "HTTPS") {
+                        taskCompleted.httpcurrent++
+                    }
+                    if(task.SpeedTest.Type == "DNS" || task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE") {
+                        taskCompleted.dnscurrent++;
+                    }
+                    if(task.Status == 3) {
+                        if(task.SpeedTest.Type == "HTTP") {
+                            taskCompleted.httpexpired++
+                        }
+                        if(task.SpeedTest.Type == "DNS") {
+                            taskCompleted.dnsexpired++;
+                        }
+                    }
                 } else {
                     element.LastToken = data.Result.LastToken;
                     TaskIDList.push(element);
@@ -117,7 +116,7 @@ function series(element) {
                 console.error('options');
                 console.error(requestOptions);
                 console.error("error:");
-                console.error(error);
+                console.error(e);
                 if(response == null) {
                     console.error('retry');
                     taskCompleted.retryTimes++;

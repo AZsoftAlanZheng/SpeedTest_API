@@ -985,11 +985,16 @@ module.exports={
 		})
 	},
 
-	//token:string
+	//token:string, session token
 	//LTaskID:string
+	//LastToken:string
 	//callback:function(error, requestOptions, response, data)
-	getLTaskResult: function(token, LTaskID, callback) {
-		getAPIData(token, '/lst/subtasks', { LTaskID: LTaskID },function(error, requestOptions, response, data){
+	getLTaskResult: function(token, LTaskID, LastToken, callback) {
+		var qs = {LTaskID: LTaskID};
+		if(LastToken != null && LastToken != undefined) {
+			qs['LastToken'] = LastToken;
+		}
+		getAPIData(token, '/lst/subtasks', qs,function(error, requestOptions, response, data){
 			callback(error, requestOptions, response, data);
 		})
 	}
