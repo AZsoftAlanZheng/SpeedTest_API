@@ -1,4 +1,4 @@
-//Usage: node js {-i inputfile} [-o outputfile] [-c statistic_outputfile] [-p]
+//Usage: node js [-i inputfile] [-o outputfile]
 //-i input file
 //-o output results file (CSV)
 //-h help
@@ -136,7 +136,7 @@ function series(element) {
 	}
 }
 
-var TaskIDList = JSON.parse(fs.readFileSync(FileInput, 'utf8')).taskIDsURL.concat(JSON.parse(fs.readFileSync(FileInput, 'utf8')).taskIDsHost);
+var TaskIDList = JSON.parse(fs.readFileSync(FileInput, 'utf8')).TaskIDs;
 
 running = MAX_RUNNING<TaskIDList.length? MAX_RUNNING:TaskIDList.length;
 taskCompleted.total = TaskIDList.length;
@@ -146,6 +146,7 @@ for(var i=0; i< running;i++) {
 
 class TaskObj {
     constructor(taskDetailJSON) {
+        this.LTaskID = taskDetailJSON.LTaskID;
         this.TaskID = taskDetailJSON.TaskID;
         this.TaskCreationTime = taskDetailJSON.TaskCreationTime
         this.Status = taskDetailJSON.Status;
@@ -170,6 +171,7 @@ class CsvEntity {
         var restriction = speedtest.Restriction;
         var time = rawData.Time;
 
+        this.LTaskID = taskObj.LTaskID;
         this.TaskID = taskObj.TaskID;
         this.TaskCreationTime = taskObj.TaskCreationTime
         this.Status = taskObj.Status;
