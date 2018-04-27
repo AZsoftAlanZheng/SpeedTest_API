@@ -60,7 +60,7 @@ FileOutputStream.pipe(writableStream);
 // })
 
 function processOutput(){
-    var str = "total:"+taskCompleted.current+"/"+taskCompleted.total+", total(http/s):"+taskCompleted.httpcurrent+", expired(http/s):"+taskCompleted.httpexpired+", total(dns/ping/traceroute):"+taskCompleted.dnscurrent+", expired(dns):"+taskCompleted.dnsexpired+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error;
+    var str = "total:"+taskCompleted.current+"/"+taskCompleted.total+", total(http/s):"+taskCompleted.httpcurrent+", expired(http/s):"+taskCompleted.httpexpired+", total(dns/ping/traceroute):"+taskCompleted.dnscurrent+", expired(dns/ping/traceroute):"+taskCompleted.dnsexpired+", retry:"+taskCompleted.retryTimes+", error:"+taskCompleted.error;
     if(process.stdout.clearLine != undefined) {
         process.stdout.clearLine();  // clear current text
         process.stdout.cursorTo(0);  // move cursor to beginning of line
@@ -101,10 +101,10 @@ function series(element) {
                         taskCompleted.dnscurrent++;
                     }
                     if(task.Status == 3) {
-                        if(task.SpeedTest.Type == "HTTP") {
+                        if(task.SpeedTest.Type == "HTTP" || task.SpeedTest.Type == "HTTPS") {
                             taskCompleted.httpexpired++
                         }
-                        if(task.SpeedTest.Type == "DNS") {
+                        if(task.SpeedTest.Type == "DNS"|| task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE") {
                             taskCompleted.dnsexpired++;
                         }
                     }
