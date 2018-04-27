@@ -596,7 +596,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 创建长时任务_尚未上线
+# Group 创建长时任务
 
 ## 长时任务下发 [/api/v2/speedtest/v1/lst]
 
@@ -696,7 +696,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)  
 
-# Group 停止长时任务_尚未上线
+# Group 停止长时任务
 
 ## 停止长时任务 [/api/v2/speedtest/v1/lst/stop]
 
@@ -727,7 +727,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 长时任务各子任务统计结果_尚未上线
+# Group 长时任务各子任务统计结果
 
 ## 取得长时任务各子任务的统计结果 [/api/v2/speedtest/v1/lst/subtasks{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
     
@@ -911,7 +911,7 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest TRACEROUTE Base (object)
-+ Type: TRACEROUTE (required, string)
++ Type: TRACEROUTE (required, string)FE 
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
 
@@ -1024,7 +1024,8 @@ SpeedTest API 任务下发及获取结果.
 + Max:1234 (required, number) - 最大值
 + Min:20 (required, number) - 最小值
 + Avg:250 (required, number) - 平均值
-+ Count:31 (required, number) - 有效样本数    
++ Count:31 (required, number) - 有效样本数   
++ Amount:7750 (required, number) - 所有數值加總
   
 
 ## Node1 Base (object)
