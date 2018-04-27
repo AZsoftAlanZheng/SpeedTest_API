@@ -91,20 +91,22 @@ function series(element) {
                         var csvEntity = new CsvEntity(task,raw);
                         FileOutputStream.write(csvEntity);
                     });
+                } else {
+                    var csvEntity = new CsvEntity(task, null);
+                    FileOutputStream.write(csvEntity);
                 }
+
                 if(data.Result.LastToken == null || data.Result.LastToken == undefined) {
                     taskCompleted.current++;
                     if(task.SpeedTest.Type == "HTTP" || task.SpeedTest.Type == "HTTPS") {
                         taskCompleted.httpcurrent++
-                    }
-                    if(task.SpeedTest.Type == "DNS" || task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE") {
+                    } else { //task.SpeedTest.Type == "DNS" || task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE"
                         taskCompleted.dnscurrent++;
                     }
                     if(task.Status == 3) {
                         if(task.SpeedTest.Type == "HTTP" || task.SpeedTest.Type == "HTTPS") {
                             taskCompleted.httpexpired++
-                        }
-                        if(task.SpeedTest.Type == "DNS"|| task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE") {
+                        } else { //task.SpeedTest.Type == "DNS" || task.SpeedTest.Type == "PING" || task.SpeedTest.Type == "TRACEROUTE"
                             taskCompleted.dnsexpired++;
                         }
                     }
@@ -178,7 +180,6 @@ class CsvEntity {
     constructor(taskObj, rawData) {
         var speedtest = taskObj.SpeedTest;
         var restriction = speedtest.Restriction;
-        var time = rawData.Time;
 
         this.LTaskID = taskObj.LTaskID;
         this.TaskID = taskObj.TaskID;
@@ -195,16 +196,32 @@ class CsvEntity {
         this.Network = CONFIG.Network_Array[restriction.Network-1].Name;
         this.Client = restriction.Client;
 
-        this.HttpStatus = rawData.HttpStatus;
-        this.ClientStatus = rawData.ClientStatus;
-        this.IP = rawData.IP;
-        this.ClientIP = rawData.ClientIP;
-        this.DNS = time.DNS;
-        this.RTT = time.RTT;
-        this.TTFB = time.TTFB;
-        this.R = time.R;
-        this.Req = time.Req;
-        this.Res = time.Res;
-        this.Connect = time.Connect;
+        if( rawData && rawData.hasOwnProperty('Time')) {
+            var time = rawData.Time;
+            this.HttpStatus = rawData.HttpStatus;
+            this.ClientStatus = rawData.ClientStatus;
+            this.IP = rawData.IP;
+            this.ClientIP = rawData.ClientIP;
+            this.DNS = time.DNS;
+            this.RTT = time.RTT;
+            this.TTFB = time.TTFB;
+            this.R = time.R;
+            this.Req = time.Req;
+            this.Res = time.Res;
+            this.Connect = time.Connect;
+        } else {
+            this.HttpStatus = null;
+            this.ClientStatus = null;
+            this.IP = null;
+            this.ClientIP = null;
+            this.DNS = null;
+            this.RTT = null;
+            this.TTFB = null;
+            this.R = null;
+            this.Req = null;
+            this.Res = null;
+            this.Connect = null;
+        }
+
     }
 } 
