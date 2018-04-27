@@ -596,7 +596,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 创建长时任务_尚未上线
+# Group 创建长时任务
 
 ## 长时任务下发 [/api/v2/speedtest/v1/lst]
 
@@ -696,7 +696,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)  
 
-# Group 停止长时任务_尚未上线
+# Group 停止长时任务
 
 ## 停止长时任务 [/api/v2/speedtest/v1/lst/stop]
 
@@ -727,7 +727,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
 
-# Group 长时任务各子任务统计结果_尚未上线
+# Group 长时任务各子任务统计结果
 
 ## 取得长时任务各子任务的统计结果 [/api/v2/speedtest/v1/lst/subtasks{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
     
@@ -911,7 +911,7 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest TRACEROUTE Base (object)
-+ Type: TRACEROUTE (required, string)
++ Type: TRACEROUTE (required, string)FE 
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
 
@@ -1024,7 +1024,8 @@ SpeedTest API 任务下发及获取结果.
 + Max:1234 (required, number) - 最大值
 + Min:20 (required, number) - 最小值
 + Avg:250 (required, number) - 平均值
-+ Count:31 (required, number) - 有效样本数    
++ Count:31 (required, number) - 有效样本数   
++ Amount:7750 (required, number) - 所有數值加總
   
 
 ## Node1 Base (object)
@@ -1051,7 +1052,7 @@ SpeedTest API 任务下发及获取结果.
         + 200: 123 (optional, number) - HTTP status code '200' 的数量
         + 404: 1 (optional, number) - HTTP status code '404' 的数量
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量
+        + 0: 1 (optional, number) - Client status code '0' 的数量. 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
     + Availability (required, object)
         + Success: 123 (required, number) - 成功完成任务的数量
         + Failure: 1 (required, number) - 任务失败的数量
@@ -1071,7 +1072,7 @@ SpeedTest API 任务下发及获取结果.
         + 200: 123 (optional, number) - HTTP status code '200' 的数量
         + 404: 1 (optional, number) - HTTP status code '404' 的数量
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量
+        + 0: 1 (optional, number) - Client status code '0' 的数量. 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
     + Availability (required, object)
         + Success: 123 (required, number) - 成功完成任务的数量
         + Failure: 1 (required, number) - 任务失败的数量
@@ -1089,7 +1090,7 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:111.23.45.67 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量
+        + 0: 1 (optional, number) - Client status code '0' 的数量. 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
     + Availability (required, object)
         + Success: 1 (required, number) - 成功完成任务的数量
         + Failure: 0 (required, number) - 任务失败的数量
@@ -1101,7 +1102,7 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量   
+        + 0: 1 (optional, number) - Client status code '0' 的数量. 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
     + Availability (required, object)
         + Success: 1 (required, number) - 成功完成任务的数量
         + Failure: 0 (required, number) - 任务失败的数量
@@ -1113,7 +1114,7 @@ SpeedTest API 任务下发及获取结果.
 + Result (required, object)
     + IP:210.71.222.164 (required, string)
     + ClientStatus (required, object)
-        + 0: 1 (optional, number) - Client status code '0' 的数量
+        + 0: 1 (optional, number) - Client status code '0' 的数量. 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
     + Availability (required, object)
         + Success: 1 (required, number) - 成功完成任务的数量
         + Failure: 0 (required, number) - 任务失败的数量
@@ -1129,29 +1130,29 @@ SpeedTest API 任务下发及获取结果.
 ## Raw HTTP Base (Raw Base)
 + _Id:5aa6146d9b53e6302000313e (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code
-+ ClientStatus: 0 (required, number) - Client status code
++ ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
 + Time (required, Time HTTP Base)
 
 ## Raw HTTPS Base (Raw Base)
 + _Id:5aa6146d9b53e6302000313f (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code 
-+ ClientStatus: 0 (required, number) - Client status code
++ ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
 + Time (required, Time HTTPS Base)
 
 ## Raw DNS Base (Raw Base)
 + _Id:5aa6146d9b53e63020003140 (required, string) - ID of Raw data, 可用来查询更之后的资料
-+ ClientStatus: 0 (required, number) - Client status code
++ ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
 + Time (required, Time DNS Base)
 + ANS (required, array[Ans Record1 Base, Ans Record2 Base, Ans Record3 Base]) - DNS解析资料
 
 ## Raw PING Base (Raw Base)
 + _Id:5aa6146d9b53e63020003141 (required, string) - ID of Raw data, 可用来查询更之后的资料
-+ ClientStatus: 0 (required, number) - Client status code
++ ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
 + Time (required, Time PING Base)
 
 ## Raw TRACEROUTE Base (Raw Base)
 + _Id:5aa6146d9b53e63020003142 (required, string) - ID of Raw data, 可用来查询更之后的资料
-+ ClientStatus: 0 (required, number) - Client status code
++ ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
 + Time (required, Time TRACEROUTE Base)
 
 ## Raw HTTP Format Base (object)
@@ -1222,6 +1223,7 @@ SpeedTest API 任务下发及获取结果.
         1410026:网路类别错误，只开放Wifi测试
         1410027:测试配额不足
         1410028:不支援的格式代号
+        1410029:Name长度过长，上限2048
         1410101:LTaskID不存在.
         1410102:缺少LTaskID.
         1410103:长时任务已经完成了
@@ -1243,6 +1245,7 @@ SpeedTest API 任务下发及获取结果.
         1410119:Interval过短，最小限制5分钟，Interval需为5分钟的倍数
         1410120:Interval过长，最大限制1天，Interval需为5分钟的倍数
         1410121:Interval需为5分钟的倍数
+        1410122:長時任務不包含此Type
     
     + MSG:权限不足 (required, string) - 错误讯息
 
