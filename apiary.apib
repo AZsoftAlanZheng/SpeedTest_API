@@ -631,7 +631,7 @@ SpeedTest API 任务下发及获取结果.
 
     + Attributes (Response Error Base)
     
-# Group 查询长时任务_尚未上线
+# Group 查询长时任务
 
 ## 查询长时任务状态 [/api/v2/speedtest/v1/lst{?LastToken}]    
             
@@ -1125,18 +1125,19 @@ SpeedTest API 任务下发及获取结果.
 ## Raw Base (object)
 + IP:111.23.45.67 (required, string) - Server's IP or Resolved IP
 + ClientIP:1.2.3.4 (required, string) - Client's IP
-+ R (required, number) - Client status code
 
 ## Raw HTTP Base (Raw Base)
 + _Id:5aa6146d9b53e6302000313e (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code
 + ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
++ R (required, number) - 重定向次数
 + Time (required, Time HTTP Base)
 
 ## Raw HTTPS Base (Raw Base)
 + _Id:5aa6146d9b53e6302000313f (required, string) - ID of Raw data, 可用来查询更之后的资料
 + HttpStatus:200 (required, number) - HTTP status code 
 + ClientStatus: 0 (required, number) - 0:正確, -1:超時, -2:IO錯誤, -3:CRC錯誤, -4:上傳錯誤, -5:MD5驗證錯誤, -6:長度不符合Size, -7:URI無法解析, -8:JSON錯誤, -9:OOM, -10:無法Ping, -99:其它
++ R (required, number) - 重定向次数
 + Time (required, Time HTTPS Base)
 
 ## Raw DNS Base (Raw Base)
@@ -1187,7 +1188,7 @@ SpeedTest API 任务下发及获取结果.
 + Carrier:0 (required, number) - 指定营运商代码. 0:中国电信. 1:中国移动. 2:中国联通.
 + Country_City:0 (required, number) - 省份与城市.
 + Network:1 (required, number) - 指定网路类别.
-+ Client:1 (required,number) - 建议取样的客户端数量。
++ Client:1 (required,number) - 建议取样的测试点数量。
     
 ## Error Base (object)
 
@@ -1276,12 +1277,12 @@ SpeedTest API 任务下发及获取结果.
     
 + Client:1 (number)
 
-    指定取样的客户端数量上限,每项上限10组。或建议取样的客户端数量。
+    指定取样的测试点数量，上限10组。(不保证实际回传的数量)
     
 + Country_City:1 (optional, number)
 
     指定省份与城市.
-    1:上海-上海
+    1:上海-
     2:云南
     3:云南-临沧
     4:云南-丽江
