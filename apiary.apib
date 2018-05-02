@@ -1188,7 +1188,7 @@ SpeedTest API 任务下发及获取结果.
 + Carrier:0 (required, number) - 指定营运商代码. 0:中国电信. 1:中国移动. 2:中国联通.
 + Country_City:0 (required, number) - 省份与城市.
 + Network:1 (required, number) - 指定网路类别.
-+ Client:1 (required,number) - 建议取样的客户端数量。
++ Client:1 (required,number) - 建议取样的测试点数量。
     
 ## Error Base (object)
 
@@ -1277,12 +1277,12 @@ SpeedTest API 任务下发及获取结果.
     
 + Client:1 (number)
 
-    指定取样的客户端数量上限,每项上限10组。或建议取样的客户端数量。
+    指定取样的测试点数量，上限10组。(不保证实际回传的数量)
     
 + Country_City:1 (optional, number)
 
     指定省份与城市.
-    1:上海-上海
+    1:上海-
     2:云南
     3:云南-临沧
     4:云南-丽江
