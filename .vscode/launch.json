@@ -75,5 +75,13 @@
             "args": ["-l","5adfe62883baf797d5001a29","-o","${workspaceFolder}/CSV_output/test2.json"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run tokenGenerator",
+            "program": "${workspaceFolder}/17ceAPI/tokenGenerator.js",
+            "args": ["-u", "test@17ce.com", "-p", "123456", "-t", "1512459843"
+            ]
+        },
     ]
 }
