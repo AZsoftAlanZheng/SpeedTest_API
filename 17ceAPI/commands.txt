@@ -1,0 +1,2 @@
+node ./tokenGenerator.js -u 'test@17ce.com' -p '123456' -t `date -d "2018-02-08" +%s`
+node ./tokenGenerator.js -u 'test@17ce.com' -p '123456' -t `date +%s`
