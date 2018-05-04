@@ -23,7 +23,8 @@ do
 	fi
 
 	if [[ $city17Name = *"$cityName"* ]]; then
-      echo $city17Code,$city17Name, $city
+    #   echo $city17Code,$city17Name, $city
+	  echo $city17,$city
 	  if [ "$useProvince" = true ]; then
 	    break
 	  fi
