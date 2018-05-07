@@ -37,27 +37,34 @@ module.exports={
             if(typeof(ts) !== 'string') throw new Error("typeof(ts) !== 'string'");
             return MD5(BASE64.encode(MD5(pw).substr(4,19).concat(user).concat(ts)));
         } else {
-           return MD5(BASE64.encode(MD5(pw).substr(4,19).concat(user).concat(Date.now() / 1000 | 0)));
+           return MD5(BASE64.encode(MD5(pw).substr(4,19).concat(user).concat(this.getTS())));
         }
+    },
+    getTS: function() {
+        return (Date.now() / 1000 | 0).toString();
     }
 }
 ////////////
 var argv = require('minimist')(process.argv.slice(2));
 
-if(argv.h || process.argv[5] == null  ) {
-    console.log("help:");
-    console.log("Usage: node js [-u user name] [-p password] {-t timestamp}");
-    console.log("-u user name");
-    console.log("-p password");
-    console.log("-t timestamp");
-    return;
-}
+if (require.main === module) {
+    if(argv.h || process.argv[5] == null  ) {
+        console.log("help:");
+        console.log("Usage: node js [-u user name] [-p password] {-t timestamp}");
+        console.log("-u user name");
+        console.log("-p password");
+        console.log("-t timestamp");
+        return;
+    }
 
-const userName = argv.u;
-const passWord = argv.p.toString();
-const timeStamp = (argv.t ? argv.t : Date.now() / 1000 | 0).toString();
-console.log("userName="+userName);
-console.log("passWord="+passWord);
-console.log("timeStamp="+timeStamp);
-var ret = MD5(BASE64.encode(MD5(passWord).substr(4,19).concat(userName).concat(timeStamp)));
-console.log(ret);
+    const userName = argv.u;
+    const passWord = argv.p.toString();
+    const timeStamp = (argv.t ? argv.t : Date.now() / 1000 | 0).toString();//Date.now(), UTC time
+    console.log("userName="+userName);
+    console.log("passWord="+passWord);
+    console.log("timeStamp="+timeStamp);
+    var ret = MD5(BASE64.encode(MD5(passWord).substr(4,19).concat(userName).concat(timeStamp)));
+    console.log(ret);
+} else {
+    console.log('required as a module');
+}
