@@ -9,13 +9,15 @@ var TokenG = require('./tokenGenerator.js');
 var running = 0;
 const MAX_RUNNING = 50;
 const now = new Date()
-const FileInputRsultsCSV = './101cityIPIPMapping17ce.csv'
-const FileHttpOutput = './results.http'+now.toISOString()+'.txt'
-const FilePingOutput = './results.ping'+now.toISOString()+'.txt'
-const LogOutput = './log.'+now.toISOString()+'.txt'
+const prefix = '.';
+// const prefix = '/Volumes/alan-opt/backup/git/SpeedTest_API/17ceAPI';
+const FileInputRsultsCSV = prefix+'101cityIPIPMapping17ce.csv'
+const FileHttpOutput = prefix+'/results.http'+now.toISOString()+'.txt'
+const FilePingOutput = prefix+'/results.ping'+now.toISOString()+'.txt'
+const LogOutput = prefix+'/log.'+now.toISOString()+'.txt'
 const userName = 'shimengying@droi.com'
 const passWord = 'Droi2018';
-var execTimes = 3*2;//2 types
+var execTimes = 24*3*2*2;//2 types
 const intervalSec = 30*60;//30*60;
 const checkReusltIntervalSec = 5*60;
 var cityList = [];
@@ -25,14 +27,13 @@ fast_csv.fromPath(FileInputRsultsCSV,{delimiter:",",headers : true})
     cityList.push(obj.city);
 }).on("end", function(){
     console.log('loading end')
-    setTimeout(createTask, intervalSec*1000, 'HTTP');
-    setTimeout(createTask, intervalSec*1000, 'PING');
+    createTask('HTTP');
+    createTask('PING');
 });
 
 //str: object
-function writeToFile(filename, str) {
-	console.log(str);
-	fs.writeFile("./"+filename, JSON.stringify(str), function(err) {
+function writeToFile(filePath, str) {
+	fs.writeFile(filePath, JSON.stringify(str), function(err) {
 	    if(err) {
 	        return console.error(err);
 	    }
@@ -42,19 +43,20 @@ function writeToFile(filename, str) {
 //type: string, [HTTP/PING]
 function createTask(type) {
     let startTime=new Date();
-    console.log(execTimes);
-    execTimes--;
-    if(execTimes < 0) return;
-    
+    let urlstr = '';
+    if(type === 'HTTP') {
+        urlstr = 'https://api.17ce.com/http';
+    } else if(type === 'PING') {
+        urlstr = 'https://api.17ce.com/ping';
+    } else {
+        throw new Error('createTask(), type is wrong, '+type);
+    }
+
     try {
-        let urlstr = '';
-        if(type === 'HTTP') {
-            urlstr = 'https://api.17ce.com/http';
-        } else if(type === 'PING') {
-            urlstr = 'https://api.17ce.com/ping';
-        } else {
-            throw new Error('type is wrong, '+type);
-        }
+        
+        execTimes--;
+        if(execTimes < 0) return;
+        
         writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', createTask(), '+'type:'+type);
         let ts = TokenG.getTS();
         let options = { method: 'POST',
@@ -70,7 +72,7 @@ function createTask(type) {
             city: cityList.toString(),
             isp: '1,2,7' } };
     
-        request(options, function (error, response, body) {
+        REQUEST(options, function (error, response, body) {
             var data = null;
             try {
                 if (error) {
@@ -82,8 +84,8 @@ function createTask(type) {
                     } else if(data.tid == undefined) {
                         throw new Error('data.tid == undefined');
                     } else {
-                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', tid:\n'+data.tid.toString()+'\nresponse:'+response.toString()+'\n');
-                        setTimeout(parseResult(), checkReusltIntervalSec*1000, data.tid, startTime, type);
+                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+", tid:\n"+data.tid.toString()+"\nresponse:"+JSON.stringify(response)+"\n");
+                        setTimeout(parseResult, checkReusltIntervalSec*1000, data.tid, startTime, type);
                     }
                 }
             } catch (e) {
@@ -101,9 +103,10 @@ function createTask(type) {
 function parseResult(taskid,startTime,type) {
     try {
         if(type !== 'HTTP' && type !== 'PING') {
-            throw new Error('type is wrong, '+type);
+            throw new Error('parseResult(), type is wrong, '+type);
         }
         writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', parseResult(), '+'type:'+type);
+        let ts = TokenG.getTS();
         var options = { method: 'POST',
         url: 'https://api.17ce.com/ajaxfresh',
         headers: {
@@ -115,7 +118,7 @@ function parseResult(taskid,startTime,type) {
             t: ts,
             tid: taskid } };
     
-        request(options, function (error, response, body) {
+        REQUEST(options, function (error, response, body) {
             var data = null;
             try {
                 if (error) {
@@ -129,7 +132,7 @@ function parseResult(taskid,startTime,type) {
                     } else if (data.tid != taskid) {
                         throw new Error('data.tid != taskid,'+data.tid+', '+taskid);
                     } else {
-                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', tid:\n'+data.tid.toString()+'\nget results response:'+response.toString()+'\n');
+                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+", tid:\n"+data.tid.toString()+"\nget results response:"+JSON.stringify(response)+"\n");
                         let obj ={
                             creationTime:startTime,
                             content:data
