@@ -11,7 +11,7 @@ const MAX_RUNNING = 50;
 const now = new Date()
 const prefix = '.';
 // const prefix = '/Volumes/alan-opt/backup/git/SpeedTest_API/17ceAPI';
-const FileInputRsultsCSV = prefix+'101cityIPIPMapping17ce.csv'
+const FileInputRsultsCSV = prefix+'/101cityIPIPMapping17ce.csv'
 const FileHttpOutput = prefix+'/results.http'+now.toISOString()+'.txt'
 const FilePingOutput = prefix+'/results.ping'+now.toISOString()+'.txt'
 const LogOutput = prefix+'/log.'+now.toISOString()+'.txt'
@@ -22,6 +22,16 @@ const intervalSec = 30*60;//30*60;
 const checkReusltIntervalSec = 5*60;
 var cityList = [];
 
+var FileHttpOutputPipe = fs.createWriteStream(FileHttpOutput, {
+    flags: 'w' 
+})
+var FilePingOutputPipe = fs.createWriteStream(FilePingOutput, {
+    flags: 'w'
+})
+var LogOutputPipe = fs.createWriteStream(LogOutput, {
+    flags: 'w'
+})
+
 fast_csv.fromPath(FileInputRsultsCSV,{delimiter:",",headers : true})
 .on("data", obj => {
     cityList.push(obj.city);
@@ -30,15 +40,6 @@ fast_csv.fromPath(FileInputRsultsCSV,{delimiter:",",headers : true})
     createTask('HTTP');
     createTask('PING');
 });
-
-//str: object
-function writeToFile(filePath, str) {
-	fs.writeFile(filePath, JSON.stringify(str), function(err) {
-	    if(err) {
-	        return console.error(err);
-	    }
-	});
-}
 
 //type: string, [HTTP/PING]
 function createTask(type) {
@@ -53,11 +54,15 @@ function createTask(type) {
     }
 
     try {
-        
         execTimes--;
-        if(execTimes < 0) return;
+        if(execTimes < 0) {
+            FileHttpOutputPipe.end();
+            FilePingOutputPipe.end();
+            LogOutputPipe.end();
+            return;
+        }
         
-        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', createTask(), '+'type:'+type);
+        LogOutputPipe.write('startTime:'+startTime.toISOString()+', createTask(), '+'type:'+type+"\n");
         let ts = TokenG.getTS();
         let options = { method: 'POST',
         url: urlstr,
@@ -84,7 +89,7 @@ function createTask(type) {
                     } else if(data.tid == undefined) {
                         throw new Error('data.tid == undefined');
                     } else {
-                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+", tid:\n"+data.tid.toString()+"\nresponse:"+JSON.stringify(response)+"\n");
+                        LogOutputPipe.write('startTime:'+startTime.toISOString()+", tid:"+data.tid.toString()+', type:'+type+", response:"+JSON.stringify(response)+"\n");
                         setTimeout(parseResult, checkReusltIntervalSec*1000, data.tid, startTime, type);
                     }
                 }
@@ -105,7 +110,7 @@ function parseResult(taskid,startTime,type) {
         if(type !== 'HTTP' && type !== 'PING') {
             throw new Error('parseResult(), type is wrong, '+type);
         }
-        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+', parseResult(), '+'type:'+type);
+        LogOutputPipe.write('startTime:'+startTime.toISOString()+', parseResult(), '+'type:'+type+"\n");
         let ts = TokenG.getTS();
         var options = { method: 'POST',
         url: 'https://api.17ce.com/ajaxfresh',
@@ -132,15 +137,16 @@ function parseResult(taskid,startTime,type) {
                     } else if (data.tid != taskid) {
                         throw new Error('data.tid != taskid,'+data.tid+', '+taskid);
                     } else {
-                        writeToFile(LogOutput,'startTime:'+startTime.toISOString()+", tid:\n"+data.tid.toString()+"\nget results response:"+JSON.stringify(response)+"\n");
+                        LogOutputPipe.write('startTime:'+startTime.toISOString()+", tid:"+data.tid.toString()+"get results response:"+JSON.stringify(response)+"\n");
                         let obj ={
                             creationTime:startTime,
+                            queryTime:new Date(),
                             content:data
                         };
                         if(type === 'HTTP') {
-                            writeToFile(FileHttpOutput, obj);
+                            FileHttpOutputPipe.write(JSON.stringify(obj));
                         } else {
-                            writeToFile(FilePingOutput, ojb);
+                            FilePingOutputPipe.write(JSON.stringify(obj));
                         }
                     }
                 }

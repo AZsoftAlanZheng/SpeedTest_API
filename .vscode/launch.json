@@ -83,5 +83,12 @@
             "args": ["-u", "test@17ce.com", "-p", "123456", "-t", "1512459843"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run 17ce index.js",
+            "program": "${workspaceFolder}/17ceAPI/index.js",
+            "args": []
+        },
     ]
 }
