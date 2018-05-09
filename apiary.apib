@@ -882,6 +882,7 @@ SpeedTest API 任务下发及获取结果.
     + Interval: 1200 (required, number) - 任务执行周期,秒
 
 ## SpeedTest HTTP Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: HTTP (required, string)   
 + URL: `http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
 + Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取，设定后会抓取此固定大小，档案长度不足会回报错误，没设定则不检查
@@ -891,6 +892,7 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest HTTPS Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: HTTPS (required, string)   
 + URL: `https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
 + Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取，设定后会抓取此固定大小，档案长度不足会回报错误，没设定则不检查
@@ -900,17 +902,20 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest DNS Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: DNS (required, string)
 + Host: www.amazon.com (required, string) - IP or Domain name
 + DNSSerIP:168.95.1.1 (optional, string) - 可指定dns server
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest PING Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: PING (required, string)
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest TRACEROUTE Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: TRACEROUTE (required, string)FE 
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
