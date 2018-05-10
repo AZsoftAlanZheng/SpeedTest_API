@@ -12,23 +12,28 @@ var fast_csv = require('fast-csv');
 var CONFIG = require('../Config.js');
 var argv = require('minimist')(process.argv.slice(2));
 
-var FileOutput = argv.o;
-
 if(argv.h || process.argv[5] == null  ) {
     console.log("help:");
     console.log("Usage: node js [-l LTaskID] [-o outputfile]");
-    console.log("-l iLongTerm Task ID");
+    console.log("-l LongTerm Task ID");
     console.log("-o output json file (taskIDs.json)");
     return;
 }
 
 var LTaskID = argv.l;
 var LastToken = null;
-var outputJson = {TaskIDs:[]};
-var FileOutput = argv.o
 var counter = 0;
 console.log("LTaskID:"+LTaskID);
-console.log("Output file:"+FileOutput);
+console.log("Output file:"+argv.o);
+var FileOutput = fs.createWriteStream(argv.o, {
+    flags: 'w' 
+}).on('open', () => {
+    FileOutput.write('{"TaskIDs":');
+}).on('close', () => {
+    console.log('Done');
+}).on('error', (err) => {
+    console.error(err);
+})
 
 function progress(c){
     var str = "total:"+c;
@@ -53,18 +58,15 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
             if(subtasks == null || subtasks == undefined) {
                 throw new Error("subtasks == null || subtasks == undefined");
             }
+            var outputJson = []
             if(subtasks instanceof Array) {
                 subtasks.forEach(element => {
-                    outputJson.TaskIDs.push(element.TaskID);
+                    outputJson.push(element.TaskID);
                 });
+                FileOutput.write(JSON.stringify(outputJson));
             }
 
             LastToken = data.Result.LastToken;
-            if(LastToken != null && LastToken != undefined) {
-                getAllSubtaskIDs(LTaskID, LastToken, outputJson);
-            } else {
-                fs.writeFileSync(FileOutput, JSON.stringify(outputJson), {flag:'w'});
-            }
         } catch(e) {
             // console.error('options');
             // console.error(requestOptions);
@@ -72,14 +74,19 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
             console.error(e);
             if(response == null) {
                 console.error('retry');
-                getAllSubtaskIDs(LTaskID, LastToken, outputJson);
             } else {
-                console.error("response:");
-                // console.error(response);
-                getAllSubtaskIDs(LTaskID, LastToken, outputJson);
+                console.error("retyr & response:");
+            }
+        } finally {
+            if(data.hasOwnProperty('Code') && data.Code == 0 && (LastToken == null || LastToken == undefined)) {
+                FileOutput.write('}');
+                FileOutput.end();
+            } else {
+                //recursive
+                getAllSubtaskIDs(LTaskID, LastToken);
             }
         }
     })
 }
 
-getAllSubtaskIDs(LTaskID, LastToken, outputJson);
+getAllSubtaskIDs(LTaskID, LastToken);
