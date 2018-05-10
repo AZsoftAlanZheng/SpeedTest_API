@@ -987,12 +987,21 @@ module.exports={
 
 	//token:string, session token
 	//LTaskID:string
-	//LastToken:string
+	//start:UTC time, string
+	//end:UTC time, string
+	//type:string {HTTP/HTTPS/DNS/PING/TRACEROUTE}
+	//lastToken:string
 	//callback:function(error, requestOptions, response, data)
-	getLTaskResult: function(token, LTaskID, LastToken, callback) {
-		var qs = {LTaskID: LTaskID};
-		if(LastToken != null && LastToken != undefined) {
-			qs['LastToken'] = LastToken;
+	getLTaskResult: function(token, LTaskID, start, end, type, lastToken, callback) {
+		var qs = {
+				LTaskID: LTaskID,
+				Start:start,
+				End:end,
+				Type:type
+			};
+		if(lastToken != null && lastToken != undefined) {
+
+			qs['LastToken'] = lastToken;
 		}
 		getAPIData(token, '/lst/subtasks', qs,function(error, requestOptions, response, data){
 			callback(error, requestOptions, response, data);
