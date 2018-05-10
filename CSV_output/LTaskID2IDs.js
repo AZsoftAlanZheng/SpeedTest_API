@@ -20,6 +20,7 @@ if(argv.h || process.argv[5] == null  ) {
     return;
 }
 
+var append = false;
 var LTaskID = argv.l;
 var LastToken = null;
 var counter = 0;
@@ -28,9 +29,9 @@ console.log("Output file:"+argv.o);
 var FileOutput = fs.createWriteStream(argv.o, {
     flags: 'w' 
 }).on('open', () => {
-    FileOutput.write('{"TaskIDs":');
+    FileOutput.write('{"TaskIDs":[');
 }).on('close', () => {
-    console.log('Done');
+    console.log('\nDone');
 }).on('error', (err) => {
     console.error(err);
 })
@@ -52,34 +53,39 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
             progress(++counter);
             if (error) throw new Error(error);
             if(data.Code != 0) {
-                throw new Error(data);
+                throw new Error('data.Code != 0, '+ data.toString());
             }
             var subtasks = data.Result.Subtasks;
             if(subtasks == null || subtasks == undefined) {
                 throw new Error("subtasks == null || subtasks == undefined");
             }
-            var outputJson = []
+            var str = "";
             if(subtasks instanceof Array) {
                 subtasks.forEach(element => {
-                    outputJson.push(element.TaskID);
+                    if(append) {
+                        str = str +',"'+element.TaskID+'"';
+                    } else {
+                        str = '"'+element.TaskID+'"';
+                        append = true;
+                    }
                 });
-                FileOutput.write(JSON.stringify(outputJson));
+                FileOutput.write(str);
             }
 
             LastToken = data.Result.LastToken;
         } catch(e) {
             // console.error('options');
             // console.error(requestOptions);
-            console.error("error:");
+            console.error("\nerror:");
             console.error(e);
             if(response == null) {
                 console.error('retry');
             } else {
-                console.error("retyr & response:");
+                console.error("retry & response:");
             }
         } finally {
             if(data.hasOwnProperty('Code') && data.Code == 0 && (LastToken == null || LastToken == undefined)) {
-                FileOutput.write('}');
+                FileOutput.write(']}');
                 FileOutput.end();
             } else {
                 //recursive
