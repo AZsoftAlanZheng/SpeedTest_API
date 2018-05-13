@@ -35,6 +35,7 @@ var FileOutput = fs.createWriteStream(argv.o, {
 }).on('error', (err) => {
     console.error(err);
 })
+var FileLastTokenOutput = argv.o+".LastToken"
 
 function progress(c){
     var str = "total:"+c;
@@ -55,6 +56,9 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
             if(data.Code != 0) {
                 throw new Error('data.Code != 0, '+ data.toString());
             }
+            if(data.Result.ErrorCode != undefined) {
+                throw new Error('ErrorCode='+data.Result.ErrorCode+', MSG='+data.Result.MSG);
+            }
             var subtasks = data.Result.Subtasks;
             if(subtasks == null || subtasks == undefined) {
                 throw new Error("subtasks == null || subtasks == undefined");
@@ -63,9 +67,9 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
             if(subtasks instanceof Array) {
                 subtasks.forEach(element => {
                     if(append) {
-                        str = str +',"'+element.TaskID+'"';
+                        str = str +',"'+element.TaskID+'"\n';
                     } else {
-                        str = '"'+element.TaskID+'"';
+                        str = '"'+element.TaskID+'"\n';
                         append = true;
                     }
                 });
@@ -82,12 +86,14 @@ function getAllSubtaskIDs(LTaskID, LastToken, outputJson) {
                 console.error('retry');
             } else {
                 console.error("retry & response:");
+
             }
         } finally {
-            if(data.hasOwnProperty('Code') && data.Code == 0 && (LastToken == null || LastToken == undefined)) {
+            if(data!=null && data != undefined && data.hasOwnProperty('Code') && data.Code == 0 && !data.Result.hasOwnProperty('ErrorCode') && (LastToken == null || LastToken == undefined)) {
                 FileOutput.write(']}');
                 FileOutput.end();
             } else {
+		fs.writeFileSync(FileLastTokenOutput,LastToken,{flag:'w'});
                 //recursive
                 getAllSubtaskIDs(LTaskID, LastToken);
             }
