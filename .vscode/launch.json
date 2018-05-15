@@ -90,5 +90,12 @@
             "program": "${workspaceFolder}/17ceAPI/index.js",
             "args": []
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "run 17ce result2CSV.js",
+            "program": "${workspaceFolder}/17ceAPI/result2CSV.js",
+            "args": ["-i","${workspaceFolder}/17ceAPI/results.http.txt","-o","${workspaceFolder}/17ceAPI/results.http.csv","-t","http"]
+        },
     ]
 }
