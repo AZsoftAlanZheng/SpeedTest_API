@@ -24,6 +24,7 @@
     "html-pdf": "^2.2.0",
     "jsonfile": "^4.0.0",
     "md5": "^2.2.1",
+    "millisecond": "^0.1.2",
     "minimist": "^1.2.0",
     "moment": "^2.20.1",
     "request": "^2.83.0",
