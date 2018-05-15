@@ -478,6 +478,11 @@ function genRestriction(city,carrier,network,client,type) {
 		TRACEROUTE:{"Type":"TRACEROUTE","Host":"m.zhbservice.com","Restriction":{"Carrier":0,"Network":1,"Timeout":60,"Client":1,"Country_City":32}}
 	}
 
+	if(type=='HTTP'||type=='HTTPS') {
+		templete[type].URL = url;
+	} else {
+		templete[type].Host = host;
+	}
     templete[type].Restriction.Country_City = city;
     templete[type].Restriction.Carrier = carrier;
 	templete[type].Restriction.Network = network;
