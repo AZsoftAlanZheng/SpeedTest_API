@@ -122,10 +122,10 @@ class HttpDataEntity {
         // this.ipfrom = Raw.SrcIP.ipfrom;
         // this.IP = Raw.IP;
         this.HttpCode = Raw.HttpCode;
-        this.TotalTime_s = ms(Raw.TotalTime);
-        this.NsLookup_s = ms(Raw.NsLookup);
-        this.ConnectTime_s = ms(Raw.ConnectTime);
-        this.downtime_s = ms(Raw.downtime);
+        this.TotalTime_ms = ms(Raw.TotalTime);
+        this.NsLookup_ms = ms(Raw.NsLookup);
+        this.ConnectTime_ms = ms(Raw.ConnectTime);
+        this.downtime_ms = ms(Raw.downtime);
         // this.FileSize = Raw.FileSize;
         this.realsize = Raw.realsize;
         this.speed = Raw.speed;
