@@ -833,11 +833,11 @@ SpeedTest API 任务下发及获取结果.
             X-Droi-Session-Token: c23d2300089f3c46
 
 + Response 200 (application/json; charset=utf-8)
-
+u
     + Attributes (Response Base)
     
         + Result (required, Status Chengyu LongTerm Base)
-            + Raw (required, array[Raw HTTP Format Base])
+            + Subtasks (required, array[Raw HTTP Format Base])
             + LastToken: TaskID_5aa6146d9b53e6302000313e_ID_5aa9ccae6a1ec42f67001610 (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料。没有代表没资料了
  
 + Response 200 (application/json; charset=utf)
@@ -882,6 +882,7 @@ SpeedTest API 任务下发及获取结果.
     + Interval: 1200 (required, number) - 任务执行周期,秒
 
 ## SpeedTest HTTP Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: HTTP (required, string)   
 + URL: `http://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
 + Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取，设定后会抓取此固定大小，档案长度不足会回报错误，没设定则不检查
@@ -891,6 +892,7 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest HTTPS Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: HTTPS (required, string)   
 + URL: `https://c6mvmbzh-sand.droibaascdn.com/droi/c6mvmbzhyOLweq6q4Z3v11GX1Q0-22uRlQAA0Pse/866894446795558912/apm_100B.txt` (required, string) - URL
 + Size: 100 (optional, number) - 下载档案只会取size长度的部份，没此栏位会完整抓取，设定后会抓取此固定大小，档案长度不足会回报错误，没设定则不检查
@@ -900,17 +902,20 @@ SpeedTest API 任务下发及获取结果.
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest DNS Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: DNS (required, string)
 + Host: www.amazon.com (required, string) - IP or Domain name
 + DNSSerIP:168.95.1.1 (optional, string) - 可指定dns server
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest PING Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: PING (required, string)
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
 
 ## SpeedTest TRACEROUTE Base (object)
++ Name:自订名称 (required, string) - 探针任务名
 + Type: TRACEROUTE (required, string)FE 
 + Host: www.hinet.net (required, string) - IP or Domain name
 + Restriction (required, Restriction Base) - 加入限制条件
@@ -1025,7 +1030,7 @@ SpeedTest API 任务下发及获取结果.
 + Min:20 (required, number) - 最小值
 + Avg:250 (required, number) - 平均值
 + Count:31 (required, number) - 有效样本数   
-+ Amount:7750 (required, number) - 所有數值加總
++ Amount:7750 (required, number) - 所有数值加总(=(Avg*Count)
   
 
 ## Node1 Base (object)
@@ -1247,6 +1252,8 @@ SpeedTest API 任务下发及获取结果.
         1410120:Interval过长，最大限制1天，Interval需为5分钟的倍数
         1410121:Interval需为5分钟的倍数
         1410122:長時任務不包含此Type
+        1410123:任务组合超过上限5k
+        1410124:给定的时间范围和长时任务的执行时间范围没有交集
     
     + MSG:权限不足 (required, string) - 错误讯息
 
