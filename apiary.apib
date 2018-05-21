@@ -101,7 +101,7 @@ SpeedTest API 任务下发及获取结果.
 
 # Group 查询任务
 
-## 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}]    
+## 查询任务状态 [/api/v2/speedtest/v1/st{?LastToken}{?Start}{?End}{?Order}]    
             
 ### List All SpeedTest Tasks [GET]
 
@@ -110,6 +110,13 @@ SpeedTest API 任务下发及获取结果.
 + Parameters
 
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + Start: 1520583602 (optional, number) - 查询晚于Start创建的长时任务,UTC
+    + End: 1520584602 (optional, number) - 查询早于End创建的长时任务,UTC
+    + Order (optional, string) - inc:正序查询，时间由小到大，dec:反序查询，时间由大到小，预设为正序。
+        - Members
+            - default:inc
+            - inc
+            - dec
     
 + Request (application/json)
     
@@ -729,7 +736,7 @@ SpeedTest API 任务下发及获取结果.
 
 # Group 长时任务各子任务统计结果
 
-## 取得长时任务各子任务的统计结果 [/api/v2/speedtest/v1/lst/subtasks{?LTaskID}{?LastToken}{?Start}{?End}{?Type}]
+## 取得长时任务各子任务的统计结果 [/api/v2/speedtest/v1/lst/subtasks{?LTaskID}{?LastToken}{?Start}{?End}{?Order}{?Type}]
     
 ### get subtasks of LongTerm Task [GET]
 
@@ -739,6 +746,11 @@ SpeedTest API 任务下发及获取结果.
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
     + Start: 1520583602 (optional, number) - 查询晚于Start创建的长时任务,UTC
     + End: 1520584602 (optional, number) - 查询早于End创建的长时任务,UTC
+    + Order (optional, string) - inc:正序查询，时间由小到大，dec:反序查询，时间由大到小，预设为正序。
+        - Members
+            - default:inc
+            - inc
+            - dec
     + Type (optional, string) - 限定回传的测试类别
         - Members
             - HTTP
