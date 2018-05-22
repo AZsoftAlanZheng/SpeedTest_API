@@ -640,7 +640,7 @@ SpeedTest API 任务下发及获取结果.
     
 # Group 查询长时任务
 
-## 查询长时任务状态 [/api/v2/speedtest/v1/lst{?LastToken}]    
+## 查询长时任务状态 [/api/v2/speedtest/v1/lst{?LastToken}{?Start}{?End}{?Order}]    
             
 ### List All LongTerm Tasks [GET]
 
@@ -649,6 +649,13 @@ SpeedTest API 任务下发及获取结果.
 + Parameters
 
     + LastToken (optional, string) - 查询更后面的资料时，带入可查询此ID之后的资料
+    + Start: 1520583602 (optional, number) - 查询晚于Start创建的长时任务,UTC
+    + End: 1520584602 (optional, number) - 查询早于End创建的长时任务,UTC
+    + Order (optional, string) - inc:正序查询，时间由小到大，dec:反序查询，时间由大到小，预设为正序。
+        - Members
+            - default:inc
+            - inc
+            - dec
     
 + Request (application/json)
     
