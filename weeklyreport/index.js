@@ -96,11 +96,8 @@ function initDateObjArray(array) {
     // array.push({date:'2017-12-25', latestID:null, rows:[]});
     // array.push({date:'2017-12-26', latestID:null, rows:[]});
     // array.push({date:'2017-12-27', latestID:null, rows:[]});
-    // for(var i=7;i>0;i--) {
-    for(var i=1;i>0;i--) {
-        // var d = new Date(); // Today!
-        //test
-        var d = new Date('2018-02-16');
+    for(var i=7;i>0;i--) {
+        var d = new Date(); // Today!
         d.setDate(d.getDate() - i);
         array.push({date:d.yyyymmdd(), latestID:null, rows:[]});
     }
