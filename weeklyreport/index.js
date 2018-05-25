@@ -96,8 +96,11 @@ function initDateObjArray(array) {
     // array.push({date:'2017-12-25', latestID:null, rows:[]});
     // array.push({date:'2017-12-26', latestID:null, rows:[]});
     // array.push({date:'2017-12-27', latestID:null, rows:[]});
-    for(var i=7;i>0;i--) {
-        var d = new Date(); // Today!
+    // for(var i=7;i>0;i--) {
+    for(var i=1;i>0;i--) {
+        // var d = new Date(); // Today!
+        //test
+        var d = new Date('2018-02-16');
         d.setDate(d.getDate() - i);
         array.push({date:d.yyyymmdd(), latestID:null, rows:[]});
     }
@@ -192,7 +195,7 @@ function outputAggregateData(dateObjArray) {
 
 function outputRows(dateObjArray, cites) {
     console.log('## 任务清单');
-    console.log('| 日期 | 创建任务时间 | 任务辨别码 | 城市分类 | 省份与城市 | 营运商 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
+    console.log('| 日期 | 创建任务时间(LocalTime) | 任务辨别码 | 城市分类 | 省份与城市 | 营运商 | 网路类别 | 任务类别 | 任务状态 | 指定取样的数量 | 真实取样的数量 | 费用')
     console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---')
     for(var i=0;i<dateObjArray.length;i++) {
         var obj = dateObjArray[i];
@@ -224,7 +227,7 @@ function outputRows(dateObjArray, cites) {
                 if(row.CarrierName == undefined) {
                     row.CarrierName = "尚未加入";
                 }
-                console.log(str + row.Date+' | '+row.TaskID+' | '+citetag+' | '+row.CityName+' | '+row.CarrierName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
+                console.log(str + new Date(row.Date)+' | '+row.TaskID+' | '+citetag+' | '+row.CityName+' | '+row.CarrierName+' | '+row.NetworkName+' | '+row.TypeName+' | '+row.Description+' | '+row.DesignatedCount+' | '+row.RecievedCount+' | '+row.Cost)
             }
         }
     }
