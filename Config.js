@@ -791,18 +791,21 @@ module.exports={
 
 	//token: string
 	//date: string, format(yy-mm-dd), 2017-02-29
+	//start: string, baas utc format, ex:2018-05-24T10:13:58.180Z
+	//end: string baas utc format, ex:2018-05-24T10:13:58.180Z
 	//latestID: string || null
 	//callback: function(error, data, returnLatestID)
-	loadTasks: function(token, date, latestID, callback) {
-		if(!date || typeof(date) !== 'string') callback(new Error("!date || typeof(date) !== 'string'"));
+	loadTasks: function(token, start, end, latestID, callback) {
+		if(!start || typeof(start) !== 'string') callback(new Error("!start || typeof(start) !== 'string'"));
+		if(!end || typeof(end) !== 'string') callback(new Error("!end || typeof(end) !== 'string'"));
 		var conditions;
 		if(latestID != null) {
-			conditions = 'where={"_Id":{"$gt":"'+latestID+'"},"Date":{"$gte":"'+date+'T00:00:00.000Z","$lte":"'+date+'T24:00:00.000Z"}}'
-		} else if(date != null) {
-			conditions = 'where={"Date":{"$gte":"'+date+'T00:00:00.000Z","$lte":"'+date+'T24:00:00.000Z"}}'
+			conditions = 'where={"_Id":{"$gt":"'+latestID+'"},"Date":{"$gte":"'+start+'","$lte":"'+end+'"}}'
+		} else {
+			conditions = 'where={"Date":{"$gte":"'+start+'","$lte":"'+end+'TZ"}}'
 		}
 		var returnLatestID = null;
-		console.log(conditions);
+		// console.log(conditions);
 		getData(token, conditions, 'Accounting', function(error,data){
 			if(!error) {
 				//EX:{

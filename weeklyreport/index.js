@@ -31,6 +31,36 @@ var ctxs = [
     }
 ];
 
+Date.prototype.yyyymmdd = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [this.getFullYear(),
+        (mm>9 ? '-' : '-0') + mm,
+        (dd>9 ? '-' : '-0') + dd
+        ].join('');
+};
+Date.prototype.toBaasUTCTimeString = function() {
+    //baas utc time format: 2018-05-24T10:13:58.180Z
+//console.log('baas:'+ttt.getUTCFullYear()+'-'+(ttt.getUTCMonth()+1)+'-'+ttt.getUTCDate()+'T'+ttt.getUTCHours()+':'+ttt.getUTCMinutes()+':'+ttt.getUTCSeconds()+'.'+ttt.getUTCMilliseconds()+'Z');
+    var yy = this.getUTCFullYear(); //2018
+    var mm = this.getUTCMonth() + 1;
+    if(mm<=9) mm = '0'+mm;
+    var dd = this.getUTCDate();
+    if(dd<=9) dd = '0'+dd;
+    var hh = this.getUTCHours();
+    if(hh<=9) hh = '0'+hh;
+    var min = this.getUTCMinutes();
+    if(min<=9) min = '0'+min;
+    var ss = this.getUTCSeconds();
+    if(ss<=9) ss = '0'+ss;
+    var ms = this.getUTCMilliseconds();
+    if(ms<=9) ms = '00'+ms;
+    else if(ms<=99) ms = '0'+ms;
+
+    return yy+'-'+mm+'-'+dd+'T'+hh+':'+min+':'+ss+'.'+ms+'Z';
+}
+
 ctxs.forEach(function(ctx){
     initDateObjArray(ctx.dateObjArray);
     CONFIG.login(ctx.user.name, ctx.user.pw, function(error,token){
@@ -66,16 +96,6 @@ function initDateObjArray(array) {
     // array.push({date:'2017-12-25', latestID:null, rows:[]});
     // array.push({date:'2017-12-26', latestID:null, rows:[]});
     // array.push({date:'2017-12-27', latestID:null, rows:[]});
-
-    Date.prototype.yyyymmdd = function() {
-        var mm = this.getMonth() + 1; // getMonth() is zero-based
-        var dd = this.getDate();
-
-        return [this.getFullYear(),
-            (mm>9 ? '-' : '-0') + mm,
-            (dd>9 ? '-' : '-0') + dd
-            ].join('');
-    };
     for(var i=7;i>0;i--) {
         var d = new Date(); // Today!
         d.setDate(d.getDate() - i);
@@ -93,7 +113,9 @@ function final(ctx) {
 
 //callback: function(error)
 function loadMoreTasks(token, dateObj, callback) {
-    CONFIG.loadTasks(token, dateObj.date, dateObj.latestID, function(error, data, returnLatestID) {
+    var start = new Date(dateObj.date+' 00:00:00').toBaasUTCTimeString();
+    var end = new Date(dateObj.date+' 24:00:00').toBaasUTCTimeString();
+    CONFIG.loadTasks(token, start, end, dateObj.latestID, function(error, data, returnLatestID) {
         if(error) {
             callback(error);
         } else {
